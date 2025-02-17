@@ -48,5 +48,6 @@ When benchmarking we will vary:
 ### Stretch goals
 
 - Run benchmarks using `zarr-python` version 3 and/or `tensorstore`
+- Run benchmarks using `zarr-python` version 3 and [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
 - Run behncmarks with Zarr v3 format
   - Try different sharding options
