@@ -6,6 +6,7 @@ It is one part of the [HEFTIE project](https://github.com/HEFTIEProject).
 ## Other related work
 
 - [`zarr-developers/zarr-benchmark`](https://github.com/zarr-developers/zarr-benchmark)
+- [`LDeakin/zarr_benchmarks`](https://github.com/LDeakin/zarr_benchmarks)
 
 ## Project plan
 
