@@ -11,12 +11,13 @@ It is one part of the [HEFTIE project](https://github.com/HEFTIEProject).
 ## Project plan
 
 The goal of this task is to benchmark writing data to Zarr with a range of different _configurations_ (e.g., compression codec, chunk size...), to guide the choice of options for folks reading and writing 3D imaging data.
-We will do this with the following constraints:
+We will do this with the following considerations:
 
 - Benchmarks should be easy to run on a typical laptop. This means:
   - **small test data** (< 1GB)
   - **quick** (~seconds for individual benchmarks, ~minutes for the whole set of benchmarks)
 - Benchmarks will be run on spatial **3D imaging data**, and **segmenations** of that data
+- The most important measurement to make is compression ratio - data will sit on disks unchanged for years, but performance of the libraries to read/write the data can improve on much shorter timescales.
 
 ### Data
 
