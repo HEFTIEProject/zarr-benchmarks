@@ -7,6 +7,7 @@ It is one part of the [HEFTIE project](https://github.com/HEFTIEProject).
 
 - [`zarr-developers/zarr-benchmark`](https://github.com/zarr-developers/zarr-benchmark)
 - [`LDeakin/zarr_benchmarks`](https://github.com/LDeakin/zarr_benchmarks)
+- https://nasa-impact.github.io/zarr-visualization-report/
 
 ## Project plan
 
