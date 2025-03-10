@@ -7,7 +7,8 @@ It is one part of the [HEFTIE project](https://github.com/HEFTIEProject).
 
 - [`zarr-developers/zarr-benchmark`](https://github.com/zarr-developers/zarr-benchmark)
 - [`LDeakin/zarr_benchmarks`](https://github.com/LDeakin/zarr_benchmarks)
-- https://nasa-impact.github.io/zarr-visualization-report/
+- [Zarr Visualization Report](https://nasa-impact.github.io/zarr-visualization-report/)
+- [`icechunk` benchmarks](https://github.com/earth-mover/icechunk/tree/main/icechunk-python/notebooks/performance)
 
 ## Project plan
 
