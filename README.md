@@ -19,6 +19,7 @@ We will do this with the following considerations:
   - **quick** (~seconds for individual benchmarks, ~minutes for the whole set of benchmarks)
 - Benchmarks will be run on spatial **3D imaging data**, and **segmenations** of that data
 - The most important measurement to make is compression ratio - data will sit on disks unchanged for years, but performance of the libraries to read/write the data can improve on much shorter timescales.
+- The most important software and configurations to test are those that are mature, reliable, and usable *now* by a wide range of scientists.
 
 ### Data
 
