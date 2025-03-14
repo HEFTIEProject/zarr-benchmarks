@@ -72,3 +72,9 @@ When benchmarking we will vary:
 - Run benchmarks using `zarr-python` version 3 and
   [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
 - Try different sharding options in Zarr format 3
+
+## Running pre-commit locally
+
+If you want quick development, you can always do git commit -n which will
+disable the check (but still run in CI). Or don’t run pre-commit install until
+you need it.
