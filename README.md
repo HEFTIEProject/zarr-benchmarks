@@ -26,7 +26,7 @@ We will do this with the following considerations:
 
 To start with, we will use a downsampled version of a full organ dataset from the [Human Organ Atalas](https://human-organ-atlas.esrf.fr) (for example [this heart dataset](https://human-organ-atlas.esrf.fr/datasets/1773966096) )
 
-### Measurements
+### Measurements
 
 For each configuration we will record:
 
