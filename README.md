@@ -1,7 +1,8 @@
 # Zarr benchmarks for 3D images
 
-This repository contains benchmarks for creating, reading, and storing huge 3D images in [Zarr](https://zarr.dev/) arrays.
-It is one part of the [HEFTIE project](https://github.com/HEFTIEProject).
+This repository contains benchmarks for creating, reading, and storing huge 3D
+images in [Zarr](https://zarr.dev/) arrays. It is one part of the
+[HEFTIE project](https://github.com/HEFTIEProject).
 
 ## Other related work
 
@@ -12,19 +13,28 @@ It is one part of the [HEFTIE project](https://github.com/HEFTIEProject).
 
 ## Project plan
 
-The goal of this task is to benchmark writing data to Zarr with a range of different _configurations_ (e.g., compression codec, chunk size...), to guide the choice of options for folks reading and writing 3D imaging data.
-We will do this with the following considerations:
+The goal of this task is to benchmark writing data to Zarr with a range of
+different _configurations_ (e.g., compression codec, chunk size...), to guide
+the choice of options for folks reading and writing 3D imaging data. We will do
+this with the following considerations:
 
 - Benchmarks should be easy to run on a typical laptop. This means:
   - **small test data** (< 1GB)
-  - **quick** (~seconds for individual benchmarks, ~minutes for the whole set of benchmarks)
-- Benchmarks will be run on spatial **3D imaging data**, and **segmenations** of that data
-- The most important measurement to make is compression ratio - data will sit on disks unchanged for years, but performance of the libraries to read/write the data can improve on much shorter timescales.
-- The most important software and configurations to test are those that are mature, reliable, and usable *now* by a wide range of scientists.
+  - **quick** (~seconds for individual benchmarks, ~minutes for the whole set of
+    benchmarks)
+- Benchmarks will be run on spatial **3D imaging data**, and **segmenations** of
+  that data
+- The most important measurement to make is compression ratio - data will sit on
+  disks unchanged for years, but performance of the libraries to read/write the
+  data can improve on much shorter timescales.
+- The most important software and configurations to test are those that are
+  mature, reliable, and usable _now_ by a wide range of scientists.
 
 ### Data
 
-To start with, we will use a downsampled version of a full organ dataset from the [Human Organ Atalas](https://human-organ-atlas.esrf.fr) (for example [this heart dataset](https://human-organ-atlas.esrf.fr/datasets/1773966096) )
+To start with, we will use a downsampled version of a full organ dataset from
+the [Human Organ Atalas](https://human-organ-atlas.esrf.fr) (for example
+[this heart dataset](https://human-organ-atlas.esrf.fr/datasets/1773966096) )
 
 ### Measurements
 
@@ -43,10 +53,13 @@ When benchmarking we will vary:
 - Zarr data format version
   - 2 and 3
 - Compression codec
-  - To limit options, use only [codecs supported by neuroglancer](https://github.com/google/neuroglancer/tree/master/src/datasource/zarr#zarr-v2) for both Zarr v2 and Zarr v3: `blosc`, `gzip`, `zstd`
+  - To limit options, use only
+    [codecs supported by neuroglancer](https://github.com/google/neuroglancer/tree/master/src/datasource/zarr#zarr-v2)
+    for both Zarr v2 and Zarr v3: `blosc`, `gzip`, `zstd`
 - Compression codec parameters, e.g., compression level
 - Chunk size
-  - To keep things simple, use a isotropic chunk shape (e.g., (128, 128, 128)) and just vary the chunk size.
+  - To keep things simple, use a isotropic chunk shape (e.g., (128, 128, 128))
+    and just vary the chunk size.
 - Shard size (only for Zarr format 3)
 - Type of data
   - Imaging data
@@ -56,5 +69,12 @@ When benchmarking we will vary:
 ### Stretch goals
 
 - Run benchmarks using `zarr-python` version 3 and/or `tensorstore`
-- Run benchmarks using `zarr-python` version 3 and [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
+- Run benchmarks using `zarr-python` version 3 and
+  [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
 - Try different sharding options in Zarr format 3
+
+## Running pre-commit locally
+
+If you want quick development, you can always do git commit -n which will
+disable the check (but still run in CI). Or don’t run pre-commit install until
+you need it.
