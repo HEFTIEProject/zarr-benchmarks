@@ -1,0 +1,6 @@
+---
+repos:
+  - repo: https://github.com/UCL-MIRSG/.github
+    rev: v0.200.0
+    hooks:
+      - id: mirsg-hooks
