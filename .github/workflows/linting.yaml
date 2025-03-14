@@ -1,0 +1,27 @@
+---
+name: Linting
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+      - synchronize
+
+concurrency:
+  cancel-in-progress: true
+  group: >-
+    ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+
+jobs:
+  linting:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: UCL-MIRSG/.github/actions/linting@861d2a9beeb8372266db39177218b27641d3e6a7 # v0
+        with:
+          pre-commit-config: ./.pre-commit-config.yaml
