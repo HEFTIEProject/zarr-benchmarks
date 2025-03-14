@@ -4,4 +4,3 @@ repos:
     rev: v0.200.0
     hooks:
       - id: mirsg-hooks
-        exclude: ^(hadolint|ansible-lint)$
