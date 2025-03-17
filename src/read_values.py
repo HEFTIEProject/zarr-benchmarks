@@ -3,7 +3,7 @@ import pyperf
 
 def main():
     """Simple example of reading benchmark values from an output json"""
-    
+
     suite = pyperf.BenchmarkSuite.load("bench.json")
     bench = suite.get_benchmark("write_to_zarr-(200, 200, 200)")
 
