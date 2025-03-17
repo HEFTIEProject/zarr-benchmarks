@@ -1,23 +1,22 @@
 [project]
-name = "zarr_benchmarks"
-version = "0.0.1"
 authors = [
-  { name="Centre for Advanced Research Computing", email="arc.collaborations@ucl.ac.uk" },
+    {email = "arc.collaborations@ucl.ac.uk", name = "Centre for Advanced Research Computing"},
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "imageio",
+    "pyperf",
+    "zarr",
 ]
 description = "zarr benchmarks"
+license = {file = "LICENSE"}
+name = "zarr_benchmarks"
 readme = "README.md"
 requires-python = ">=3.11"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
-]
-license = {file = "LICENSE"}
-
-dependencies = [
-    "zarr",
-    "imageio",
-    "pyperf"
-]
+version = "0.0.1"
 
 [project.urls]
 Homepage = "https://github.com/HEFTIEProject/zarr-benchmarks"

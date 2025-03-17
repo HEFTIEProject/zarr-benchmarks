@@ -128,5 +128,6 @@ def run_profiling() -> None:
 
 
 if __name__ == "__main__":
+    # To dump results to json, run with: python src/benchmark.py -o output/bench.json
     logging.basicConfig(level=logging.INFO)
     run_profiling()
