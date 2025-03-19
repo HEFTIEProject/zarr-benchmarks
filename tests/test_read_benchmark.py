@@ -1,12 +1,13 @@
 import pytest
 from src.read_write_zarr import write_zarr_array, read_zarr_array, get_compression_ratio
+from tests.benchmark_parameters import CHUNK_SIZE
 import pathlib
 
 
 @pytest.mark.benchmark(
     group="read",
 )
-@pytest.mark.parametrize("chunk_size", [400, 300, 200, 100])
+@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 def test_read(benchmark, image, chunk_size):
     store_path = pathlib.Path("data/output/heart-example.zarr")
     overwrite = True
