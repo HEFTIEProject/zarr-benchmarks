@@ -19,13 +19,21 @@ def read_zarr_array(store_path: pathlib.Path) -> np.array:
 
 
 def write_zarr_array(
-    image: np.array, store_path: pathlib.Path, overwrite: bool, chunk_size: tuple[int]
+    image: np.array,
+    store_path: pathlib.Path,
+    overwrite: bool,
+    chunk_size: tuple[int],
+    compressors: zarr.core.array.CompressorsLike = "auto",
 ) -> None:
     if overwrite:
         remove_output_dir(store_path)
 
     zarr_array = zarr.create_array(
-        store=store_path, shape=image.shape, chunks=chunk_size, dtype=image.dtype
+        store=store_path,
+        shape=image.shape,
+        chunks=chunk_size,
+        dtype=image.dtype,
+        compressors=compressors,
     )
     zarr_array[:] = image
 
@@ -44,6 +52,6 @@ def get_image(image_dir_path: pathlib.Path) -> np.array:
     return image
 
 
-def remove_output_dir(output_dir: pathlib.Path):
+def remove_output_dir(output_dir: pathlib.Path) -> None:
     if output_dir.exists():
         shutil.rmtree(output_dir)
