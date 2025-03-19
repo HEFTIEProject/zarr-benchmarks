@@ -1,15 +1,12 @@
 import pytest
 from src.read_write_zarr import write_zarr_array, remove_output_dir
 import pathlib
-import numpy as np
 
 
 @pytest.mark.benchmark(
     group="group-name",
 )
-def test_write(benchmark):
-    # image = get_image(image_dir_path=pathlib.Path('data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_'))
-    image = np.random.rand(100, 100, 100)
+def test_write(benchmark, image):
     store_path = pathlib.Path("data/output/heart-example.zarr")
     overwrite = True
 
@@ -22,9 +19,7 @@ def test_write(benchmark):
 @pytest.mark.benchmark(
     group="group-name",
 )
-def test_write_without_removal(benchmark):
-    # image = get_image(image_dir_path=pathlib.Path('data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_'))
-    image = np.random.rand(100, 100, 100)
+def test_write_without_removal(benchmark, image):
     store_path = pathlib.Path("data/output/heart-example.zarr")
     overwrite = False
 
