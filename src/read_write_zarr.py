@@ -19,13 +19,13 @@ def read_zarr_array(store_path: pathlib.Path) -> np.array:
 
 
 def write_zarr_array(
-    image: np.array, store_path: pathlib.Path, overwrite: bool
+    image: np.array, store_path: pathlib.Path, overwrite: bool, chunk_size: tuple[int]
 ) -> None:
     if overwrite:
         remove_output_dir(store_path)
 
     zarr_array = zarr.create_array(
-        store=store_path, shape=image.shape, chunks=(100, 100, 100), dtype=image.dtype
+        store=store_path, shape=image.shape, chunks=chunk_size, dtype=image.dtype
     )
     zarr_array[:] = image
 

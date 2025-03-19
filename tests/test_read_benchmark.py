@@ -4,12 +4,15 @@ import pathlib
 
 
 @pytest.mark.benchmark(
-    group="group-name",
+    group="read",
 )
-def test_read(benchmark, image):
+@pytest.mark.parametrize("chunk_size", [400, 300, 200, 100])
+def test_read(benchmark, image, chunk_size):
     store_path = pathlib.Path("data/output/heart-example.zarr")
     overwrite = True
-    write_zarr_array(image, store_path, overwrite)
+    chunks = (chunk_size, chunk_size, chunk_size)
+    write_zarr_array(image, store_path, overwrite, chunks)
+
     compression_ratio = get_compression_ratio(store_path)
     benchmark.extra_info["compression_ratio"] = compression_ratio
 

@@ -13,5 +13,6 @@ def image():
         )
     )
     # image = np.random.rand(100, 100, 100)
+    # image = np.random.rand(806, 629, 629)
 
     return image
