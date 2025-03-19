@@ -122,3 +122,4 @@ cython_debug/
 .vscode/
 
 output/
+data/
