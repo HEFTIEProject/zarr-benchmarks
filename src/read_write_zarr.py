@@ -22,7 +22,7 @@ def write_zarr_array(
     image: np.array,
     store_path: pathlib.Path,
     overwrite: bool,
-    chunk_size: tuple[int],
+    chunks: tuple[int],
     compressors: zarr.core.array.CompressorsLike = "auto",
 ) -> None:
     if overwrite:
@@ -31,7 +31,7 @@ def write_zarr_array(
     zarr_array = zarr.create_array(
         store=store_path,
         shape=image.shape,
-        chunks=chunk_size,
+        chunks=chunks,
         dtype=image.dtype,
         compressors=compressors,
     )
