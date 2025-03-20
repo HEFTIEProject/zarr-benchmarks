@@ -1,32 +1,28 @@
 import pytest
-from src.read_write_zarr import get_image, write_zarr_array, remove_output_dir
+from src.read_write_zarr import write_zarr_array, remove_output_dir
 import pathlib
-import numpy as np
+from tests.benchmark_parameters import CHUNK_SIZE, COMPRESSORS
+
 
 @pytest.mark.benchmark(
-    group="group-name",
+    group="write",
 )
-def test_write(benchmark):
-    # image = get_image(image_dir_path=pathlib.Path('data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_'))
-    image = np.random.rand(4, 4, 4)
-    store_path=pathlib.Path('data/output/heart-example.zarr')
-    overwrite=True
-    def setup():
-        return (image, store_path, overwrite), {}
-    
-    benchmark.pedantic(write_zarr_array, setup=setup, rounds=3, warmup_rounds=1)
-    
-    
-@pytest.mark.benchmark(
-    group="group-name",
+@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
+@pytest.mark.parametrize(
+    "compressors", COMPRESSORS, ids=[type(compressor) for compressor in COMPRESSORS]
 )
-def test_write_without_removal(benchmark):
-    # image = get_image(image_dir_path=pathlib.Path('data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_'))
-    image = np.random.rand(4, 4, 4)
-    store_path=pathlib.Path('data/output/heart-example.zarr')
-    overwrite=False
+def test_write(benchmark, image, chunk_size, compressors):
+    store_path = pathlib.Path("data/output/heart-example.zarr")
+    overwrite = False
+
     def setup():
         remove_output_dir(store_path)
-        return (image, store_path, overwrite), {}
-    
+        return (
+            image,
+            store_path,
+            overwrite,
+            (chunk_size, chunk_size, chunk_size),
+            compressors,
+        ), {}
+
     benchmark.pedantic(write_zarr_array, setup=setup, rounds=3, warmup_rounds=1)

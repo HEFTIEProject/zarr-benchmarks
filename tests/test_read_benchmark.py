@@ -1,18 +1,23 @@
 import pytest
-from src.read_write_zarr import get_image, write_zarr_array, read_zarr_array, get_compression_ratio
+from src.read_write_zarr import write_zarr_array, read_zarr_array, get_compression_ratio
+from tests.benchmark_parameters import CHUNK_SIZE, COMPRESSORS
 import pathlib
-import numpy as np
+
 
 @pytest.mark.benchmark(
-    group="group-name",
+    group="read",
 )
-def test_read(benchmark):
-    # image = get_image(image_dir_path=pathlib.Path('data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_'))
-    image = np.random.rand(100, 100, 100)
-    store_path=pathlib.Path('data/output/heart-example.zarr')
-    overwrite=True
-    _, _ = write_zarr_array(image, store_path, overwrite)
+@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
+@pytest.mark.parametrize(
+    "compressors", COMPRESSORS, ids=[type(compressor) for compressor in COMPRESSORS]
+)
+def test_read(benchmark, image, chunk_size, compressors):
+    store_path = pathlib.Path("data/output/heart-example.zarr")
+    overwrite = True
+    chunks = (chunk_size, chunk_size, chunk_size)
+    write_zarr_array(image, store_path, overwrite, chunks, compressors)
+
     compression_ratio = get_compression_ratio(store_path)
-    benchmark.extra_info['compression_ratio'] = compression_ratio
+    benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(read_zarr_array, args=(store_path,), rounds=3, warmup_rounds=1)
