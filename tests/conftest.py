@@ -12,6 +12,4 @@ def image():
         )
     )
 
-    # image = np.random.rand(100, 100, 100)
-
     return image

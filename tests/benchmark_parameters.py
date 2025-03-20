@@ -3,18 +3,12 @@ import zarr
 CHUNK_SIZE = (300, 200, 100)
 
 BLOSC_CLEVEL = (1, 3, 5)  # range 1-9
-BLOSC_SHUFFLE = (
-    # zarr.codecs.BloscShuffle.bitshuffle,
-    # zarr.codecs.BloscShuffle.shuffle,
-    zarr.codecs.BloscShuffle.noshuffle,
-)
-BLOSC_CNAME = (
-    # zarr.codecs.BloscCname.blosclz,
-    # zarr.codecs.BloscCname.lz4,
-    # zarr.codecs.BloscCname.lz4hc,
-    # zarr.codecs.BloscCname.zlib,
-    zarr.codecs.BloscCname.zstd,
-)
+
+# possible options are BloscShuffle.bitshuffle, BloscShuffle.shuffle and BloscShuffle.noshuffle
+BLOSC_SHUFFLE = (zarr.codecs.BloscShuffle.noshuffle,)
+
+# possible options are BloscCname.blosclz, BloscCname.lz4, BloscCname.lz4hc, BloscCname.zlib and BloscCname.zstd
+BLOSC_CNAME = (zarr.codecs.BloscCname.zstd,)
 
 GZIP_LEVEL = (1, 3, 5)  # range 1-9
 
