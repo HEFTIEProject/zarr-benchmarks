@@ -2,7 +2,7 @@ import zarr
 import numcodecs
 from numcodecs import Blosc, GZip, Zstd
 import pathlib
-from src.utils import remove_output_dir
+from utils import remove_output_dir
 import numpy as np
 
 

@@ -3,7 +3,7 @@ import numpy as np
 import zarr
 import zarr.codecs
 from typing import Any
-from src.utils import remove_output_dir
+from utils import remove_output_dir
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:

@@ -13,3 +13,9 @@ def image():
     )
 
     return image
+
+
+@pytest.fixture()
+def store_path():
+    """Path to store zarr images written from benchmarks"""
+    return pathlib.Path("data/output/heart-example.zarr")
