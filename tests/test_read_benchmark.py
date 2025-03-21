@@ -1,6 +1,8 @@
 import pytest
 from read_write_zarr import (
     get_blosc_compressor,
+    get_gzip_compressor,
+    get_zstd_compressor,
     get_zarr_read_function,
     get_zarr_write_function,
     get_compression_ratio,
@@ -10,6 +12,8 @@ from tests.benchmark_parameters import (
     BLOSC_CLEVEL,
     BLOSC_CNAME,
     BLOSC_SHUFFLE,
+    GZIP_LEVEL,
+    ZSTD_LEVEL,
 )
 import pathlib
 
@@ -45,45 +49,55 @@ def test_read_blosc(
     )
 
 
-# @pytest.mark.benchmark(
-#     group="read",
-# )
-# @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-# @pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
-# def test_read_gzip(benchmark, image, chunk_size, gzip_level):
-#     store_path = pathlib.Path("data/output/heart-example.zarr")
+@pytest.mark.benchmark(
+    group="read",
+)
+@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
+@pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
+def test_read_gzip(benchmark, image, chunk_size, gzip_level):
+    store_path = pathlib.Path("data/output/heart-example.zarr")
+    gzip_compressor = get_gzip_compressor(gzip_level)
+    zarr_write_function = get_zarr_write_function()
+    zarr_read_function = get_zarr_read_function()
 
-#     write_zarr_array(
-#         image=image,
-#         store_path=store_path,
-#         overwrite=True,
-#         chunks=(chunk_size, chunk_size, chunk_size),
-#         compressors=zarr.codecs.GzipCodec(level=gzip_level),
-#     )
+    zarr_write_function(
+        image=image,
+        store_path=store_path,
+        overwrite=True,
+        chunks=(chunk_size, chunk_size, chunk_size),
+        compressor=gzip_compressor,
+    )
 
-#     compression_ratio = get_compression_ratio(store_path)
-#     benchmark.extra_info["compression_ratio"] = compression_ratio
+    compression_ratio = get_compression_ratio(store_path)
+    benchmark.extra_info["compression_ratio"] = compression_ratio
 
-#     benchmark.pedantic(read_zarr_array, args=(store_path,), rounds=3, warmup_rounds=1)
+    benchmark.pedantic(
+        zarr_read_function, args=(store_path,), rounds=3, warmup_rounds=1
+    )
 
 
-# @pytest.mark.benchmark(
-#     group="read",
-# )
-# @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-# @pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
-# def test_read_zstd(benchmark, image, chunk_size, zstd_level):
-#     store_path = pathlib.Path("data/output/heart-example.zarr")
+@pytest.mark.benchmark(
+    group="read",
+)
+@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
+@pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
+def test_read_zstd(benchmark, image, chunk_size, zstd_level):
+    store_path = pathlib.Path("data/output/heart-example.zarr")
+    zstd_compressor = get_zstd_compressor(zstd_level)
+    zarr_write_function = get_zarr_write_function()
+    zarr_read_function = get_zarr_read_function()
 
-#     write_zarr_array(
-#         image=image,
-#         store_path=store_path,
-#         overwrite=True,
-#         chunks=(chunk_size, chunk_size, chunk_size),
-#         compressors=zarr.codecs.ZstdCodec(level=zstd_level),
-#     )
+    zarr_write_function(
+        image=image,
+        store_path=store_path,
+        overwrite=True,
+        chunks=(chunk_size, chunk_size, chunk_size),
+        compressor=zstd_compressor,
+    )
 
-#     compression_ratio = get_compression_ratio(store_path)
-#     benchmark.extra_info["compression_ratio"] = compression_ratio
+    compression_ratio = get_compression_ratio(store_path)
+    benchmark.extra_info["compression_ratio"] = compression_ratio
 
-#     benchmark.pedantic(read_zarr_array, args=(store_path,), rounds=3, warmup_rounds=1)
+    benchmark.pedantic(
+        zarr_read_function, args=(store_path,), rounds=3, warmup_rounds=1
+    )

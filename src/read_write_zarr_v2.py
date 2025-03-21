@@ -1,6 +1,6 @@
 import zarr
 import numcodecs
-from numcodecs import Blosc
+from numcodecs import Blosc, GZip, Zstd
 import pathlib
 from src.utils import remove_output_dir
 import numpy as np
@@ -52,3 +52,11 @@ def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> numcodecs.abc
             raise ValueError(f"invalid shuffle value for blosc {shuffle}")
 
     return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
+
+
+def get_gzip_compressor(level: int) -> numcodecs.abc.Codec:
+    return GZip(level=level)
+
+
+def get_zstd_compressor(level: int) -> numcodecs.abc.Codec:
+    return Zstd(level=level)
