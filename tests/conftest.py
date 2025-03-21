@@ -1,6 +1,6 @@
 import pytest
 import pathlib
-from src.read_write_zarr import get_image
+from utils import get_image
 
 
 @pytest.fixture(scope="session")
