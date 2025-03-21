@@ -29,16 +29,20 @@ dev = [
 Homepage = "https://github.com/HEFTIEProject/zarr-benchmarks"
 Issues = "https://github.com/HEFTIEProject/zarr-benchmarks/issues"
 
+# override sorting inline arrays for tox configuration - otherwise 'commands' lines are sorted and broken
+[tool.tomlsort]
+overrides."tool.tox.*".inline_arrays = false
+
 [tool.tox]
-requires = ["tox>=4.24"]
 env_list = ["py313-zarrv2", "py313-zarrv3"]
+requires = ["tox>=4.24"]
 
 [tool.tox.env.py313-zarrv2]
-description = "Run benchmarks under zarr-python version 2"
-deps = ["zarr==2.18.4"]
 commands = [["pytest", "--benchmark-save=zarr-python-v2", "--benchmark-save-data"]]
+deps = ["zarr==2.18.4"]
+description = "Run benchmarks under zarr-python version 2"
 
 [tool.tox.env.py313-zarrv3]
-description = "Run benchmarks under zarr-python version 3"
-deps = ["zarr==3.0.6"]
 commands = [["pytest", "--benchmark-save=zarr-python-v3", "--benchmark-save-data"]]
+deps = ["zarr==3.0.6"]
+description = "Run benchmarks under zarr-python version 3"
