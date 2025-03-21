@@ -1,6 +1,6 @@
 import pytest
 import pathlib
-from src.read_write_zarr import get_image
+from utils import get_image
 import numpy as np
 
 
@@ -31,3 +31,9 @@ def image(dev_image):
             "data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_"
         )
     )
+
+
+@pytest.fixture()
+def store_path():
+    """Path to store zarr images written from benchmarks"""
+    return pathlib.Path("data/output/heart-example.zarr")
