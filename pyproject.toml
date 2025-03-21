@@ -10,6 +10,7 @@ dependencies = [
     "imageio",
     "pytest",
     "pytest-benchmark",
+    "tox",
     "zarr",
 ]
 description = "zarr benchmarks"
@@ -27,3 +28,17 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/HEFTIEProject/zarr-benchmarks"
 Issues = "https://github.com/HEFTIEProject/zarr-benchmarks/issues"
+
+[tool.tox]
+requires = ["tox>=4.24"]
+env_list = ["py313-zarrv2", "py313-zarrv3"]
+
+[tool.tox.env.py313-zarrv2]
+description = "Run benchmarks under zarr-python version 2"
+deps = ["zarr==2.18.4"]
+commands = [["pytest", "--benchmark-save=zarr-python-v2", "--benchmark-save-data"]]
+
+[tool.tox.env.py313-zarrv3]
+description = "Run benchmarks under zarr-python version 3"
+deps = ["zarr==3.0.6"]
+commands = [["pytest", "--benchmark-save=zarr-python-v3", "--benchmark-save-data"]]
