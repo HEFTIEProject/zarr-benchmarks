@@ -1,8 +1,9 @@
-import imageio.v3 as iio
 import pathlib
 import numpy as np
 import zarr
-import shutil
+from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
+from typing import Any
+from utils import remove_output_dir
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
@@ -23,7 +24,7 @@ def write_zarr_array(
     store_path: pathlib.Path,
     overwrite: bool,
     chunks: tuple[int],
-    compressors: zarr.core.array.CompressorsLike = "auto",
+    compressor: Any = "auto",
 ) -> None:
     if overwrite:
         remove_output_dir(store_path)
@@ -33,25 +34,18 @@ def write_zarr_array(
         shape=image.shape,
         chunks=chunks,
         dtype=image.dtype,
-        compressors=compressors,
+        compressors=compressor,
     )
     zarr_array[:] = image
 
 
-def get_image(image_dir_path: pathlib.Path) -> np.array:
-    """Read a series of jpeg to one 3D numpy array"""
-    image_slices = []
-    for image_slice in image_dir_path.iterdir():
-        if not image_slice.is_file():
-            continue
-
-        image_slices.append(iio.imread(image_slice))
-
-    image = np.stack(image_slices, axis=0)
-
-    return image
+def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> Any:
+    return BloscCodec(cname=cname, clevel=clevel, shuffle=shuffle)
 
 
-def remove_output_dir(output_dir: pathlib.Path) -> None:
-    if output_dir.exists():
-        shutil.rmtree(output_dir)
+def get_gzip_compressor(level: int) -> Any:
+    return GzipCodec(level=level)
+
+
+def get_zstd_compressor(level: int) -> Any:
+    return ZstdCodec(level=level)

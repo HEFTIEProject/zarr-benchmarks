@@ -1,7 +1,5 @@
 import pytest
-from src.read_write_zarr import write_zarr_array, remove_output_dir
-import pathlib
-import zarr
+from utils import remove_output_dir
 from tests.benchmark_parameters import (
     CHUNK_SIZE,
     BLOSC_CLEVEL,
@@ -10,6 +8,11 @@ from tests.benchmark_parameters import (
     GZIP_LEVEL,
     ZSTD_LEVEL,
 )
+
+try:
+    import read_write_zarr_v3 as read_write_zarr
+except ImportError:
+    import read_write_zarr_v2 as read_write_zarr
 
 
 @pytest.mark.benchmark(
@@ -20,9 +23,11 @@ from tests.benchmark_parameters import (
 @pytest.mark.parametrize("blosc_shuffle", BLOSC_SHUFFLE)
 @pytest.mark.parametrize("blosc_cname", BLOSC_CNAME)
 def test_write_blosc(
-    benchmark, image, chunk_size, blosc_clevel, blosc_shuffle, blosc_cname
+    benchmark, image, store_path, chunk_size, blosc_clevel, blosc_shuffle, blosc_cname
 ):
-    store_path = pathlib.Path("data/output/heart-example.zarr")
+    blosc_compressor = read_write_zarr.get_blosc_compressor(
+        blosc_cname, blosc_clevel, blosc_shuffle
+    )
 
     def setup():
         remove_output_dir(store_path)
@@ -31,12 +36,12 @@ def test_write_blosc(
             "store_path": store_path,
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
-            "compressors": zarr.codecs.BloscCodec(
-                cname=blosc_cname, clevel=blosc_clevel, shuffle=blosc_shuffle
-            ),
+            "compressor": blosc_compressor,
         }
 
-    benchmark.pedantic(write_zarr_array, setup=setup, rounds=3, warmup_rounds=1)
+    benchmark.pedantic(
+        read_write_zarr.write_zarr_array, setup=setup, rounds=3, warmup_rounds=1
+    )
 
 
 @pytest.mark.benchmark(
@@ -44,8 +49,8 @@ def test_write_blosc(
 )
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
-def test_write_gzip(benchmark, image, chunk_size, gzip_level):
-    store_path = pathlib.Path("data/output/heart-example.zarr")
+def test_write_gzip(benchmark, image, store_path, chunk_size, gzip_level):
+    gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level)
 
     def setup():
         remove_output_dir(store_path)
@@ -54,10 +59,12 @@ def test_write_gzip(benchmark, image, chunk_size, gzip_level):
             "store_path": store_path,
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
-            "compressors": zarr.codecs.GzipCodec(level=gzip_level),
+            "compressor": gzip_compressor,
         }
 
-    benchmark.pedantic(write_zarr_array, setup=setup, rounds=3, warmup_rounds=1)
+    benchmark.pedantic(
+        read_write_zarr.write_zarr_array, setup=setup, rounds=3, warmup_rounds=1
+    )
 
 
 @pytest.mark.benchmark(
@@ -65,8 +72,8 @@ def test_write_gzip(benchmark, image, chunk_size, gzip_level):
 )
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
-def test_write_zstd(benchmark, image, chunk_size, zstd_level):
-    store_path = pathlib.Path("data/output/heart-example.zarr")
+def test_write_zstd(benchmark, image, store_path, chunk_size, zstd_level):
+    zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level)
 
     def setup():
         remove_output_dir(store_path)
@@ -75,7 +82,9 @@ def test_write_zstd(benchmark, image, chunk_size, zstd_level):
             "store_path": store_path,
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
-            "compressors": zarr.codecs.ZstdCodec(level=zstd_level),
+            "compressor": zstd_compressor,
         }
 
-    benchmark.pedantic(write_zarr_array, setup=setup, rounds=3, warmup_rounds=1)
+    benchmark.pedantic(
+        read_write_zarr.write_zarr_array, setup=setup, rounds=3, warmup_rounds=1
+    )
