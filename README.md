@@ -73,6 +73,35 @@ When benchmarking we will vary:
   [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
 - Try different sharding options in Zarr format 3
 
+## Running the benchmarks
+
+Install the relevant dependencies with:
+
+```bash
+# Run from the top level of this repository
+pip install .
+```
+
+Then run tox with:
+
+```bash
+tox
+```
+
+This will run all benchmarks via `zarr-python` version 2 and 3 with the example
+Human Organ Atlas image.
+
+For a quicker run, add `--dev-image`:
+
+```bash
+tox -- --dev-image
+```
+
+This will run all benchmarks with a small 100x100x100 numpy array, which is
+useful for quick test runs during development. Everything after the first `--`
+will be passed to the internal `pytest` call, so you can also add any pytest
+options you require.
+
 ## Running pre-commit locally
 
 If you want quick development, you can always do git commit -n which will
