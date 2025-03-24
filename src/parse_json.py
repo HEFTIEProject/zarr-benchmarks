@@ -1,5 +1,19 @@
 import json
+import matplotlib.pyplot as plt
+import numpy as np
 
+# Example data
+data = [7, 8, 5, 6, 9, 10, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+# Create the box plot
+plt.boxplot(data, vert=True, patch_artist=True, showmeans=True)
+
+# Add labels and title
+plt.title("Whisker Plot (Box Plot) Example")
+plt.ylabel("Values")
+
+# Show the plot
+plt.show()
 
 def load_benchmarks_json(path_to_file: str) -> dict:
     with open(path_to_file, "r") as in_file_obj:
