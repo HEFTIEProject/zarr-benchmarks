@@ -1,7 +1,7 @@
 import pathlib
 import numpy as np
 import zarr
-import zarr.codecs
+from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
 from typing import Any
 from utils import remove_output_dir
 
@@ -40,12 +40,12 @@ def write_zarr_array(
 
 
 def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> Any:
-    return zarr.codecs.BloscCodec(cname=cname, clevel=clevel, shuffle=shuffle)
+    return BloscCodec(cname=cname, clevel=clevel, shuffle=shuffle)
 
 
 def get_gzip_compressor(level: int) -> Any:
-    return zarr.codecs.GzipCodec(level=level)
+    return GzipCodec(level=level)
 
 
 def get_zstd_compressor(level: int) -> Any:
-    return zarr.codecs.ZstdCodec(level=level)
+    return ZstdCodec(level=level)
