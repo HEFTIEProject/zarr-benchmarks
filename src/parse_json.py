@@ -8,7 +8,7 @@ with open(path_to_file, "r") as in_file_obj:
     data = json.loads(text)
 
 machine_info = data["machine_info"]["cpu"]
-for test in range(len(data["benchmarks"])):
+for benchmark in range(len(data["benchmarks"])):
     print(data["benchmarks"][test]["group"])
     print(data["benchmarks"][test]["name"])
     print(data["benchmarks"][test]["stats"])
