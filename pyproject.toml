@@ -39,10 +39,10 @@ requires = ["tox>=4.24"]
 
 [tool.tox.env.py313-zarrv2]
 commands = [["pytest", "--benchmark-save=zarr-python-v2", "--benchmark-save-data", {extend = true, replace = "posargs"}]]
-deps = ["zarr==2.18.4"]
+deps = ["zarr==2.18.4", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 2"
 
 [tool.tox.env.py313-zarrv3]
 commands = [["pytest", "--benchmark-save=zarr-python-v3", "--benchmark-save-data", {extend = true, replace = "posargs"}]]
-deps = ["zarr==3.0.6"]
+deps = ["zarr==3.0.6", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 3"
