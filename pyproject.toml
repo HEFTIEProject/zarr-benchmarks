@@ -10,6 +10,7 @@ dependencies = [
     "imageio",
     "pytest",
     "pytest-benchmark",
+    "tensorstore",
     "tox",
     "zarr",
 ]
