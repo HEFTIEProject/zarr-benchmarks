@@ -98,9 +98,15 @@ tox -- --dev-image
 ```
 
 This will run all benchmarks with a small 100x100x100 numpy array, which is
-useful for quick test runs during development. Everything after the first `--`
-will be passed to the internal `pytest` call, so you can also add any pytest
-options you require.
+useful for quick test runs during development. You can also override the default
+number of rounds / warmup rounds for each benchmark with:
+
+```bash
+tox -- --dev-image --rounds=1 --warmup-rounds=0
+```
+
+Everything after the first `--` will be passed to the internal `pytest` call, so
+you can also add any pytest options you require.
 
 ## Running pre-commit locally
 

@@ -11,6 +11,32 @@ def pytest_addoption(parser):
         help="Use a small 100x100x100 image to test benchmarks",
     )
 
+    parser.addoption(
+        "--rounds",
+        action="store",
+        default=3,
+        type=int,
+        help="number of rounds for each benchmark",
+    )
+
+    parser.addoption(
+        "--warmup-rounds",
+        action="store",
+        default=1,
+        type=int,
+        help="number of warmup rounds for each benchmark",
+    )
+
+
+@pytest.fixture
+def rounds(request):
+    return request.config.getoption("--rounds")
+
+
+@pytest.fixture
+def warmup_rounds(request):
+    return request.config.getoption("--warmup-rounds")
+
 
 @pytest.fixture(scope="session")
 def dev_image(request):

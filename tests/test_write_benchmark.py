@@ -23,7 +23,15 @@ except ImportError:
 @pytest.mark.parametrize("blosc_shuffle", BLOSC_SHUFFLE)
 @pytest.mark.parametrize("blosc_cname", BLOSC_CNAME)
 def test_write_blosc(
-    benchmark, image, store_path, chunk_size, blosc_clevel, blosc_shuffle, blosc_cname
+    benchmark,
+    image,
+    rounds,
+    warmup_rounds,
+    store_path,
+    chunk_size,
+    blosc_clevel,
+    blosc_shuffle,
+    blosc_cname,
 ):
     blosc_compressor = read_write_zarr.get_blosc_compressor(
         blosc_cname, blosc_clevel, blosc_shuffle
@@ -40,7 +48,10 @@ def test_write_blosc(
         }
 
     benchmark.pedantic(
-        read_write_zarr.write_zarr_array, setup=setup, rounds=3, warmup_rounds=1
+        read_write_zarr.write_zarr_array,
+        setup=setup,
+        rounds=rounds,
+        warmup_rounds=warmup_rounds,
     )
 
 
@@ -49,7 +60,9 @@ def test_write_blosc(
 )
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
-def test_write_gzip(benchmark, image, store_path, chunk_size, gzip_level):
+def test_write_gzip(
+    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, gzip_level
+):
     gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level)
 
     def setup():
@@ -63,7 +76,10 @@ def test_write_gzip(benchmark, image, store_path, chunk_size, gzip_level):
         }
 
     benchmark.pedantic(
-        read_write_zarr.write_zarr_array, setup=setup, rounds=3, warmup_rounds=1
+        read_write_zarr.write_zarr_array,
+        setup=setup,
+        rounds=rounds,
+        warmup_rounds=warmup_rounds,
     )
 
 
@@ -72,7 +88,9 @@ def test_write_gzip(benchmark, image, store_path, chunk_size, gzip_level):
 )
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
-def test_write_zstd(benchmark, image, store_path, chunk_size, zstd_level):
+def test_write_zstd(
+    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, zstd_level
+):
     zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level)
 
     def setup():
@@ -86,5 +104,8 @@ def test_write_zstd(benchmark, image, store_path, chunk_size, zstd_level):
         }
 
     benchmark.pedantic(
-        read_write_zarr.write_zarr_array, setup=setup, rounds=3, warmup_rounds=1
+        read_write_zarr.write_zarr_array,
+        setup=setup,
+        rounds=rounds,
+        warmup_rounds=warmup_rounds,
     )
