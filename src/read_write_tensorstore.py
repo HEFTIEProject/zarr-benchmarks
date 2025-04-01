@@ -1,3 +1,4 @@
+from typing import Literal
 import tensorstore as ts
 import numpy as np
 import pathlib
@@ -53,7 +54,9 @@ def write_zarr_array(
     write_future.result()
 
 
-def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> dict:
+def get_blosc_compressor(
+    cname: str, clevel: int, shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]
+) -> dict:
     # see the zarr shuffle docs: https://google.github.io/tensorstore/driver/zarr/index.html#json-driver/zarr/Compressor/blosc.shuffle
     match shuffle:
         case "noshuffle":
