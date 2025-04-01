@@ -12,7 +12,7 @@ def read_zarr_array(store_path: pathlib.Path) -> np.array:
             "driver": "zarr",
             "kvstore": {
                 "driver": "file",
-                "path": str(store_path),
+                "path": str(store_path.resolve()),
             },
         },
         read=True,
@@ -37,7 +37,7 @@ def write_zarr_array(
             "driver": "zarr",
             "kvstore": {
                 "driver": "file",
-                "path": str(store_path),
+                "path": str(store_path.resolve()),
             },
             "metadata": {
                 "dtype": image.dtype.str,
