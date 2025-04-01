@@ -1,4 +1,5 @@
 import pathlib
+from typing import Literal
 import numpy as np
 import imageio.v3 as iio
 import shutil
@@ -24,7 +25,7 @@ def remove_output_dir(output_dir: pathlib.Path) -> None:
         shutil.rmtree(output_dir)
 
 
-def get_numcodec_shuffle(shuffle: str) -> int:
+def get_numcodec_shuffle(shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]) -> int:
     match shuffle:
         case "shuffle":
             return numcodecs.Blosc.SHUFFLE

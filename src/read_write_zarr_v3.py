@@ -3,7 +3,7 @@ import numpy as np
 import zarr
 from numcodecs import Blosc, GZip, Zstd
 from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
-from typing import Any
+from typing import Any, Literal
 import utils
 
 
@@ -26,7 +26,7 @@ def write_zarr_array(
     overwrite: bool,
     chunks: tuple[int],
     compressor: Any = "auto",
-    zarr_spec: int = 2,
+    zarr_spec: Literal[2, 3] = 2,
 ) -> None:
     if overwrite:
         utils.remove_output_dir(store_path)
@@ -43,7 +43,10 @@ def write_zarr_array(
 
 
 def get_blosc_compressor(
-    cname: str, clevel: int, shuffle: str, zarr_spec: int = 2
+    cname: str,
+    clevel: int,
+    shuffle: Literal["shuffle", "noshuffle", "bitshuffle"],
+    zarr_spec: Literal[2, 3] = 2,
 ) -> Any:
     if zarr_spec == 2:
         shuffle_int = utils.get_numcodec_shuffle(shuffle)
@@ -54,7 +57,7 @@ def get_blosc_compressor(
         raise ValueError(f"invalid zarr spec version {zarr_spec}")
 
 
-def get_gzip_compressor(level: int, zarr_spec: int = 2) -> Any:
+def get_gzip_compressor(level: int, zarr_spec: Literal[2, 3] = 2) -> Any:
     if zarr_spec == 2:
         return GZip(level=level)
     elif zarr_spec == 3:
@@ -63,7 +66,7 @@ def get_gzip_compressor(level: int, zarr_spec: int = 2) -> Any:
         raise ValueError(f"invalid zarr spec version {zarr_spec}")
 
 
-def get_zstd_compressor(level: int, zarr_spec: int = 2) -> Any:
+def get_zstd_compressor(level: int, zarr_spec: Literal[2, 3] = 2) -> Any:
     if zarr_spec == 2:
         return Zstd(level=level)
     elif zarr_spec == 3:

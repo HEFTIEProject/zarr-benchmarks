@@ -1,3 +1,4 @@
+from typing import Literal
 import zarr
 import numcodecs
 from numcodecs import Blosc, GZip, Zstd
@@ -40,7 +41,9 @@ def write_zarr_array(
     zarr_array[:] = image
 
 
-def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> numcodecs.abc.Codec:
+def get_blosc_compressor(
+    cname: str, clevel: int, shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]
+) -> numcodecs.abc.Codec:
     shuffle_int = utils.get_numcodec_shuffle(shuffle)
     return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
 
