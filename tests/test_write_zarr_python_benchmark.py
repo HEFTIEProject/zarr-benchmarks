@@ -14,8 +14,9 @@ try:
 except ImportError:
     import read_write_zarr_v2 as read_write_zarr
 
+pytestmark = [pytest.mark.zarr_python]
 
-@pytest.mark.zarr_python
+
 @pytest.mark.benchmark(group="write")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("blosc_clevel", BLOSC_CLEVEL)
@@ -54,7 +55,6 @@ def test_write_blosc(
     )
 
 
-@pytest.mark.zarr_python
 @pytest.mark.benchmark(group="write")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
@@ -81,7 +81,6 @@ def test_write_gzip(
     )
 
 
-@pytest.mark.zarr_python
 @pytest.mark.benchmark(group="write")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
