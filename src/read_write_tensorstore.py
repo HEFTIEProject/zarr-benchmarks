@@ -1,16 +1,17 @@
+import tensorstore as ts
 import numpy as np
 import pathlib
-import tensorstore as ts
-from utils import remove_output_dir
+import utils
 
 
 def read_zarr_array(store_path: pathlib.Path) -> np.array:
+    """Read the v2 zarr spec with tensorstore"""
     zarr_read = ts.open(
         {
             "driver": "zarr",
             "kvstore": {
                 "driver": "file",
-                "path": store_path,
+                "path": str(store_path),
             },
         },
         read=True,
@@ -26,15 +27,16 @@ def write_zarr_array(
     chunks: tuple[int],
     compressor: dict,
 ) -> None:
+    """Write the v2 zarr spec with tensorstore"""
     if overwrite:
-        remove_output_dir(store_path)
+        utils.remove_output_dir(store_path)
 
     dataset = ts.open(
         {
             "driver": "zarr",
             "kvstore": {
                 "driver": "file",
-                "path": store_path,
+                "path": str(store_path),
             },
             "metadata": {
                 "dtype": image.dtype.str,

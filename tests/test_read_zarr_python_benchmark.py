@@ -14,6 +14,7 @@ except ImportError:
     import read_write_zarr_v2 as read_write_zarr
 
 
+@pytest.mark.zarr_python
 @pytest.mark.benchmark(
     group="read",
 )
@@ -55,6 +56,7 @@ def test_read_blosc(
     )
 
 
+@pytest.mark.zarr_python
 @pytest.mark.benchmark(
     group="read",
 )
@@ -84,6 +86,7 @@ def test_read_gzip(
     )
 
 
+@pytest.mark.zarr_python
 @pytest.mark.benchmark(
     group="read",
 )
