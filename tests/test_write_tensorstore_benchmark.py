@@ -51,9 +51,7 @@ def test_write_blosc(
 
 
 @pytest.mark.tensorstore
-@pytest.mark.benchmark(
-    group="write",
-)
+@pytest.mark.benchmark(group="write")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
 def test_write_gzip(
@@ -80,9 +78,7 @@ def test_write_gzip(
 
 
 @pytest.mark.tensorstore
-@pytest.mark.benchmark(
-    group="write",
-)
+@pytest.mark.benchmark(group="write")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
 def test_write_zstd(

@@ -16,9 +16,7 @@ except ImportError:
 
 
 @pytest.mark.tensorstore
-@pytest.mark.benchmark(
-    group="read",
-)
+@pytest.mark.benchmark(group="read")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("blosc_clevel", BLOSC_CLEVEL)
 @pytest.mark.parametrize("blosc_shuffle", BLOSC_SHUFFLE)
@@ -58,9 +56,7 @@ def test_read_blosc(
 
 
 @pytest.mark.tensorstore
-@pytest.mark.benchmark(
-    group="read",
-)
+@pytest.mark.benchmark(group="read")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
 def test_read_gzip(
@@ -88,9 +84,7 @@ def test_read_gzip(
 
 
 @pytest.mark.tensorstore
-@pytest.mark.benchmark(
-    group="read",
-)
+@pytest.mark.benchmark(group="read")
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
 @pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
 def test_read_zstd(
