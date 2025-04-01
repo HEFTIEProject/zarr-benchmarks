@@ -2,7 +2,7 @@ import zarr
 import numcodecs
 from numcodecs import Blosc, GZip, Zstd
 import pathlib
-from utils import remove_output_dir
+import utils
 import numpy as np
 
 
@@ -27,7 +27,7 @@ def write_zarr_array(
     compressor: numcodecs.abc.Codec,
 ) -> None:
     if overwrite:
-        remove_output_dir(store_path)
+        utils.remove_output_dir(store_path)
 
     zarr_array = zarr.open_array(
         store=store_path,
@@ -41,16 +41,7 @@ def write_zarr_array(
 
 
 def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> numcodecs.abc.Codec:
-    match shuffle:
-        case "shuffle":
-            shuffle_int = Blosc.SHUFFLE
-        case "noshuffle":
-            shuffle_int = Blosc.NOSHUFFLE
-        case "bitshuffle":
-            shuffle_int = Blosc.BITSHUFFLE
-        case _:
-            raise ValueError(f"invalid shuffle value for blosc {shuffle}")
-
+    shuffle_int = utils.get_numcodec_shuffle(shuffle)
     return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
 
 

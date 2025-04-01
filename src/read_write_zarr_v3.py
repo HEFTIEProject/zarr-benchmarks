@@ -1,9 +1,10 @@
 import pathlib
 import numpy as np
 import zarr
+from numcodecs import Blosc, GZip, Zstd
 from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
 from typing import Any
-from utils import remove_output_dir
+import utils
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
@@ -25,9 +26,10 @@ def write_zarr_array(
     overwrite: bool,
     chunks: tuple[int],
     compressor: Any = "auto",
+    zarr_spec: int = 2,
 ) -> None:
     if overwrite:
-        remove_output_dir(store_path)
+        utils.remove_output_dir(store_path)
 
     zarr_array = zarr.create_array(
         store=store_path,
@@ -35,17 +37,36 @@ def write_zarr_array(
         chunks=chunks,
         dtype=image.dtype,
         compressors=compressor,
+        zarr_format=zarr_spec,
     )
     zarr_array[:] = image
 
 
-def get_blosc_compressor(cname: str, clevel: int, shuffle: str) -> Any:
-    return BloscCodec(cname=cname, clevel=clevel, shuffle=shuffle)
+def get_blosc_compressor(
+    cname: str, clevel: int, shuffle: str, zarr_spec: int = 2
+) -> Any:
+    if zarr_spec == 2:
+        shuffle_int = utils.get_numcodec_shuffle(shuffle)
+        return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
+    elif zarr_spec == 3:
+        return BloscCodec(cname=cname, clevel=clevel, shuffle=shuffle)
+    else:
+        raise ValueError(f"invalid zarr spec version {zarr_spec}")
 
 
-def get_gzip_compressor(level: int) -> Any:
-    return GzipCodec(level=level)
+def get_gzip_compressor(level: int, zarr_spec: int = 2) -> Any:
+    if zarr_spec == 2:
+        return GZip(level=level)
+    elif zarr_spec == 3:
+        return GzipCodec(level=level)
+    else:
+        raise ValueError(f"invalid zarr spec version {zarr_spec}")
 
 
-def get_zstd_compressor(level: int) -> Any:
-    return ZstdCodec(level=level)
+def get_zstd_compressor(level: int, zarr_spec: int = 2) -> Any:
+    if zarr_spec == 2:
+        return Zstd(level=level)
+    elif zarr_spec == 3:
+        return ZstdCodec(level=level)
+    else:
+        raise ValueError(f"invalid zarr spec version {zarr_spec}")
