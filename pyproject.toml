@@ -30,6 +30,8 @@ dev = [
 Homepage = "https://github.com/HEFTIEProject/zarr-benchmarks"
 Issues = "https://github.com/HEFTIEProject/zarr-benchmarks/issues"
 
+[tool.pytest]
+
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
 markers = [
