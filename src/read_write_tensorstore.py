@@ -24,6 +24,7 @@ def read_zarr_array(store_path: pathlib.Path) -> np.array:
 def write_zarr_array(
     image: np.array,
     store_path: pathlib.Path,
+    *,
     overwrite: bool,
     chunks: tuple[int],
     compressor: dict,
