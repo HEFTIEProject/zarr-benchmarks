@@ -10,6 +10,7 @@ dependencies = [
     "imageio",
     "pytest",
     "pytest-benchmark",
+    "tensorstore",
     "tox",
     "zarr",
 ]
@@ -29,20 +30,61 @@ dev = [
 Homepage = "https://github.com/HEFTIEProject/zarr-benchmarks"
 Issues = "https://github.com/HEFTIEProject/zarr-benchmarks/issues"
 
+[tool.pytest]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+markers = [
+    "tensorstore",
+    "zarr_python",
+]
+
 # override sorting inline arrays for tox configuration - otherwise 'commands' lines are sorted and broken
 [tool.tomlsort]
 overrides."tool.tox.*".inline_arrays = false
 
 [tool.tox]
-env_list = ["py313-zarrv2", "py313-zarrv3"]
+env_list = ["py313-zarrv2", "py313-zarrv3", "py313-tensorstore"]
 requires = ["tox>=4.24"]
 
+[tool.tox.env.py313-tensorstore]
+commands = [
+    [
+        "pytest",
+        "--benchmark-save=tensorstore",
+        "--benchmark-save-data",
+        "-m",
+        "tensorstore",
+        {extend = true, replace = "posargs"},
+    ],
+]
+deps = ["tensorstore==0.1.73", "zarr==3.0.6", "numcodecs==0.15.1"]
+description = "Run benchmarks under tensorstore"
+
 [tool.tox.env.py313-zarrv2]
-commands = [["pytest", "--benchmark-save=zarr-python-v2", "--benchmark-save-data", {extend = true, replace = "posargs"}]]
+commands = [
+    [
+        "pytest",
+        "--benchmark-save=zarr-python-v2",
+        "--benchmark-save-data",
+        "-m",
+        "zarr_python",
+        {extend = true, replace = "posargs"},
+    ],
+]
 deps = ["zarr==2.18.4", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 2"
 
 [tool.tox.env.py313-zarrv3]
-commands = [["pytest", "--benchmark-save=zarr-python-v3", "--benchmark-save-data", {extend = true, replace = "posargs"}]]
+commands = [
+    [
+        "pytest",
+        "--benchmark-save=zarr-python-v3",
+        "--benchmark-save-data",
+        "-m",
+        "zarr_python",
+        {extend = true, replace = "posargs"},
+    ],
+]
 deps = ["zarr==3.0.6", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 3"

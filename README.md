@@ -88,8 +88,8 @@ Then run tox with:
 tox
 ```
 
-This will run all benchmarks via `zarr-python` version 2 and 3 with the example
-Human Organ Atlas image.
+This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
+with the example Human Organ Atlas image.
 
 For a quicker run, add `--dev-image`:
 
@@ -107,6 +107,19 @@ tox -- --dev-image --rounds=1 --warmup-rounds=0
 
 Everything after the first `--` will be passed to the internal `pytest` call, so
 you can also add any pytest options you require.
+
+To run a subset of the benchmarks, use the `-e` option:
+
+```bash
+# tensorstore only
+tox run -e py313-tensorstore
+
+# zarr-python v2 only
+tox run -e py313-zarrv2
+
+# zarr-python v3 only
+tox run -e py313-zarrv3
+```
 
 ## Running pre-commit locally
 
