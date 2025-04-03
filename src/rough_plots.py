@@ -57,4 +57,4 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
 if __name__ == "__main__":
     json_path = "data/json/0007_zarr-python-v2.json"
     json_dict = load_benchmarks_json(json_path)
-    df = prepare_benchmarks_dataframe(json_dict)
+    benchmark_df = prepare_benchmarks_dataframe(json_dict)

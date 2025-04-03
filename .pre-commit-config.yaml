@@ -4,3 +4,8 @@ repos:
     rev: v0.200.0
     hooks:
       - id: mirsg-hooks
+
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
