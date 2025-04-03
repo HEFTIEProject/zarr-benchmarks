@@ -84,7 +84,6 @@ def prep_benchmarks_for_plotting(data, group, plot_type, path_to_file=None):
     palette = sns.color_palette("husl", len(unique_levels))
     palette_dict = {level: color for level, color in zip(unique_levels, palette)}
 
-    print("COUNTER = ", counter)
 
     if plot_type == "scatter":
         plot_benchmarks(df, group, plot_type, palette_dict, path_to_file)
