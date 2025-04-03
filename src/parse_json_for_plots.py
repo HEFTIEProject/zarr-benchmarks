@@ -130,7 +130,7 @@ def plot_benchmarks(df, group, plot_type, palette_dict=None, path_to_file=None):
 
     save_plot_as_jpeg(
         plt,
-        f"data/json/{group}_{plot_type}_{path_to_file.split('/')[2].split('.')[0]}.jpeg",
+        f"data/json/{group}_{plot_type}_{pathlib.Path(path_to_file).stem}.jpeg",
     )
 
 
