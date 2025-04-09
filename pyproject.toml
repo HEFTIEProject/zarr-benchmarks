@@ -8,8 +8,11 @@ classifiers = [
 ]
 dependencies = [
     "imageio",
+    "matplotlib",
+    "pandas",
     "pytest",
     "pytest-benchmark",
+    "seaborn",
     "zarr",
 ]
 description = "zarr benchmarks"
