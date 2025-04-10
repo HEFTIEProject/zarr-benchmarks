@@ -26,6 +26,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# uv
+uv.lock
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -119,5 +122,6 @@ cython_debug/
 .pypirc
 
 data/
+tmp/
 .vscode/
 .benchmarks/
