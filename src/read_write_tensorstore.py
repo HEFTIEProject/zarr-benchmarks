@@ -46,6 +46,7 @@ def write_zarr_array(
                 "shape": image.shape,
                 "chunks": chunks,
                 "compressor": compressor,
+                "fill_value": 0,
             },
             "create": True,
             "delete_existing": False,

@@ -39,6 +39,7 @@ def write_zarr_array(
         chunks=chunks,
         dtype=image.dtype,
         compressor=compressor,
+        fill_value=0,
         write_empty_chunks=write_empty_chunks,
     )
     zarr_array[:] = image
