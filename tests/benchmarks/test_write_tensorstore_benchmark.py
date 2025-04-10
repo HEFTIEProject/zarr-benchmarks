@@ -1,6 +1,6 @@
 import pytest
 from utils import remove_output_dir
-from tests.benchmark_parameters import (
+from tests.benchmarks.benchmark_parameters import (
     CHUNK_SIZE,
     BLOSC_CLEVEL,
     BLOSC_SHUFFLE,
