@@ -124,23 +124,58 @@ def plot_errorbars_benchmarks(df, group, palette_dict=None, path_to_file=None):
     )
 
 
-def plot_relplot_benchmarks(data: pd.DataFrame, group: str, path_to_file=None):
+def plot_relplot_subplots_benchmarks(
+    data: pd.DataFrame,
+    group: str,
+    x_axis: str,
+    y_axis: str,
+    hue: str,
+    path_to_file=None,
+):
     graph = sns.relplot(
         data=data,
-        x="stats.mean",
-        y="compression_ratio",
-        hue="compressor",
-        style="compressor",
-        size="compression_level",
-        height=4,
-        aspect=1.5,
+        x=x_axis,
+        y=y_axis,
+        col=hue,
+        hue=hue,
+        facet_kws=dict(sharex=False, sharey=False),
     )
-    graph.set_axis_labels("Mean write time (s)", "Compression ratio")
+    graph.set_axis_labels(x_axis.capitalize(), f"Mean {group} time (s)")
 
     if path_to_file is not None:
         save_plot_as_png(
             graph,
-            f"data/json/{group}_errorbars_{Path(path_to_file).stem}.png",
+            f"data/json/test_facet_kws{group}_relplot_{Path(path_to_file).stem}.png",
+        )
+
+
+def plot_relplot_benchmarks(
+    data: pd.DataFrame,
+    group: str,
+    x_axis: str,
+    y_axis: str,
+    hue: str,
+    size: str,
+    title: str,
+    path_to_file=None,
+):
+    graph = sns.relplot(
+        data=data,
+        x=x_axis,
+        y=y_axis,
+        hue=hue,
+        style=hue,
+        size=size,
+        col=title,
+        height=4,
+        aspect=1.5,
+    )
+    graph.set_axis_labels(f"Mean {group} time (s)", y_axis.capitalize())
+
+    if path_to_file is not None:
+        save_plot_as_png(
+            graph,
+            f"data/json/test_{group}_relplot_{Path(path_to_file).stem}.png",
         )
 
 
@@ -164,8 +199,43 @@ if __name__ == "__main__":
     write_zarr_v2_chunks_200 = write_zarr_v2[write_zarr_v2.chunk_size == 200]
     read_zarr_v2_chunks_200 = read_zarr_v2[read_zarr_v2.chunk_size == 200]
 
-    plot_relplot_benchmarks(write_zarr_v2_chunks_200, "write", zarr_v2_path)
-    plot_relplot_benchmarks(read_zarr_v2_chunks_200, "read", zarr_v2_path)
+    plot_relplot_benchmarks(
+        write_zarr_v2_chunks_200,
+        "write",
+        "stats.mean",
+        "compression_ratio",
+        "compressor",
+        "compression_level",
+        "package",
+        zarr_v2_path,
+    )
+    plot_relplot_benchmarks(
+        read_zarr_v2_chunks_200,
+        "read",
+        "stats.mean",
+        "compression_ratio",
+        "compressor",
+        "compression_level",
+        "package",
+        zarr_v2_path,
+    )
+
+    plot_relplot_subplots_benchmarks(
+        write_zarr_v2_chunks_200,
+        "write",
+        "compression_level",
+        "stats.mean",
+        "compressor",
+        zarr_v2_path,
+    )
+    plot_relplot_subplots_benchmarks(
+        read_zarr_v2_chunks_200,
+        "read",
+        "compression_level",
+        "stats.mean",
+        "compressor",
+        zarr_v2_path,
+    )
 
     data = load_benchmarks_json(zarr_v2_path)
     machine_info = data["machine_info"]["cpu"]
