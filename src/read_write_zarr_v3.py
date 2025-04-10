@@ -28,6 +28,7 @@ def write_zarr_array(
     chunks: tuple[int],
     compressor: Any = "auto",
     zarr_spec: Literal[2, 3] = 2,
+    write_empty_chunks: bool = True,
 ) -> None:
     if overwrite:
         utils.remove_output_dir(store_path)
@@ -39,6 +40,7 @@ def write_zarr_array(
         dtype=image.dtype,
         compressors=compressor,
         zarr_format=zarr_spec,
+        config={"write_empty_chunks": write_empty_chunks},
     )
     zarr_array[:] = image
 

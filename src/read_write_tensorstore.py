@@ -28,6 +28,7 @@ def write_zarr_array(
     overwrite: bool,
     chunks: tuple[int],
     compressor: dict,
+    write_empty_chunks: bool = True,
 ) -> None:
     """Write the v2 zarr spec with tensorstore"""
     if overwrite:
@@ -48,6 +49,7 @@ def write_zarr_array(
             },
             "create": True,
             "delete_existing": False,
+            "store_data_equal_to_fill_value": write_empty_chunks,
         },
     ).result()
 
