@@ -130,7 +130,7 @@ def plot_relplot_subplots_benchmarks(
     x_axis: str,
     y_axis: str,
     hue: str,
-    path_to_file=None,
+    path_to_file: str = None,
 ):
     graph = sns.relplot(
         data=data,
@@ -140,7 +140,9 @@ def plot_relplot_subplots_benchmarks(
         hue=hue,
         facet_kws=dict(sharex=False, sharey=False),
     )
-    graph.set_axis_labels(x_axis.capitalize(), f"Mean {group} time (s)")
+    graph.set_axis_labels(
+        x_axis.capitalize().replace("_", " "), f"Mean {group} time (s)"
+    )
 
     if path_to_file is not None:
         save_plot_as_png(
@@ -151,13 +153,14 @@ def plot_relplot_subplots_benchmarks(
 
 def plot_relplot_benchmarks(
     data: pd.DataFrame,
+    *,
     group: str,
     x_axis: str,
     y_axis: str,
     hue: str,
     size: str,
     title: str,
-    path_to_file=None,
+    path_to_file: str = None,
 ):
     graph = sns.relplot(
         data=data,
@@ -170,7 +173,9 @@ def plot_relplot_benchmarks(
         height=4,
         aspect=1.5,
     )
-    graph.set_axis_labels(f"Mean {group} time (s)", y_axis.capitalize())
+    graph.set_axis_labels(
+        f"Mean {group} time (s)", y_axis.capitalize().replace("_", " ")
+    )
 
     if path_to_file is not None:
         save_plot_as_png(
@@ -201,23 +206,24 @@ if __name__ == "__main__":
 
     plot_relplot_benchmarks(
         write_zarr_v2_chunks_200,
-        "write",
-        "stats.mean",
-        "compression_ratio",
-        "compressor",
-        "compression_level",
-        "package",
-        zarr_v2_path,
+        group="write",
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        title="package",
+        path_to_file=zarr_v2_path,
     )
+
     plot_relplot_benchmarks(
         read_zarr_v2_chunks_200,
-        "read",
-        "stats.mean",
-        "compression_ratio",
-        "compressor",
-        "compression_level",
-        "package",
-        zarr_v2_path,
+        group="read",
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        title="package",
+        path_to_file=zarr_v2_path,
     )
 
     plot_relplot_subplots_benchmarks(
@@ -236,6 +242,3 @@ if __name__ == "__main__":
         "compressor",
         zarr_v2_path,
     )
-
-    data = load_benchmarks_json(zarr_v2_path)
-    machine_info = data["machine_info"]["cpu"]
