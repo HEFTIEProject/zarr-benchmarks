@@ -58,70 +58,17 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
 
 
 def get_benchmarks_dataframe(
-    json_paths: tuple[Path], package_ids: tuple[str]
+    package_paths_dict: dict,
 ) -> pd.DataFrame:
     """Combine multiple pytest-benchmark json results into a single dataframe"""
 
     benchmark_dfs = []
-    for json_path, id in zip(json_paths, package_ids):
+    for id, json_path in package_paths_dict.items():
         benchmark_df = prepare_benchmarks_dataframe(load_benchmarks_json(json_path))
         benchmark_df.insert(0, "package", id)
         benchmark_dfs.append(benchmark_df)
 
     return pd.concat(benchmark_dfs, ignore_index=True)
-
-
-def plot_scatter_benchmarks(
-    df: pd.DataFrame, group: str, palette_dict=None, path_to_file=None
-):
-    x_label = group.capitalize() + " Time (s)"
-    plt.clf()
-    plt.figure(figsize=(10, 6))
-
-    # Add labels and title
-    plt.xlabel(x_label)
-    plt.ylabel("Compression Ratio")
-    plt.title(f"Compression Ratio vs {x_label} for Different Compression Types")
-
-    sns.scatterplot(
-        data=df,
-        x="write_time",
-        y="compression_ratio",
-        hue="compression_type",
-        style="compression_level",
-        alpha=0.7,
-        palette=palette_dict,
-        s=100,
-    )
-
-    save_plot_as_png(
-        plt,
-        f"data/json/{group}_scatter_{Path(path_to_file).stem}.png",
-    )
-
-
-def plot_errorbars_benchmarks(df, group, palette_dict=None, path_to_file=None):
-    x_label = group.capitalize() + " Time (s)"
-    plt.clf()
-    plt.figure(figsize=(10, 6))
-
-    # Add labels and title
-    plt.xlabel(x_label)
-    plt.ylabel("Compression Ratio")
-    plt.title(f"Compression Ratio vs {x_label} for Different Compression Types")
-
-    sns.boxplot(
-        x="write_time",
-        y="compression_ratio",
-        hue="compression_type",
-        data=df,
-        palette=palette_dict,
-    )
-
-    save_plot_as_png(
-        plt,
-        f"data/json/{group}_errorbars_{Path(path_to_file).stem}.png",
-    )
 
 
 def plot_relplot_subplots_benchmarks(
@@ -131,7 +78,7 @@ def plot_relplot_subplots_benchmarks(
     y_axis: str,
     hue: str,
     path_to_file: str = None,
-):
+) -> None:
     graph = sns.relplot(
         data=data,
         x=x_axis,
@@ -161,7 +108,7 @@ def plot_relplot_benchmarks(
     size: str,
     title: str,
     path_to_file: str = None,
-):
+) -> None:
     graph = sns.relplot(
         data=data,
         x=x_axis,
@@ -169,13 +116,14 @@ def plot_relplot_benchmarks(
         hue=hue,
         style=hue,
         size=size,
-        col=title,
         height=4,
         aspect=1.5,
     )
     graph.set_axis_labels(
         f"Mean {group} time (s)", y_axis.capitalize().replace("_", " ")
     )
+    graph.figure.suptitle(title)
+    graph.figure.subplots_adjust(top=0.9)
 
     if path_to_file is not None:
         save_plot_as_png(
@@ -193,9 +141,14 @@ if __name__ == "__main__":
     zarr_v3_path = "data/json/0008_zarr-python-v3.json"
     tensorstore_path = "data/json/0009_tensorstore.json"
 
+    package_paths_dict = {
+        "zarr_python_2": zarr_v2_path,
+        "zarr_python_3": zarr_v3_path,
+        "tensorstore": tensorstore_path,
+    }
+
     benchmarks_df = get_benchmarks_dataframe(
-        (zarr_v2_path, zarr_v3_path, tensorstore_path),
-        package_ids=("zarr_python_2", "zarr_python_3", "tensorstore"),
+        package_paths_dict,
     )
     benchmarks_zarr_v2 = benchmarks_df[benchmarks_df.package == "zarr_python_2"]
     write_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "write"]
@@ -211,7 +164,7 @@ if __name__ == "__main__":
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title="package",
+        title="zarr_python_2",
         path_to_file=zarr_v2_path,
     )
 
@@ -222,7 +175,7 @@ if __name__ == "__main__":
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title="package",
+        title="zarr_python_2",
         path_to_file=zarr_v2_path,
     )
 
