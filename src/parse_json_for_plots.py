@@ -87,9 +87,15 @@ def plot_relplot_subplots_benchmarks(
         hue=hue,
         facet_kws=dict(sharex=False, sharey=False),
     )
-    graph.set_axis_labels(
-        x_axis.capitalize().replace("_", " "), f"Mean {group} time (s)"
-    )
+
+    if x_axis.startswith("stats"):
+        label = f"{x_axis.split('.')[-1]} {group} time (s)"
+        graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
+
+    else:
+        graph.set_axis_labels(
+            x_axis.capitalize().replace("_", " "), f"Mean {group} time (s)"
+        )
 
     if path_to_file is not None:
         save_plot_as_png(
