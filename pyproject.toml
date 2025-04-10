@@ -10,9 +10,6 @@ dependencies = [
     "imageio",
     "pytest",
     "pytest-benchmark",
-    "tensorstore",
-    "tox",
-    "zarr",
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}
@@ -24,6 +21,20 @@ version = "0.0.1"
 [project.optional-dependencies]
 dev = [
     "pre-commit",
+    "tox",
+]
+tensorstore = [
+    "numcodecs==0.15.1",
+    "tensorstore==0.1.73",
+    "zarr==3.0.6",
+]
+zarr-python-v2 = [
+    "numcodecs==0.15.1",
+    "zarr==2.18.4",
+]
+zarr-python-v3 = [
+    "numcodecs==0.15.1",
+    "zarr==3.0.6",
 ]
 
 [project.urls]
@@ -58,8 +69,8 @@ commands = [
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["tensorstore==0.1.73", "zarr==3.0.6", "numcodecs==0.15.1"]
 description = "Run benchmarks under tensorstore"
+extras = ["tensorstore"]
 
 [tool.tox.env.py313-zarrv2]
 commands = [
@@ -69,11 +80,12 @@ commands = [
         "--benchmark-save-data",
         "-m",
         "zarr_python",
+        "--ignore-glob=*_tensorstore_benchmark.py",
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["zarr==2.18.4", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 2"
+extras = ["zarr-python-v2"]
 
 [tool.tox.env.py313-zarrv3]
 commands = [
@@ -83,8 +95,9 @@ commands = [
         "--benchmark-save-data",
         "-m",
         "zarr_python",
+        "--ignore-glob=*_tensorstore_benchmark.py",
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["zarr==3.0.6", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 3"
+extras = ["zarr-python-v3"]
