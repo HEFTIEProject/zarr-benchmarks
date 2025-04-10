@@ -85,16 +85,23 @@ pip install .
 Then run tox with:
 
 ```bash
-tox
+tox -- --benchmark-only
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
 with the example Human Organ Atlas image.
 
-For a quicker run, add `--dev-image`:
+Running `tox` alone (without `--benchmark-only`) will run the tests + the
+benchmarks. To only run the tests use:
 
 ```bash
-tox -- --dev-image
+tox -- --benchmark-skip
+```
+
+For a quicker benchmark run, add `--dev-image`:
+
+```bash
+tox -- --benchmark-only --dev-image
 ```
 
 This will run all benchmarks with a small 100x100x100 numpy array, which is
@@ -102,7 +109,7 @@ useful for quick test runs during development. You can also override the default
 number of rounds / warmup rounds for each benchmark with:
 
 ```bash
-tox -- --dev-image --rounds=1 --warmup-rounds=0
+tox -- --benchmark-only --dev-image --rounds=1 --warmup-rounds=0
 ```
 
 Everything after the first `--` will be passed to the internal `pytest` call, so
