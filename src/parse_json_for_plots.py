@@ -200,16 +200,16 @@ if __name__ == "__main__":
     plot_relplot_subplots_benchmarks(
         write_zarr_v2_chunks_200,
         group="write",
-        x_axis="compression_level",
-        y_axis="stats.mean",
+        x_axis="stats.mean",
+        y_axis="compression_level",
         hue="compressor",
         path_to_file=path_to_file,
     )
     plot_relplot_subplots_benchmarks(
         read_zarr_v2_chunks_200,
         group="read",
-        x_axis="compression_level",
-        y_axis="stats.mean",
+        x_axis="stats.mean",
+        y_axis="compression_level",
         hue="compressor",
         path_to_file=path_to_file,
     )
