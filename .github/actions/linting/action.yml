@@ -1,0 +1,46 @@
+---
+name: Linting
+description: Runs pre-commit over the repo
+
+inputs:
+  pre-commit-config:
+    description: The pre-commit config file of the current repo
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+    - name: Cache ansible & pre-commit
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      with:
+        path: |-
+          ~/.cache/pre-commit
+        # yamllint disable-line rule:quoted-strings
+        key: "\
+          cache-\
+          ${{ hashFiles(inputs.pre-commit-config) }}\
+          "
+    - name: Cache pre-commit
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      with:
+        path: ~/.cache/pre-commit
+        key: cache-${{ hashFiles(inputs.pre-commit-config) }}
+
+    - name: Set up python
+      uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5
+      with:
+        python-version: 3.x
+
+    - name: Install pre-commit
+      shell: bash
+      run: python -m pip install pre-commit
+
+    - name: Run pre-commit
+      shell: bash
+      run: pre-commit run --all-files --color always --verbose
+
+    - uses: pre-commit-ci/lite-action@5d6cc0eb514c891a40562a58a8e71576c5c7fb43 # v1.1.0
+      if: ${{ !cancelled() }}

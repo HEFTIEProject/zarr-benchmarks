@@ -23,6 +23,6 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - uses: UCL-MIRSG/.github/actions/linting@ae93891672cb0edd8d8fe3748d6d6920d437f75e # v0
+      - uses: ./.github/actions/linting
         with:
           pre-commit-config: ./.pre-commit-config.yaml
