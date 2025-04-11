@@ -73,6 +73,7 @@ def get_benchmarks_dataframe(
 
 def plot_relplot_subplots_benchmarks(
     data: pd.DataFrame,
+    *,
     group: str,
     x_axis: str,
     y_axis: str,
@@ -93,9 +94,8 @@ def plot_relplot_subplots_benchmarks(
         graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
 
     else:
-        graph.set_axis_labels(
-            x_axis.capitalize().replace("_", " "), f"Mean {group} time (s)"
-        )
+        label = f"{y_axis.split('.')[-1]} {group} time (s)"
+        graph.set_axis_labels(x_axis.capitalize().replace("_", " "), label)
 
     if path_to_file is not None:
         save_plot_as_png(
@@ -125,9 +125,14 @@ def plot_relplot_benchmarks(
         height=4,
         aspect=1.5,
     )
-    graph.set_axis_labels(
-        f"Mean {group} time (s)", y_axis.capitalize().replace("_", " ")
-    )
+    if x_axis.startswith("stats"):
+        label = f"{x_axis.split('.')[-1]} {group} time (s)"
+        graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
+
+    else:
+        label = f"{y_axis.split('.')[-1]} {group} time (s)"
+        graph.set_axis_labels(x_axis.capitalize().replace("_", " "), label)
+
     graph.figure.suptitle(title)
     graph.figure.subplots_adjust(top=0.9)
 
@@ -187,17 +192,17 @@ if __name__ == "__main__":
 
     plot_relplot_subplots_benchmarks(
         write_zarr_v2_chunks_200,
-        "write",
-        "compression_level",
-        "stats.mean",
-        "compressor",
-        zarr_v2_path,
+        group="write",
+        x_axis="compression_level",
+        y_axis="stats.mean",
+        hue="compressor",
+        path_to_file=zarr_v2_path,
     )
     plot_relplot_subplots_benchmarks(
         read_zarr_v2_chunks_200,
-        "read",
-        "compression_level",
-        "stats.mean",
-        "compressor",
-        zarr_v2_path,
+        group="read",
+        x_axis="compression_level",
+        y_axis="stats.mean",
+        hue="compressor",
+        path_to_file=zarr_v2_path,
     )
