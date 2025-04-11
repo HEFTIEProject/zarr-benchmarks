@@ -72,39 +72,6 @@ def get_benchmarks_dataframe(
     return pd.concat(benchmark_dfs, ignore_index=True)
 
 
-def plot_relplot_subplots_benchmarks(
-    data: pd.DataFrame,
-    *,
-    group: str,
-    x_axis: str,
-    y_axis: str,
-    hue: str,
-    path_to_file: str = None,
-) -> None:
-    graph = sns.relplot(
-        data=data,
-        x=x_axis,
-        y=y_axis,
-        col=hue,
-        hue=hue,
-        facet_kws=dict(sharex=False, sharey=False),
-    )
-
-    if x_axis.startswith("stats"):
-        label = f"{x_axis.split('.')[-1]} {group} time (s)"
-        graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
-
-    else:
-        label = f"{y_axis.split('.')[-1]} {group} time (s)"
-        graph.set_axis_labels(x_axis.capitalize().replace("_", " "), label)
-
-    if path_to_file is not None:
-        save_plot_as_png(
-            graph,
-            f"data/plots/{group}_subplot_relplot_{path_to_file[0]}.png",
-        )
-
-
 def plot_relplot_benchmarks(
     data: pd.DataFrame,
     *,
@@ -141,6 +108,39 @@ def plot_relplot_benchmarks(
         save_plot_as_png(
             graph,
             f"data/plots/{group}_relplot_{path_to_file[0]}.png",
+        )
+
+
+def plot_relplot_subplots_benchmarks(
+    data: pd.DataFrame,
+    *,
+    group: str,
+    x_axis: str,
+    y_axis: str,
+    hue: str,
+    path_to_file: str = None,
+) -> None:
+    graph = sns.relplot(
+        data=data,
+        x=x_axis,
+        y=y_axis,
+        col=hue,
+        hue=hue,
+        facet_kws=dict(sharex=True, sharey=True),
+    )
+
+    if x_axis.startswith("stats"):
+        label = f"{x_axis.split('.')[-1]} {group} time (s)"
+        graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
+
+    else:
+        label = f"{y_axis.split('.')[-1]} {group} time (s)"
+        graph.set_axis_labels(x_axis.capitalize().replace("_", " "), label)
+
+    if path_to_file is not None:
+        save_plot_as_png(
+            graph,
+            f"data/plots/{group}_subplot_relplot_{path_to_file[0]}.png",
         )
 
 
