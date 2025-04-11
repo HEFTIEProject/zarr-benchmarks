@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from pathlib import Path
 import matplotlib.pyplot as plt
@@ -100,7 +101,7 @@ def plot_relplot_subplots_benchmarks(
     if path_to_file is not None:
         save_plot_as_png(
             graph,
-            f"data/json/test_facet_kws{group}_relplot_{Path(path_to_file).stem}.png",
+            f"data/plots/{group}_subplot_relplot_{path_to_file[0]}.png",
         )
 
 
@@ -139,7 +140,7 @@ def plot_relplot_benchmarks(
     if path_to_file is not None:
         save_plot_as_png(
             graph,
-            f"data/json/test_{group}_relplot_{Path(path_to_file).stem}.png",
+            f"data/plots/{group}_relplot_{path_to_file[0]}.png",
         )
 
 
@@ -168,6 +169,12 @@ if __name__ == "__main__":
     write_zarr_v2_chunks_200 = write_zarr_v2[write_zarr_v2.chunk_size == 200]
     read_zarr_v2_chunks_200 = read_zarr_v2[read_zarr_v2.chunk_size == 200]
 
+    benchmark_name = Path(zarr_v2_path).stem
+    data = load_benchmarks_json(zarr_v2_path)
+    machine_info = data["machine_info"]["machine"]
+    date = datetime.now().strftime("%Y-%m-%d")
+
+    path_to_file = [date + "_" + machine_info + "_" + benchmark_name]
     plot_relplot_benchmarks(
         write_zarr_v2_chunks_200,
         group="write",
@@ -176,7 +183,7 @@ if __name__ == "__main__":
         hue="compressor",
         size="compression_level",
         title="zarr_python_2",
-        path_to_file=zarr_v2_path,
+        path_to_file=path_to_file,
     )
 
     plot_relplot_benchmarks(
@@ -187,7 +194,7 @@ if __name__ == "__main__":
         hue="compressor",
         size="compression_level",
         title="zarr_python_2",
-        path_to_file=zarr_v2_path,
+        path_to_file=path_to_file,
     )
 
     plot_relplot_subplots_benchmarks(
@@ -196,7 +203,7 @@ if __name__ == "__main__":
         x_axis="compression_level",
         y_axis="stats.mean",
         hue="compressor",
-        path_to_file=zarr_v2_path,
+        path_to_file=path_to_file,
     )
     plot_relplot_subplots_benchmarks(
         read_zarr_v2_chunks_200,
@@ -204,5 +211,5 @@ if __name__ == "__main__":
         x_axis="compression_level",
         y_axis="stats.mean",
         hue="compressor",
-        path_to_file=zarr_v2_path,
+        path_to_file=path_to_file,
     )
