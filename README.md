@@ -128,6 +128,16 @@ tox run -e py313-zarrv2
 tox run -e py313-zarrv3
 ```
 
+## Creating plots
+
+Once in your virtual environment, you can create plots with:
+
+```bash
+python src/parse_json_for_plots.py
+```
+
+This will create and save plots as .png files under `data/plots`.
+
 ## Running pre-commit locally
 
 If you want quick development, you can always do git commit -n which will
