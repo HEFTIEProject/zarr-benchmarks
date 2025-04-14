@@ -81,7 +81,7 @@ def plot_relplot_benchmarks(
     hue: str,
     size: str,
     title: str,
-    path_to_file: str = None,
+    output_filename: str = None,
 ) -> None:
     graph = sns.relplot(
         data=data,
@@ -93,21 +93,16 @@ def plot_relplot_benchmarks(
         height=4,
         aspect=1.5,
     )
-    if x_axis.startswith("stats"):
-        label = f"{x_axis.split('.')[-1]} {group} time (s)"
-        graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
-
-    else:
-        label = f"{y_axis.split('.')[-1]} {group} time (s)"
-        graph.set_axis_labels(x_axis.capitalize().replace("_", " "), label)
+    x_axis_label, y_axis_label = get_axis_labels(x_axis, y_axis, group)
+    graph.set_axis_labels(x_axis_label, y_axis_label)
 
     graph.figure.suptitle(title)
     graph.figure.subplots_adjust(top=0.9)
 
-    if path_to_file is not None:
+    if output_filename is not None:
         save_plot_as_png(
             graph,
-            f"data/plots/{group}_relplot_{path_to_file[0]}.png",
+            f"data/plots/{group}_relplot_{output_filename}.png",
         )
 
 
@@ -118,7 +113,7 @@ def plot_relplot_subplots_benchmarks(
     x_axis: str,
     y_axis: str,
     hue: str,
-    path_to_file: str = None,
+    output_filename: str = None,
 ) -> None:
     graph = sns.relplot(
         data=data,
@@ -129,23 +124,32 @@ def plot_relplot_subplots_benchmarks(
         facet_kws=dict(sharex=True, sharey=True),
     )
 
-    if x_axis.startswith("stats"):
-        label = f"{x_axis.split('.')[-1]} {group} time (s)"
-        graph.set_axis_labels(label, y_axis.capitalize().replace("_", " "))
+    x_axis_label, y_axis_label = get_axis_labels(x_axis, y_axis, group)
+    graph.set_axis_labels(x_axis_label, y_axis_label)
 
-    else:
-        label = f"{y_axis.split('.')[-1]} {group} time (s)"
-        graph.set_axis_labels(x_axis.capitalize().replace("_", " "), label)
-
-    if path_to_file is not None:
+    if output_filename is not None:
         save_plot_as_png(
             graph,
-            f"data/plots/{group}_subplot_relplot_{path_to_file[0]}.png",
+            f"data/plots/{group}_subplot_relplot_{output_filename}.png",
         )
 
 
-def save_plot_as_png(plt: plt, path_to_file: str) -> None:
-    plt.savefig(path_to_file, format="png", dpi=300)
+def get_axis_labels(x_axis: str, y_axis: str, group: str) -> str:
+    if x_axis.startswith("stats"):
+        x_axis_label = f"{x_axis.split('.')[-1]} {group} time (s)"
+    else:
+        x_axis_label = x_axis.capitalize().replace("_", " ")
+
+    if y_axis.startswith("stats"):
+        y_axis_label = f"{y_axis.split('.')[-1]} {group} time (s)"
+    else:
+        y_axis_label = y_axis.capitalize().replace("_", " ")
+
+    return x_axis_label, y_axis_label
+
+
+def save_plot_as_png(plt: plt, output_filename: str) -> None:
+    plt.savefig(output_filename, format="png", dpi=300)
 
 
 if __name__ == "__main__":
@@ -174,7 +178,7 @@ if __name__ == "__main__":
     machine_info = data["machine_info"]["machine"]
     date = datetime.now().strftime("%Y-%m-%d")
 
-    path_to_file = [date + "_" + machine_info + "_" + benchmark_name]
+    output_filename = date + "_" + machine_info + "_" + benchmark_name
     plot_relplot_benchmarks(
         write_zarr_v2_chunks_200,
         group="write",
@@ -183,7 +187,7 @@ if __name__ == "__main__":
         hue="compressor",
         size="compression_level",
         title="zarr_python_2",
-        path_to_file=path_to_file,
+        output_filename=output_filename,
     )
 
     plot_relplot_benchmarks(
@@ -194,7 +198,7 @@ if __name__ == "__main__":
         hue="compressor",
         size="compression_level",
         title="zarr_python_2",
-        path_to_file=path_to_file,
+        output_filename=output_filename,
     )
 
     plot_relplot_subplots_benchmarks(
@@ -203,7 +207,7 @@ if __name__ == "__main__":
         x_axis="stats.mean",
         y_axis="compression_level",
         hue="compressor",
-        path_to_file=path_to_file,
+        output_filename=output_filename,
     )
     plot_relplot_subplots_benchmarks(
         read_zarr_v2_chunks_200,
@@ -211,5 +215,5 @@ if __name__ == "__main__":
         x_axis="stats.mean",
         y_axis="compression_level",
         hue="compressor",
-        path_to_file=path_to_file,
+        output_filename=output_filename,
     )
