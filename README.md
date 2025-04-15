@@ -76,7 +76,6 @@ If you want quick development, you can always do git commit -n which will
 disable the check (but still run in CI). Or don’t run pre-commit install until
 you need it.
 
-
 ## Project considerations
 
 - Benchmarks should be easy to run on a typical laptop. This means:
