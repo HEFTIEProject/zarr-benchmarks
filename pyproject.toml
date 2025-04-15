@@ -7,15 +7,12 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "imageio",
+    # Plotting results
     "matplotlib",
     "pandas",
-    "pytest",
-    "pytest-benchmark",
     "seaborn",
-    "tensorstore",
+    # Running benchmarks
     "tox",
-    "zarr",
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}
@@ -47,6 +44,7 @@ markers = [
 overrides."tool.tox.*".inline_arrays = false
 
 [tool.tox]
+deps = ["pytest", "pytest-benchmark", "imageio"]
 env_list = ["py313-zarrv2", "py313-zarrv3", "py313-tensorstore"]
 requires = ["tox>=4.24"]
 
