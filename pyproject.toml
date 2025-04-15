@@ -7,15 +7,15 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "imageio",
+    # Plotting results
     "matplotlib",
     "pandas",
+    "seaborn",
+    # Running benchmarks
+    "tox",
     "pytest",
     "pytest-benchmark",
-    "seaborn",
-    "tensorstore",
-    "tox",
-    "zarr",
+    "imageio"
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}
