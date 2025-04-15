@@ -12,6 +12,7 @@ dependencies = [
     "pandas",
     "pytest",
     "pytest-benchmark",
+    "pytest-lazy-fixture",
     "seaborn",
     "tensorstore",
     "tox",

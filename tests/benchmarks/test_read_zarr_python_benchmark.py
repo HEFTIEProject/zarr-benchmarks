@@ -1,12 +1,11 @@
 import pytest
+from pytest_lazyfixture import lazy_fixture
+
 from tests.benchmarks.benchmark_parameters import (
     CHUNK_SIZE,
-    BLOSC_CLEVEL,
-    BLOSC_CNAME,
-    BLOSC_SHUFFLE,
-    GZIP_LEVEL,
     ZSTD_LEVEL,
 )
+from tests.benchmarks.benchmark_parameters_mult_runs import parameters
 
 try:
     import read_write_zarr_v3 as read_write_zarr
@@ -15,12 +14,74 @@ except ImportError:
 
 pytestmark = [pytest.mark.zarr_python]
 
+plot_run_1_params = parameters["plot_run_1"]
+plot_run_2_params = parameters["plot_run_2"]
+plot_run_3_params = parameters["plot_run_3"]
+
+
+@pytest.fixture
+def plot_run_1_params_fix():
+    return {
+        "CHUNK_SIZE": plot_run_1_params["CHUNK_SIZE"],
+        "BLOSC_CLEVEL": plot_run_1_params["BLOSC_CLEVEL"],
+        "BLOSC_SHUFFLE": plot_run_1_params["BLOSC_SHUFFLE"],
+        "BLOSC_CNAME": plot_run_1_params["BLOSC_CNAME"],
+    }
+
+
+@pytest.fixture
+def plot_run_2_params_fix():
+    return {
+        "CHUNK_SIZE": [60, 61, 62],
+        "BLOSC_CLEVEL": [4, 5, 6],
+        "BLOSC_SHUFFLE": "shuffle",
+        "BLOSC_CNAME": "zstd",
+    }
+
+
+@pytest.fixture
+def plot_run_3_params_fix():
+    return {
+        "CHUNK_SIZE": [60, 61, 62],
+        "BLOSC_CLEVEL": [4, 5, 6],
+        "BLOSC_SHUFFLE": ["shuffle"],
+        "BLOSC_CNAME": "zstd",
+    }
+
 
 @pytest.mark.benchmark(group="read")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("blosc_clevel", BLOSC_CLEVEL)
-@pytest.mark.parametrize("blosc_shuffle", BLOSC_SHUFFLE)
-@pytest.mark.parametrize("blosc_cname", BLOSC_CNAME)
+@pytest.mark.parametrize(
+    "chunk_size",
+    [
+        lazy_fixture("plot_run_1_params_fix"),
+        lazy_fixture("plot_run_2_params_fix"),
+        lazy_fixture("plot_run_3_params_fix"),
+    ],
+)
+@pytest.mark.parametrize(
+    "blosc_clevel",
+    [
+        lazy_fixture("plot_run_1_params_fix"),
+        lazy_fixture("plot_run_2_params_fix"),
+        lazy_fixture("plot_run_3_params_fix"),
+    ],
+)
+@pytest.mark.parametrize(
+    "blosc_shuffle",
+    [
+        lazy_fixture("plot_run_1_params_fix"),
+        lazy_fixture("plot_run_2_params_fix"),
+        lazy_fixture("plot_run_3_params_fix"),
+    ],
+)
+@pytest.mark.parametrize(
+    "blosc_cname",
+    [
+        lazy_fixture("plot_run_1_params_fix"),
+        lazy_fixture("plot_run_2_params_fix"),
+        lazy_fixture("plot_run_3_params_fix"),
+    ],
+)
 def test_read_blosc(
     benchmark,
     image,
@@ -31,7 +92,17 @@ def test_read_blosc(
     blosc_clevel,
     blosc_shuffle,
     blosc_cname,
+    request,
 ):
+    # pdb.set_trace()
+    # if "chunk_size" == 64:
+    #     pytest.skip()
+
+    chunk_size = request.getfixturevalue(chunk_size)
+    blosc_clevel = request.getfixturevalue(blosc_clevel)
+    blosc_shuffle = request.getfixturevalue(blosc_shuffle)
+    blosc_cname = request.getfixturevalue(blosc_cname)
+
     blosc_compressor = read_write_zarr.get_blosc_compressor(
         blosc_cname, blosc_clevel, blosc_shuffle
     )
@@ -56,11 +127,27 @@ def test_read_blosc(
 
 
 @pytest.mark.benchmark(group="read")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
+@pytest.mark.parametrize(
+    "chunk_size",
+    [
+        (plot_run_1_params["CHUNK_SIZE"]),
+        (plot_run_2_params["CHUNK_SIZE"]),
+        (plot_run_3_params["CHUNK_SIZE"]),
+    ],
+)
+@pytest.mark.parametrize(
+    "gzip_level",
+    [
+        (plot_run_1_params["GZIP_LEVEL"]),
+        (plot_run_2_params["GZIP_LEVEL"]),
+        (plot_run_3_params["GZIP_LEVEL"]),
+    ],
+)
 def test_read_gzip(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, gzip_level
 ):
+    if gzip_level is None:
+        pytest.skip()
     gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level)
 
     read_write_zarr.write_zarr_array(
