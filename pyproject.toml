@@ -13,6 +13,9 @@ dependencies = [
     "seaborn",
     # Running benchmarks
     "tox",
+    "pytest",
+    "pytest-benchmark",
+    "imageio"
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}
@@ -44,7 +47,6 @@ markers = [
 overrides."tool.tox.*".inline_arrays = false
 
 [tool.tox]
-deps = ["pytest", "pytest-benchmark", "imageio"]
 env_list = ["py313-zarrv2", "py313-zarrv3", "py313-tensorstore"]
 requires = ["tox>=4.24"]
 
