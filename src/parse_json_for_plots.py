@@ -218,3 +218,5 @@ if __name__ == "__main__":
         hue="compressor",
         output_filename=output_filename,
     )
+    print("Plotting finished 🕺")
+    print("Plots saved to 'data/plots'")
