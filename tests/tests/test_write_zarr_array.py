@@ -1,12 +1,12 @@
 import numpy as np
 import pytest
-import read_write_tensorstore
+from zarr_benchmarks import read_write_tensorstore
 from pathlib import Path
 
 try:
-    import read_write_zarr_v3 as read_write_zarr
+    from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:
-    import read_write_zarr_v2 as read_write_zarr
+    from zarr_benchmarks import read_write_zarr_v2 as read_write_zarr
 
 
 def assert_empty_chunks_written(

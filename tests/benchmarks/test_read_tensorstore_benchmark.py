@@ -7,12 +7,12 @@ from tests.benchmarks.benchmark_parameters import (
     GZIP_LEVEL,
     ZSTD_LEVEL,
 )
-import read_write_tensorstore
+from zarr_benchmarks import read_write_tensorstore
 
 try:
-    import read_write_zarr_v3 as read_write_zarr
+    from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:
-    import read_write_zarr_v2 as read_write_zarr
+    from zarr_benchmarks import read_write_zarr_v2 as read_write_zarr
 
 pytestmark = [pytest.mark.tensorstore]
 

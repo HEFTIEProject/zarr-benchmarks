@@ -1,5 +1,5 @@
 import pytest
-from utils import remove_output_dir
+from zarr_benchmarks.utils import remove_output_dir
 from tests.benchmarks.benchmark_parameters import (
     CHUNK_SIZE,
     BLOSC_CLEVEL,
@@ -8,7 +8,7 @@ from tests.benchmarks.benchmark_parameters import (
     GZIP_LEVEL,
     ZSTD_LEVEL,
 )
-import read_write_tensorstore
+from zarr_benchmarks import read_write_tensorstore
 
 pytestmark = [pytest.mark.tensorstore]
 

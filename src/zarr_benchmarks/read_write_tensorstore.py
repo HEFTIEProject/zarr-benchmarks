@@ -2,7 +2,7 @@ from typing import Literal
 import tensorstore as ts
 import numpy as np
 import pathlib
-import utils
+from zarr_benchmarks import utils
 
 
 def read_zarr_array(store_path: pathlib.Path) -> np.array:

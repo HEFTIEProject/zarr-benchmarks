@@ -1,3 +1,7 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools"]
+
 [project]
 authors = [
     {email = "arc.collaborations@ucl.ac.uk", name = "Centre for Advanced Research Computing"},

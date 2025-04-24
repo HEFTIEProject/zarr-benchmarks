@@ -3,7 +3,7 @@ import zarr
 import numcodecs
 from numcodecs import Blosc, GZip, Zstd
 import pathlib
-import utils
+from zarr_benchmarks import utils
 import numpy as np
 
 

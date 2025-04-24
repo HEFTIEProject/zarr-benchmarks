@@ -9,9 +9,9 @@ from tests.benchmarks.benchmark_parameters import (
 )
 
 try:
-    import read_write_zarr_v3 as read_write_zarr
+    from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:
-    import read_write_zarr_v2 as read_write_zarr
+    from zarr_benchmarks import read_write_zarr_v2 as read_write_zarr
 
 pytestmark = [pytest.mark.zarr_python]
 
