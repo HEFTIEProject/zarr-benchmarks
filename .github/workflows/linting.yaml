@@ -23,8 +23,6 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Checkout source
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
