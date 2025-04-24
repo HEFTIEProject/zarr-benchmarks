@@ -1,6 +1,6 @@
 import pytest
 import pathlib
-from utils import get_image
+from zarr_benchmarks.utils import get_image
 import numpy as np
 
 

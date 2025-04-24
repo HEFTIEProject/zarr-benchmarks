@@ -4,7 +4,7 @@ import zarr
 from numcodecs import Blosc, GZip, Zstd
 from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
 from typing import Any, Literal
-import utils
+from zarr_benchmarks import utils
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
