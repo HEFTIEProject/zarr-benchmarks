@@ -10,11 +10,6 @@ from tests.benchmarks.benchmark_parameters import (
 )
 from zarr_benchmarks import read_write_tensorstore
 
-try:
-    from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
-except ImportError:
-    from zarr_benchmarks import read_write_zarr_v2 as read_write_zarr
-
 pytestmark = [pytest.mark.tensorstore]
 
 
@@ -46,7 +41,7 @@ def test_read_blosc(
         compressor=blosc_compressor,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path)
+    compression_ratio = read_write_tensorstore.get_compression_ratio(store_path)
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(
@@ -73,7 +68,7 @@ def test_read_gzip(
         compressor=gzip_compressor,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path)
+    compression_ratio = read_write_tensorstore.get_compression_ratio(store_path)
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(
@@ -100,7 +95,7 @@ def test_read_zstd(
         compressor=zstd_compressor,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path)
+    compression_ratio = read_write_tensorstore.get_compression_ratio(store_path)
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(

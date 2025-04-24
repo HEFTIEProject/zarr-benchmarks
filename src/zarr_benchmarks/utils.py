@@ -1,3 +1,4 @@
+import os
 import pathlib
 import shutil
 from typing import Literal
@@ -24,6 +25,21 @@ def get_image(image_dir_path: pathlib.Path) -> np.array:
 def remove_output_dir(output_dir: pathlib.Path) -> None:
     if output_dir.exists():
         shutil.rmtree(output_dir)
+
+
+def get_directory_size(path: pathlib.Path) -> int:
+    """
+    Get total size of a directory.
+    """
+    total_size = 0
+    if not path.is_dir():
+        raise ValueError(f"Path not a directory: {path}")
+    for dirpath, dirnames, filenames in path.walk():
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+
+    return total_size
 
 
 def get_numcodec_shuffle(shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]) -> int:

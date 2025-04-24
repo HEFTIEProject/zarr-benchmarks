@@ -7,9 +7,16 @@ import tensorstore as ts
 from zarr_benchmarks import utils
 
 
-def read_zarr_array(store_path: pathlib.Path) -> np.array:
-    """Read the v2 zarr spec with tensorstore"""
-    zarr_read = ts.open(
+def get_compression_ratio(store_path: pathlib.Path) -> float:
+    zarr_array = open_zarr_array(store_path)
+    item_size = zarr_array.dtype.numpy_dtype.itemsize
+    nbytes = item_size * zarr_array.size
+    nbytes_stored = utils.get_directory_size(store_path)
+    return nbytes / nbytes_stored
+
+
+def open_zarr_array(store_path: pathlib.Path) -> ts.TensorStore:
+    return ts.open(
         {
             "driver": "zarr",
             "kvstore": {
@@ -17,8 +24,12 @@ def read_zarr_array(store_path: pathlib.Path) -> np.array:
                 "path": str(store_path.resolve()),
             },
         },
-        read=True,
     ).result()
+
+
+def read_zarr_array(store_path: pathlib.Path) -> np.array:
+    """Read the v2 zarr spec with tensorstore"""
+    zarr_read = open_zarr_array(store_path)
     read_image = zarr_read[:].read().result()
     return read_image
 
