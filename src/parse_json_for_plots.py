@@ -149,6 +149,7 @@ def get_axis_labels(x_axis: str, y_axis: str, group: str) -> str:
 
 
 def save_plot_as_png(plt: plt, output_filename: str) -> None:
+    Path(output_filename).parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_filename, format="png", dpi=300)
 
 
