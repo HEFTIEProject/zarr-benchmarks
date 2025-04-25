@@ -1,9 +1,10 @@
 import pytest
+
 from tests.benchmarks.benchmark_parameters import (
-    CHUNK_SIZE,
     BLOSC_CLEVEL,
     BLOSC_CNAME,
     BLOSC_SHUFFLE,
+    CHUNK_SIZE,
     GZIP_LEVEL,
     ZSTD_LEVEL,
 )

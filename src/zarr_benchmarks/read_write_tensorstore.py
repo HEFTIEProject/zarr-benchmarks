@@ -1,7 +1,9 @@
-from typing import Literal
-import tensorstore as ts
-import numpy as np
 import pathlib
+from typing import Literal
+
+import numpy as np
+import tensorstore as ts
+
 from zarr_benchmarks import utils
 
 
