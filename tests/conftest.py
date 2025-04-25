@@ -87,8 +87,12 @@ def pytest_generate_tests(metafunc):
         if key not in metafunc.fixturenames:
             continue
 
-        if key == "chunk_size" and "min" in values and "max" in values:
-            parameter_values = range(values["min"], values["max"])
+        if (
+            key in ["chunk_size", "blosc_clevel", "gzip_level", "zstd_level"]
+            and "min" in values
+            and "max" in values
+        ):
+            parameter_values = range(values["min"], values["max"] + 1)
         else:
             parameter_values = values
 
