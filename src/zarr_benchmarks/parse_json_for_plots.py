@@ -1,9 +1,10 @@
-from datetime import datetime
 import json
+from datetime import datetime
 from pathlib import Path
+
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
+import seaborn as sns
 
 
 def load_benchmarks_json(path_to_file: Path) -> dict:

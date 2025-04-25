@@ -1,9 +1,11 @@
 import pathlib
+from typing import Any, Literal
+
 import numpy as np
 import zarr
 from numcodecs import Blosc, GZip, Zstd
 from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
-from typing import Any, Literal
+
 from zarr_benchmarks import utils
 
 

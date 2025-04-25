@@ -1,9 +1,10 @@
 import pathlib
-from typing import Literal
-import numpy as np
-import imageio.v3 as iio
 import shutil
+from typing import Literal
+
+import imageio.v3 as iio
 import numcodecs
+import numpy as np
 
 
 def get_image(image_dir_path: pathlib.Path) -> np.array:

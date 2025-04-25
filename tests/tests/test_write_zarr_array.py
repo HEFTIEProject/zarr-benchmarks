@@ -1,7 +1,9 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
+
 from zarr_benchmarks import read_write_tensorstore
-from pathlib import Path
 
 try:
     from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr

@@ -1,10 +1,12 @@
-from typing import Literal
-import zarr
-import numcodecs
-from numcodecs import Blosc, GZip, Zstd
 import pathlib
-from zarr_benchmarks import utils
+from typing import Literal
+
+import numcodecs
 import numpy as np
+import zarr
+from numcodecs import Blosc, GZip, Zstd
+
+from zarr_benchmarks import utils
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
