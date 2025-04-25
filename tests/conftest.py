@@ -77,12 +77,19 @@ def store_path():
 
 
 def pytest_generate_tests(metafunc):
-    """Parse the config file, and pass the read parameters to the relevant fixtures"""
+    """Parse the config file, and pass the parameters to the relevant fixtures"""
 
     config_path = metafunc.config.getoption("config")
     with open(config_path) as f:
         config = json.load(f)
 
     for key, values in config.items():
-        if key in metafunc.fixturenames:
-            metafunc.parametrize(key, values)
+        if key not in metafunc.fixturenames:
+            continue
+
+        if key == "chunk_size" and "min" in values and "max" in values:
+            parameter_values = range(values["min"], values["max"])
+        else:
+            parameter_values = values
+
+        metafunc.parametrize(key, parameter_values)
