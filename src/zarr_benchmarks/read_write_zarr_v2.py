@@ -3,6 +3,7 @@ from typing import Literal
 
 import numcodecs
 import numpy as np
+import numpy.typing as npt
 import zarr
 from numcodecs import Blosc, GZip, Zstd
 
@@ -16,14 +17,14 @@ def get_compression_ratio(store_path: pathlib.Path) -> float:
     return compression_ratio
 
 
-def read_zarr_array(store_path: pathlib.Path) -> np.array:
+def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
     zarr_read = zarr.open_array(store_path, mode="r")
     read_image = zarr_read[:]
-    return read_image
+    return np.asarray(read_image)
 
 
 def write_zarr_array(
-    image: np.array,
+    image: npt.NDArray,
     store_path: pathlib.Path,
     *,
     overwrite: bool,
