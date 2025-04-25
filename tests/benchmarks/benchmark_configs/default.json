@@ -1,0 +1,8 @@
+{
+  "chunk_size": [300, 200, 100],
+  "blosc_clevel": [1, 3, 5],
+  "blosc_shuffle": ["noshuffle"],
+  "blosc_cname": ["zstd"],
+  "gzip_level": [1, 3, 5],
+  "zstd_level": [1, 7, 13]
+}

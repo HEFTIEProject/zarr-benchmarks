@@ -1,3 +1,4 @@
+import json
 import pathlib
 
 import numpy as np
@@ -7,6 +8,14 @@ from zarr_benchmarks.utils import get_image
 
 
 def pytest_addoption(parser):
+    parser.addoption(
+        "--config",
+        action="store",
+        default="tests/benchmarks/benchmark_configs/default.json",
+        type=str,
+        help="path to benchmark config json file",
+    )
+
     parser.addoption(
         "--dev-image",
         action="store_true",
@@ -65,3 +74,15 @@ def image(dev_image):
 def store_path():
     """Path to store zarr images written from benchmarks"""
     return pathlib.Path("data/output/heart-example.zarr")
+
+
+def pytest_generate_tests(metafunc):
+    """Parse the config file, and pass the read parameters to the relevant fixtures"""
+
+    config_path = metafunc.config.getoption("config")
+    with open(config_path) as f:
+        config = json.load(f)
+
+    for key, values in config.items():
+        if key in metafunc.fixturenames:
+            metafunc.parametrize(key, values)
