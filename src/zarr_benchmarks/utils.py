@@ -29,7 +29,7 @@ def remove_output_dir(output_dir: pathlib.Path) -> None:
 
 def get_directory_size(path: pathlib.Path) -> int:
     """
-    Get total size of a directory.
+    Get total size of a directory in bytes.
     """
     total_size = 0
     if not path.is_dir():
