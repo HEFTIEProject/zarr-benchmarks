@@ -20,7 +20,7 @@ def get_compression_ratio(store_path: pathlib.Path) -> float:
 def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
     zarr_read = zarr.open_array(store_path, mode="r")
     read_image = zarr_read[:]
-    return np.asarray(read_image)
+    return read_image
 
 
 def write_zarr_array(
