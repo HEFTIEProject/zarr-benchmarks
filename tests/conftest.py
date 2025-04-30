@@ -10,9 +10,9 @@ def pytest_addoption(parser):
     parser.addoption(
         "--config",
         action="store",
-        default="tests/benchmarks/benchmark_configs/dev.json",
+        default="dev",
         type=str,
-        help="path to benchmark config json file",
+        help="name of config json file from tests/benchmarks/benchmark_configs",
     )
 
     parser.addoption(
@@ -78,7 +78,9 @@ def store_path():
 def pytest_generate_tests(metafunc):
     """Parse the config file, and pass the parameters to the relevant fixtures"""
 
-    config_path = metafunc.config.getoption("config")
+    config_path = (
+        f"tests/benchmarks/benchmark_configs/{metafunc.config.getoption('config')}.json"
+    )
     config = read_json_file(config_path)
 
     for key, values in config.items():
