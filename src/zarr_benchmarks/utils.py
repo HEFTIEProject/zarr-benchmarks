@@ -7,9 +7,10 @@ from typing import Literal
 import imageio.v3 as iio
 import numcodecs
 import numpy as np
+import numpy.typing as npt
 
 
-def get_image(image_dir_path: pathlib.Path) -> np.array:
+def get_image(image_dir_path: pathlib.Path) -> npt.NDArray:
     """Read a series of jpeg to one 3D numpy array"""
     image_slices = []
     for image_slice in image_dir_path.iterdir():

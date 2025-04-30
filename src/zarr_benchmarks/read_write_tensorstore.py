@@ -1,7 +1,7 @@
 import pathlib
 from typing import Literal
 
-import numpy as np
+import numpy.typing as npt
 import tensorstore as ts
 
 from zarr_benchmarks import utils
@@ -27,7 +27,7 @@ def open_zarr_array(store_path: pathlib.Path) -> ts.TensorStore:
     ).result()
 
 
-def read_zarr_array(store_path: pathlib.Path) -> np.array:
+def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
     """Read the v2 zarr spec with tensorstore"""
     zarr_read = open_zarr_array(store_path)
     read_image = zarr_read[:].read().result()
@@ -35,7 +35,7 @@ def read_zarr_array(store_path: pathlib.Path) -> np.array:
 
 
 def write_zarr_array(
-    image: np.array,
+    image: npt.NDArray,
     store_path: pathlib.Path,
     *,
     overwrite: bool,

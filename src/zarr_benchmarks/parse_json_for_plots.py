@@ -1,7 +1,6 @@
 from datetime import datetime
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
@@ -76,7 +75,7 @@ def plot_relplot_benchmarks(
     hue: str,
     size: str,
     title: str,
-    output_filename: str = None,
+    output_filename: str | None = None,
 ) -> None:
     graph = sns.relplot(
         data=data,
@@ -108,7 +107,7 @@ def plot_relplot_subplots_benchmarks(
     x_axis: str,
     y_axis: str,
     hue: str,
-    output_filename: str = None,
+    output_filename: str | None = None,
 ) -> None:
     graph = sns.relplot(
         data=data,
@@ -129,7 +128,7 @@ def plot_relplot_subplots_benchmarks(
         )
 
 
-def get_axis_labels(x_axis: str, y_axis: str, group: str) -> str:
+def get_axis_labels(x_axis: str, y_axis: str, group: str) -> tuple[str, str]:
     if x_axis.startswith("stats"):
         x_axis_label = f"{x_axis.split('.')[-1]} {group} time (s)"
     else:
@@ -143,9 +142,9 @@ def get_axis_labels(x_axis: str, y_axis: str, group: str) -> str:
     return x_axis_label, y_axis_label
 
 
-def save_plot_as_png(plt: plt, output_filename: str) -> None:
+def save_plot_as_png(grid: sns.FacetGrid, output_filename: str) -> None:
     Path(output_filename).parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_filename, format="png", dpi=300)
+    grid.savefig(output_filename, format="png", dpi=300)
 
 
 if __name__ == "__main__":
@@ -170,7 +169,7 @@ if __name__ == "__main__":
     read_zarr_v2_chunks_200 = read_zarr_v2[read_zarr_v2.chunk_size == 200]
 
     benchmark_name = Path(zarr_v2_path).stem
-    data = utils.read_json_file(zarr_v2_path)
+    data = utils.read_json_file(Path(zarr_v2_path))
     machine_info = data["machine_info"]["machine"]
     date = datetime.now().strftime("%Y-%m-%d")
 
