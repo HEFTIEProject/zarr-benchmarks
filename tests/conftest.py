@@ -1,17 +1,16 @@
-import json
 import pathlib
 
 import numpy as np
 import pytest
 
-from zarr_benchmarks.utils import get_image
+from zarr_benchmarks.utils import get_image, read_json_file
 
 
 def pytest_addoption(parser):
     parser.addoption(
         "--config",
         action="store",
-        default="tests/benchmarks/benchmark_configs/default.json",
+        default="tests/benchmarks/benchmark_configs/dev.json",
         type=str,
         help="path to benchmark config json file",
     )
@@ -80,8 +79,7 @@ def pytest_generate_tests(metafunc):
     """Parse the config file, and pass the parameters to the relevant fixtures"""
 
     config_path = metafunc.config.getoption("config")
-    with open(config_path) as f:
-        config = json.load(f)
+    config = read_json_file(config_path)
 
     for key, values in config.items():
         if key not in metafunc.fixturenames:

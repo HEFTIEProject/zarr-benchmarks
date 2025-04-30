@@ -1,3 +1,4 @@
+import json
 import os
 import pathlib
 import shutil
@@ -52,3 +53,8 @@ def get_numcodec_shuffle(shuffle: Literal["shuffle", "noshuffle", "bitshuffle"])
             return numcodecs.Blosc.BITSHUFFLE
         case _:
             raise ValueError(f"invalid shuffle value for blosc {shuffle}")
+
+
+def read_json_file(path_to_file: pathlib.Path) -> dict:
+    with open(path_to_file, "r") as f:
+        return json.load(f)
