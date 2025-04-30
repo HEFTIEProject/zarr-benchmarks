@@ -1,7 +1,6 @@
 import pathlib
 from typing import Any, Literal
 
-import numpy as np
 import numpy.typing as npt
 import zarr
 from numcodecs import Blosc, GZip, Zstd
