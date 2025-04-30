@@ -12,7 +12,7 @@ commands = [
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["tensorstore==0.1.73", "zarr==3.0.6", "numcodecs==0.15.1"]
+deps = ["tensorstore==0.1.73"]
 description = "Run benchmarks under tensorstore"
 
 [env.py313-zarrv2]
