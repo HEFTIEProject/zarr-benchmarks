@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Callable
 
 import numpy as np
 import pytest
@@ -8,11 +9,13 @@ from zarr_benchmarks import read_write_tensorstore
 try:
     from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:
-    from zarr_benchmarks import read_write_zarr_v2 as read_write_zarr
+    from zarr_benchmarks import (  # type: ignore[no-redef]
+        read_write_zarr_v2 as read_write_zarr,
+    )
 
 
 def assert_empty_chunks_written(
-    output_dir: Path, write_zarr_array: callable, write_empty_chunks: bool
+    output_dir: Path, write_zarr_array: Callable, write_empty_chunks: bool
 ) -> None:
     """Check an empty chunk is written to file when write_empty_chunks=True"""
 
