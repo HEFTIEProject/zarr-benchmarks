@@ -1,3 +1,4 @@
+import itertools
 import pathlib
 
 import numpy as np
@@ -75,25 +76,58 @@ def store_path():
     return pathlib.Path("data/output/heart-example.zarr")
 
 
+def expand_min_max(config: dict) -> dict:
+    """Expand min/max keys in config to a list of the full range of values."""
+
+    for key in ["chunk_size", "blosc_clevel", "gzip_level", "zstd_level"]:
+        values = config[key]
+        if "min" in values and "max" in values:
+            config[key] = range(values["min"], values["max"] + 1)
+
+    return config
+
+
+def parse_config_files(config_name: str) -> list[dict]:
+    """Parse json config files. 'all' will parse every config in tests/benchmark_configs (except for dev, which contains
+    a small set of parameters for development runs)."""
+
+    configs_dir = pathlib.Path("tests/benchmarks/benchmark_configs")
+    configs = []
+
+    if config_name == "all":
+        for config_file in configs_dir.iterdir():
+            if config_file.is_file() and config_file.stem != "dev":
+                config = expand_min_max(read_json_file(config_file))
+                configs.append(config)
+    else:
+        config_file = configs_dir / f"{config_name}.json"
+        config = expand_min_max(read_json_file(config_file))
+        configs.append(config)
+
+    return configs
+
+
 def pytest_generate_tests(metafunc):
-    """Parse the config file, and pass the parameters to the relevant fixtures"""
+    """Parse the config file, and parametrize the given function with these values. pytest_generate_tests is called
+    once per test function, during the collection stage."""
 
-    config_path = (
-        f"tests/benchmarks/benchmark_configs/{metafunc.config.getoption('config')}.json"
-    )
-    config = read_json_file(config_path)
+    config_name = metafunc.config.getoption("config")
+    configs = parse_config_files(config_name)
 
-    for key, values in config.items():
-        if key not in metafunc.fixturenames:
-            continue
+    # keys from the config, that are used as arguments for this function
+    used_config_keys = [key for key in configs[0] if key in metafunc.fixturenames]
+    if len(used_config_keys) == 0:
+        return
 
-        if (
-            key in ["chunk_size", "blosc_clevel", "gzip_level", "zstd_level"]
-            and "min" in values
-            and "max" in values
-        ):
-            parameter_values = range(values["min"], values["max"] + 1)
-        else:
-            parameter_values = values
+    # generate all combinations of parameters for each config, and add to a set to remove any duplicate combos
+    parametrize_values = set()
+    for config in configs:
+        parameter_values = [config[key] for key in used_config_keys]
+        parameter_combinations = tuple(itertools.product(*parameter_values))
+        parametrize_values.update(parameter_combinations)
 
-        metafunc.parametrize(key, parameter_values)
+    # sort values for parametrize, so they are more readable in pytest output
+    parametrize_values = list(parametrize_values)
+    parametrize_values.sort()
+
+    metafunc.parametrize(used_config_keys, parametrize_values)
