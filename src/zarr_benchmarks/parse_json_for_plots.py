@@ -44,10 +44,16 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
             "compression_level",
             "compression_ratio",
             "params.chunk_size",
+            "params.blosc_shuffle",
         ]
         + stats_cols
     ]
-    benchmark_df = benchmark_df.rename(columns={"params.chunk_size": "chunk_size"})
+    benchmark_df = benchmark_df.rename(
+        columns={
+            "params.chunk_size": "chunk_size",
+            "params.blosc_shuffle": "blosc_shuffle",
+        }
+    )
 
     return benchmark_df
 
@@ -161,12 +167,20 @@ if __name__ == "__main__":
     benchmarks_df = get_benchmarks_dataframe(
         package_paths_dict,
     )
-    benchmarks_zarr_v2 = benchmarks_df[benchmarks_df.package == "zarr_python_2"]
+
+    read_write_benchmarks = benchmarks_df[
+        (benchmarks_df.chunk_size.isin([64, 128]))
+        & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
+    ]
+
+    benchmarks_zarr_v2 = read_write_benchmarks[
+        read_write_benchmarks.package == "zarr_python_2"
+    ]
     write_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "write"]
     read_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "read"]
 
-    write_zarr_v2_chunks_200 = write_zarr_v2[write_zarr_v2.chunk_size == 200]
-    read_zarr_v2_chunks_200 = read_zarr_v2[read_zarr_v2.chunk_size == 200]
+    write_zarr_v2_chunks_128 = write_zarr_v2[write_zarr_v2.chunk_size == 128]
+    read_zarr_v2_chunks_128 = read_zarr_v2[read_zarr_v2.chunk_size == 128]
 
     benchmark_name = Path(zarr_v2_path).stem
     data = utils.read_json_file(Path(zarr_v2_path))
@@ -175,7 +189,7 @@ if __name__ == "__main__":
 
     output_filename = date + "_" + machine_info + "_" + benchmark_name
     plot_relplot_benchmarks(
-        write_zarr_v2_chunks_200,
+        write_zarr_v2_chunks_128,
         group="write",
         x_axis="stats.mean",
         y_axis="compression_ratio",
@@ -186,7 +200,7 @@ if __name__ == "__main__":
     )
 
     plot_relplot_benchmarks(
-        read_zarr_v2_chunks_200,
+        read_zarr_v2_chunks_128,
         group="read",
         x_axis="stats.mean",
         y_axis="compression_ratio",
@@ -197,7 +211,7 @@ if __name__ == "__main__":
     )
 
     plot_relplot_subplots_benchmarks(
-        write_zarr_v2_chunks_200,
+        write_zarr_v2_chunks_128,
         group="write",
         x_axis="stats.mean",
         y_axis="compression_level",
@@ -205,7 +219,7 @@ if __name__ == "__main__":
         output_filename=output_filename,
     )
     plot_relplot_subplots_benchmarks(
-        read_zarr_v2_chunks_200,
+        read_zarr_v2_chunks_128,
         group="read",
         x_axis="stats.mean",
         y_axis="compression_level",
