@@ -1,3 +1,4 @@
+import argparse
 from datetime import datetime
 from pathlib import Path
 
@@ -153,11 +154,9 @@ def save_plot_as_png(grid: sns.FacetGrid, output_filename: str) -> None:
     grid.savefig(output_filename, format="png", dpi=300)
 
 
-if __name__ == "__main__":
-    zarr_v2_path = "data/json/0007_zarr-python-v2.json"
-    zarr_v3_path = "data/json/0008_zarr-python-v3.json"
-    tensorstore_path = "data/json/0009_tensorstore.json"
-
+def create_plots(
+    zarr_v2_path: str | Path, zarr_v3_path: str | Path, tensorstore_path: str | Path
+) -> None:
     package_paths_dict = {
         "zarr_python_2": zarr_v2_path,
         "zarr_python_3": zarr_v3_path,
@@ -226,5 +225,29 @@ if __name__ == "__main__":
         hue="compressor",
         output_filename=output_filename,
     )
+
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
+
+
+def main(json_dir: str, zarr_v2_id: str, zarr_v3_id: str, tensorstore_id: str) -> None:
+    json_dir_path = Path(f"data/json/{json_dir}")
+    create_plots(
+        json_dir_path / f"{zarr_v2_id}_zarr-python-v2.json",
+        json_dir_path / f"{zarr_v3_id}_zarr-python-v3.json",
+        json_dir_path / f"{tensorstore_id}_tensorstore.json",
+    )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "json_dir",
+        help="name of directory inside data/json to process files from e.g. 'Windows-CPython-3.13-64bit'",
+    )
+    parser.add_argument("zarr_v2_id", help="id of zarr-python-v2 json file e.g. 0001")
+    parser.add_argument("zarr_v3_id", help="id of zarr-python-v3 json file e.g. 0001")
+    parser.add_argument("tensorstore_id", help="id of tensorstore json file e.g. 0001")
+    args = parser.parse_args()
+
+    main(args.json_dir, args.zarr_v2_id, args.zarr_v3_id, args.tensorstore_id)
