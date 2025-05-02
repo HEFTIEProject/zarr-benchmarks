@@ -15,6 +15,7 @@ dependencies = [
     "pytest",
     "pytest-benchmark",
     "tox",
+    "jsonschema"
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}

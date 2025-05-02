@@ -1,3 +1,4 @@
+import json
 import os
 import pathlib
 import shutil
@@ -39,3 +40,8 @@ def get_directory_size(path: pathlib.Path) -> int:
             total_size += os.path.getsize(fp)
 
     return total_size
+
+
+def read_json_file(path_to_file: pathlib.Path) -> dict:
+    with open(path_to_file, "r") as f:
+        return json.load(f)

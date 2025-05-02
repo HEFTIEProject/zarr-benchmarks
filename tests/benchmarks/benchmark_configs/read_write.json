@@ -1,0 +1,17 @@
+{
+  "chunk_size": [64, 128],
+  "blosc_clevel": {
+    "min": 1,
+    "max": 9
+  },
+  "blosc_shuffle": ["shuffle"],
+  "blosc_cname": ["blosclz", "lz4", "lz4hc", "zlib", "zstd"],
+  "gzip_level": {
+    "min": 1,
+    "max": 9
+  },
+  "zstd_level": {
+    "min": 1,
+    "max": 19
+  }
+}

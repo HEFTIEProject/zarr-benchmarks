@@ -1,23 +1,10 @@
 import pytest
 
-from tests.benchmarks.benchmark_parameters import (
-    BLOSC_CLEVEL,
-    BLOSC_CNAME,
-    BLOSC_SHUFFLE,
-    CHUNK_SIZE,
-    GZIP_LEVEL,
-    ZSTD_LEVEL,
-)
-
 read_write_tensorstore = pytest.importorskip("zarr_benchmarks.read_write_tensorstore")
 pytestmark = [pytest.mark.tensorstore]
 
 
 @pytest.mark.benchmark(group="read")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("blosc_clevel", BLOSC_CLEVEL)
-@pytest.mark.parametrize("blosc_shuffle", BLOSC_SHUFFLE)
-@pytest.mark.parametrize("blosc_cname", BLOSC_CNAME)
 def test_read_blosc(
     benchmark,
     image,
@@ -53,8 +40,6 @@ def test_read_blosc(
 
 
 @pytest.mark.benchmark(group="read")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
 def test_read_gzip(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, gzip_level
 ):
@@ -80,8 +65,6 @@ def test_read_gzip(
 
 
 @pytest.mark.benchmark(group="read")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
 def test_read_zstd(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, zstd_level
 ):
