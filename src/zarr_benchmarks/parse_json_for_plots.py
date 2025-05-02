@@ -233,9 +233,6 @@ def create_read_write_plots(
         output_filename=output_filename,
     )
 
-    print("Plotting finished 🕺")
-    print("Plots saved to 'data/plots'")
-
 
 def create_all_plots(
     json_dir: str, zarr_v2_id: str, zarr_v3_id: str, tensorstore_id: str
@@ -246,6 +243,9 @@ def create_all_plots(
         json_dir_path / f"{zarr_v3_id}_zarr-python-v3.json",
         json_dir_path / f"{tensorstore_id}_tensorstore.json",
     )
+
+    print("Plotting finished 🕺")
+    print("Plots saved to 'data/plots'")
 
 
 if __name__ == "__main__":
