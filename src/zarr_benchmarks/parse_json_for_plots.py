@@ -103,7 +103,10 @@ def plot_relplot_benchmarks(
     if output_filename is not None:
         save_plot_as_png(
             graph,
-            f"data/plots/{group}_relplot_{output_filename}.png",
+            Path(__file__).parents[2]
+            / "data"
+            / "plots"
+            / f"{group}_relplot_{output_filename}.png",
         )
 
 
@@ -123,6 +126,7 @@ def plot_relplot_subplots_benchmarks(
         col=hue,
         hue=hue,
         facet_kws=dict(sharex=True, sharey=True),
+        col_wrap=3,
     )
 
     x_axis_label, y_axis_label = get_axis_labels(x_axis, y_axis, group)
@@ -131,7 +135,10 @@ def plot_relplot_subplots_benchmarks(
     if output_filename is not None:
         save_plot_as_png(
             graph,
-            f"data/plots/{group}_subplot_relplot_{output_filename}.png",
+            Path(__file__).parents[2]
+            / "data"
+            / "plots"
+            / f"{group}_subplot_relplot_{output_filename}.png",
         )
 
 
@@ -149,13 +156,13 @@ def get_axis_labels(x_axis: str, y_axis: str, group: str) -> tuple[str, str]:
     return x_axis_label, y_axis_label
 
 
-def save_plot_as_png(grid: sns.FacetGrid, output_filename: str) -> None:
-    Path(output_filename).parent.mkdir(parents=True, exist_ok=True)
-    grid.savefig(output_filename, format="png", dpi=300)
+def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    grid.savefig(output_path, format="png", dpi=300)
 
 
 def create_read_write_plots(
-    zarr_v2_path: str | Path, zarr_v3_path: str | Path, tensorstore_path: str | Path
+    zarr_v2_path: Path, zarr_v3_path: Path, tensorstore_path: Path
 ) -> None:
     package_paths_dict = {
         "zarr_python_2": zarr_v2_path,
@@ -233,7 +240,7 @@ def create_read_write_plots(
 def create_all_plots(
     json_dir: str, zarr_v2_id: str, zarr_v3_id: str, tensorstore_id: str
 ) -> None:
-    json_dir_path = Path(f"data/json/{json_dir}")
+    json_dir_path = Path(__file__).parents[2] / "data" / "json" / json_dir
     create_read_write_plots(
         json_dir_path / f"{zarr_v2_id}_zarr-python-v2.json",
         json_dir_path / f"{zarr_v3_id}_zarr-python-v3.json",
