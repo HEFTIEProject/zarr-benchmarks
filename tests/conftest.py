@@ -13,7 +13,7 @@ def pytest_addoption(parser):
         action="store",
         default="dev",
         type=str,
-        help="name of config json file from tests/benchmarks/benchmark_configs",
+        help="Name of config json file from tests/benchmarks/benchmark_configs, or 'all' to combine all configs (excluding the 'dev' config)",
     )
 
     parser.addoption(
@@ -27,7 +27,7 @@ def pytest_addoption(parser):
         action="store",
         default=3,
         type=int,
-        help="number of rounds for each benchmark",
+        help="Number of rounds for each benchmark",
     )
 
     parser.addoption(
@@ -35,7 +35,7 @@ def pytest_addoption(parser):
         action="store",
         default=1,
         type=int,
-        help="number of warmup rounds for each benchmark",
+        help="Number of warmup rounds for each benchmark",
     )
 
 
@@ -91,12 +91,12 @@ def parse_config_files(config_name: str) -> list[dict]:
     """Parse json config files. 'all' will parse every config in tests/benchmark_configs (except for dev, which contains
     a small set of parameters for development runs)."""
 
-    configs_dir = pathlib.Path("tests/benchmarks/benchmark_configs")
+    configs_dir = pathlib.Path(__file__).parent / "benchmarks" / "benchmark_configs"
     configs = []
 
     if config_name == "all":
-        for config_file in configs_dir.iterdir():
-            if config_file.is_file() and config_file.stem != "dev":
+        for config_file in configs_dir.glob("*.json"):
+            if config_file.stem != "dev":
                 config = expand_min_max(read_json_file(config_file))
                 configs.append(config)
     else:
@@ -107,7 +107,7 @@ def parse_config_files(config_name: str) -> list[dict]:
     return configs
 
 
-def pytest_generate_tests(metafunc):
+def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
     """Parse the config file, and parametrize the given function with these values. pytest_generate_tests is called
     once per test function, during the collection stage."""
 
@@ -120,14 +120,13 @@ def pytest_generate_tests(metafunc):
         return
 
     # generate all combinations of parameters for each config, and add to a set to remove any duplicate combos
-    parametrize_values = set()
+    parametrize_values: set[tuple] = set()
     for config in configs:
         parameter_values = [config[key] for key in used_config_keys]
         parameter_combinations = tuple(itertools.product(*parameter_values))
         parametrize_values.update(parameter_combinations)
 
     # sort values for parametrize, so they are more readable in pytest output
-    parametrize_values = list(parametrize_values)
-    parametrize_values.sort()
+    parametrize_values_list = sorted(list(parametrize_values))
 
-    metafunc.parametrize(used_config_keys, parametrize_values)
+    metafunc.parametrize(used_config_keys, parametrize_values_list)
