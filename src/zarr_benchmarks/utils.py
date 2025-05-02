@@ -5,7 +5,6 @@ import shutil
 from typing import Literal
 
 import imageio.v3 as iio
-import numcodecs
 import numpy as np
 import numpy.typing as npt
 
@@ -45,6 +44,8 @@ def get_directory_size(path: pathlib.Path) -> int:
 
 
 def get_numcodec_shuffle(shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]) -> int:
+    import numcodecs
+
     match shuffle:
         case "shuffle":
             return numcodecs.Blosc.SHUFFLE

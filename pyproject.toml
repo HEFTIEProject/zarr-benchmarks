@@ -10,17 +10,23 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
 ]
+# Dependencies for running the benchmarks are specified in tox.toml
+#
+# These dependencies are either common across all benchmarks, or
+# for post-processing of results
 dependencies = [
-    "imageio",
+    # Parsing and plotting benchmark data
+    "jsonschema",
     "matplotlib",
     "pandas",
+    "seaborn",
+    # Loading image test data
+    "imageio",
+    "numpy",
+    # Running tests
     "pytest",
     "pytest-benchmark",
-    "seaborn",
-    "tensorstore",
     "tox",
-    "zarr",
-    "jsonschema"
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}
