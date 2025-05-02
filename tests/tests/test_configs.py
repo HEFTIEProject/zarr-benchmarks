@@ -1,8 +1,12 @@
 from pathlib import Path
 
 import jsonschema
+import pytest
 
 from zarr_benchmarks import utils
+
+# mark as tensorstore, so tests in this file are only run once and not for every tox environment
+pytestmark = [pytest.mark.tensorstore]
 
 
 def test_schemas_valid():
