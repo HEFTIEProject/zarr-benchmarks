@@ -6,7 +6,7 @@ import zarr
 from numcodecs import Blosc, GZip, Zstd
 from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
 
-from zarr_benchmarks import utils
+from zarr_benchmarks import read_write_zarr_utils, utils
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
@@ -55,7 +55,7 @@ def get_blosc_compressor(
     zarr_spec: Literal[2, 3] = 2,
 ) -> Any:
     if zarr_spec == 2:
-        shuffle_int = utils.get_numcodec_shuffle(shuffle)
+        shuffle_int = read_write_zarr_utils.get_numcodec_shuffle(shuffle)
         return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
     elif zarr_spec == 3:
         return BloscCodec(cname=cname, clevel=clevel, shuffle=shuffle)

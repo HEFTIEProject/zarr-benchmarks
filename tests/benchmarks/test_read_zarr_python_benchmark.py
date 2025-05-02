@@ -12,9 +12,7 @@ from tests.benchmarks.benchmark_parameters import (
 try:
     from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:
-    from zarr_benchmarks import (  # type: ignore[no-redef]
-        read_write_zarr_v2 as read_write_zarr,
-    )
+    read_write_zarr = pytest.importorskip("zarr_benchmarks.read_write_zarr_v2")
 
 pytestmark = [pytest.mark.zarr_python]
 
