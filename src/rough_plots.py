@@ -47,10 +47,11 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
             "compression_level",
             "compression_ratio",
             "params.chunk_size",
+            "params.blosc_shuffle"
         ]
         + stats_cols
     ]
-    benchmark_df = benchmark_df.rename(columns={"params.chunk_size": "chunk_size"})
+    benchmark_df = benchmark_df.rename(columns={"params.chunk_size": "chunk_size", "params.blosc_shuffle": "blosc_shuffle"})
 
     return benchmark_df
 
