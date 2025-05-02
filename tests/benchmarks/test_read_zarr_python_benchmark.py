@@ -1,5 +1,6 @@
 import pytest
 
+pytest.importorskip("zarr")
 try:
     from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:

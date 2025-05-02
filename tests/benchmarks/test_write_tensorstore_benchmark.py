@@ -1,5 +1,6 @@
 import pytest
 
+pytest.importorskip("tensorstore")
 from zarr_benchmarks import read_write_tensorstore
 from zarr_benchmarks.utils import remove_output_dir
 

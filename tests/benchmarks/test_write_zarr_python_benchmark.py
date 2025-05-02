@@ -1,5 +1,6 @@
 import pytest
 
+pytest.importorskip("zarr")
 from zarr_benchmarks.utils import remove_output_dir
 
 try:
