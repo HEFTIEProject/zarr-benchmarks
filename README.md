@@ -23,8 +23,11 @@ Install the relevant dependencies with:
 
 ```bash
 # Run from the top level of this repository
-pip install .
+pip install .[plots]
 ```
+
+Note: there are a number of optional dependencies that can be installed, if
+required. See the [development dependencies](#development-dependencies) section.
 
 Then run tox with:
 
@@ -107,6 +110,16 @@ python src/parse_json_for_plots.py
 ```
 
 This will create and save plots as .png files under `data/plots`.
+
+## Development dependencies
+
+If required, you can install all tensorstore + zarr-python dependencies with:
+
+```bash
+pip install .[plots,tensorstore,zarr-python-v3]
+```
+
+Use `zarr-python-v2` if you need version 2 instead.
 
 ## Running pre-commit locally
 
