@@ -4,6 +4,10 @@ This repository contains benchmarks for creating, reading, and storing huge 3D
 images in [Zarr](https://zarr.dev/) arrays. It is one part of the
 [HEFTIE project](https://github.com/HEFTIEProject).
 
+The goal of this repository is to benchmark writing data to Zarr with a range of
+different _configurations_ (e.g., compression codec, chunk size...), to guide
+the choice of options for folks reading and writing 3D imaging data.
+
 ## Other related work
 
 - [`zarr-developers/zarr-benchmark`](https://github.com/zarr-developers/zarr-benchmark)
@@ -11,12 +15,78 @@ images in [Zarr](https://zarr.dev/) arrays. It is one part of the
 - [Zarr Visualization Report](https://nasa-impact.github.io/zarr-visualization-report/)
 - [`icechunk` benchmarks](https://github.com/earth-mover/icechunk/tree/main/icechunk-python/notebooks/performance)
 
-## Project plan
+## Running the benchmarks
 
-The goal of this task is to benchmark writing data to Zarr with a range of
-different _configurations_ (e.g., compression codec, chunk size...), to guide
-the choice of options for folks reading and writing 3D imaging data. We will do
-this with the following considerations:
+Install the relevant dependencies with:
+
+```bash
+# Run from the top level of this repository
+pip install .
+```
+
+Then run tox with:
+
+```bash
+tox -- --benchmark-only
+```
+
+This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
+with the example Human Organ Atlas image.
+
+Running `tox` alone (without `--benchmark-only`) will run the tests + the
+benchmarks. To only run the tests use:
+
+```bash
+tox -- --benchmark-skip
+```
+
+For a quicker benchmark run, add `--dev-image`:
+
+```bash
+tox -- --benchmark-only --dev-image
+```
+
+This will run all benchmarks with a small 100x100x100 numpy array, which is
+useful for quick test runs during development. You can also override the default
+number of rounds / warmup rounds for each benchmark with:
+
+```bash
+tox -- --benchmark-only --dev-image --rounds=1 --warmup-rounds=0
+```
+
+Everything after the first `--` will be passed to the internal `pytest` call, so
+you can also add any pytest options you require.
+
+To run a subset of the benchmarks, use the `-e` option:
+
+```bash
+# tensorstore only
+tox run -e py313-tensorstore
+
+# zarr-python v2 only
+tox run -e py313-zarrv2
+
+# zarr-python v3 only
+tox run -e py313-zarrv3
+```
+
+## Creating plots
+
+Once in your virtual environment, you can create plots with:
+
+```bash
+python src/parse_json_for_plots.py
+```
+
+This will create and save plots as .png files under `data/plots`.
+
+## Running pre-commit locally
+
+If you want quick development, you can always do git commit -n which will
+disable the check (but still run in CI). Or don’t run pre-commit install until
+you need it.
+
+## Project considerations
 
 - Benchmarks should be easy to run on a typical laptop. This means:
   - **small test data** (< 1GB)
@@ -72,57 +142,3 @@ When benchmarking we will vary:
 - Run benchmarks using `zarr-python` version 3 and
   [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
 - Try different sharding options in Zarr format 3
-
-## Running the benchmarks
-
-Install the relevant dependencies with:
-
-```bash
-# Run from the top level of this repository
-pip install .
-```
-
-Then run tox with:
-
-```bash
-tox
-```
-
-This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
-with the example Human Organ Atlas image.
-
-For a quicker run, add `--dev-image`:
-
-```bash
-tox -- --dev-image
-```
-
-This will run all benchmarks with a small 100x100x100 numpy array, which is
-useful for quick test runs during development. You can also override the default
-number of rounds / warmup rounds for each benchmark with:
-
-```bash
-tox -- --dev-image --rounds=1 --warmup-rounds=0
-```
-
-Everything after the first `--` will be passed to the internal `pytest` call, so
-you can also add any pytest options you require.
-
-To run a subset of the benchmarks, use the `-e` option:
-
-```bash
-# tensorstore only
-tox run -e py313-tensorstore
-
-# zarr-python v2 only
-tox run -e py313-zarrv2
-
-# zarr-python v3 only
-tox run -e py313-zarrv3
-```
-
-## Running pre-commit locally
-
-If you want quick development, you can always do git commit -n which will
-disable the check (but still run in CI). Or don’t run pre-commit install until
-you need it.

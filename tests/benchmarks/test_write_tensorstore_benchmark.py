@@ -1,20 +1,17 @@
 import pytest
-from utils import remove_output_dir
-from tests.benchmark_parameters import (
-    CHUNK_SIZE,
+
+from tests.benchmarks.benchmark_parameters import (
     BLOSC_CLEVEL,
-    BLOSC_SHUFFLE,
     BLOSC_CNAME,
+    BLOSC_SHUFFLE,
+    CHUNK_SIZE,
     GZIP_LEVEL,
     ZSTD_LEVEL,
 )
+from zarr_benchmarks import read_write_tensorstore
+from zarr_benchmarks.utils import remove_output_dir
 
-try:
-    import read_write_zarr_v3 as read_write_zarr
-except ImportError:
-    import read_write_zarr_v2 as read_write_zarr
-
-pytestmark = [pytest.mark.zarr_python]
+pytestmark = [pytest.mark.tensorstore]
 
 
 @pytest.mark.benchmark(group="write")
@@ -33,7 +30,7 @@ def test_write_blosc(
     blosc_shuffle,
     blosc_cname,
 ):
-    blosc_compressor = read_write_zarr.get_blosc_compressor(
+    blosc_compressor = read_write_tensorstore.get_blosc_compressor(
         blosc_cname, blosc_clevel, blosc_shuffle
     )
 
@@ -48,7 +45,7 @@ def test_write_blosc(
         }
 
     benchmark.pedantic(
-        read_write_zarr.write_zarr_array,
+        read_write_tensorstore.write_zarr_array,
         setup=setup,
         rounds=rounds,
         warmup_rounds=warmup_rounds,
@@ -61,7 +58,7 @@ def test_write_blosc(
 def test_write_gzip(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, gzip_level
 ):
-    gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level)
+    gzip_compressor = read_write_tensorstore.get_gzip_compressor(gzip_level)
 
     def setup():
         remove_output_dir(store_path)
@@ -74,7 +71,7 @@ def test_write_gzip(
         }
 
     benchmark.pedantic(
-        read_write_zarr.write_zarr_array,
+        read_write_tensorstore.write_zarr_array,
         setup=setup,
         rounds=rounds,
         warmup_rounds=warmup_rounds,
@@ -87,7 +84,7 @@ def test_write_gzip(
 def test_write_zstd(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, zstd_level
 ):
-    zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level)
+    zstd_compressor = read_write_tensorstore.get_zstd_compressor(zstd_level)
 
     def setup():
         remove_output_dir(store_path)
@@ -100,7 +97,7 @@ def test_write_zstd(
         }
 
     benchmark.pedantic(
-        read_write_zarr.write_zarr_array,
+        read_write_tensorstore.write_zarr_array,
         setup=setup,
         rounds=rounds,
         warmup_rounds=warmup_rounds,

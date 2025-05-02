@@ -1,5 +1,5 @@
 ---
-name: Benchmarks
+name: Benchmarks and tests
 
 on:
   push:
@@ -36,6 +36,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox
 
-      - name: Run benchmarks with tox
+      - name: Run benchmarks and tests with tox
         run: |
           tox -- --dev-image --rounds=1 --warmup-rounds=0

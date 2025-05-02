@@ -1,10 +1,12 @@
 import pathlib
-import numpy as np
+from typing import Any, Literal
+
+import numpy.typing as npt
 import zarr
 from numcodecs import Blosc, GZip, Zstd
 from zarr.codecs import BloscCodec, GzipCodec, ZstdCodec
-from typing import Any, Literal
-import utils
+
+from zarr_benchmarks import utils
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
@@ -14,20 +16,21 @@ def get_compression_ratio(store_path: pathlib.Path) -> float:
     return compression_ratio
 
 
-def read_zarr_array(store_path: pathlib.Path) -> np.array:
+def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
     zarr_read = zarr.open_array(store_path, mode="r")
     read_image = zarr_read[:]
     return read_image
 
 
 def write_zarr_array(
-    image: np.array,
+    image: npt.NDArray,
     store_path: pathlib.Path,
     *,
     overwrite: bool,
     chunks: tuple[int],
     compressor: Any = "auto",
     zarr_spec: Literal[2, 3] = 2,
+    write_empty_chunks: bool = True,
 ) -> None:
     if overwrite:
         utils.remove_output_dir(store_path)
@@ -39,6 +42,8 @@ def write_zarr_array(
         dtype=image.dtype,
         compressors=compressor,
         zarr_format=zarr_spec,
+        fill_value=0,
+        config={"write_empty_chunks": write_empty_chunks},
     )
     zarr_array[:] = image
 

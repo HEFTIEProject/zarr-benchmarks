@@ -1,7 +1,9 @@
-import pytest
 import pathlib
-from utils import get_image
+
 import numpy as np
+import pytest
+
+from zarr_benchmarks.utils import get_image
 
 
 def pytest_addoption(parser):
