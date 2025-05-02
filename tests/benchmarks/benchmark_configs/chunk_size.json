@@ -1,0 +1,11 @@
+{
+  "chunk_size": {
+    "min": 60,
+    "max": 130
+  },
+  "blosc_clevel": [3],
+  "blosc_shuffle": ["shuffle"],
+  "blosc_cname": ["zstd"],
+  "gzip_level": [],
+  "zstd_level": []
+}

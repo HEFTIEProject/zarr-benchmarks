@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Benchmark config",
+  "description": "Parameters to run zarr benchmarks",
+  "type": "object",
+  "properties": {
+    "chunk_size": {
+      "description": "The chunk sizes to use for writing zarr arrays",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "description": "Minimum chunk size",
+              "type": "integer",
+              "minimum": 1
+            },
+            "max": {
+              "description": "Maximum chunk size",
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": ["min", "max"]
+        }
+      ]
+    },
+    "blosc_clevel": {
+      "description": "The compression levels of blosc",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "description": "Minimum compression level of blosc",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "max": {
+              "description": "Maximum compression level of blosc",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            }
+          },
+          "required": ["min", "max"]
+        }
+      ]
+    },
+    "blosc_shuffle": {
+      "description": "Types of shuffle to use with blosc",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["bitshuffle", "shuffle", "noshuffle"]
+      }
+    },
+    "blosc_cname": {
+      "description": "The compressor names to use with blosc",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["blosclz", "lz4", "lz4hc", "zlib", "zstd"]
+      }
+    },
+    "gzip_level": {
+      "description": "The compression levels of gzip",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "description": "Minimum compression level of gzip",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "max": {
+              "description": "Maximum compression level of gzip",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            }
+          },
+          "required": ["min", "max"]
+        }
+      ]
+    },
+    "zstd_level": {
+      "description": "The compression levels of zstd. According to zstd docs, levels>=20 should be used with caution, as they need more memory",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 22
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "description": "Minimum compression level of zstd",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 22
+            },
+            "max": {
+              "description": "Maximum compression level of zstd",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 22
+            }
+          },
+          "required": ["min", "max"]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "chunk_size",
+    "blosc_clevel",
+    "blosc_shuffle",
+    "blosc_cname",
+    "gzip_level",
+    "zstd_level"
+  ]
+}

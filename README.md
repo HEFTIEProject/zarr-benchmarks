@@ -17,6 +17,8 @@ the choice of options for folks reading and writing 3D imaging data.
 
 ## Running the benchmarks
 
+### All benchmarks
+
 Install the relevant dependencies with:
 
 ```bash
@@ -27,37 +29,26 @@ pip install .
 Then run tox with:
 
 ```bash
-tox -- --benchmark-only
+tox -- --benchmark-only --config=all
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
 with the example Human Organ Atlas image.
 
-Running `tox` alone (without `--benchmark-only`) will run the tests + the
-benchmarks. To only run the tests use:
+### Specific config
+
+`--config=all` will use parameters from all configuration files under
+`tests/benchmarks/benchmark_configs` (except for `dev` which contains a small
+selection of parameters for quick test runs). To run with parameters from a
+single config file use e.g.
 
 ```bash
-tox -- --benchmark-skip
+tox -- --benchmark-only --config=shuffle
 ```
 
-For a quicker benchmark run, add `--dev-image`:
+### Specific package
 
-```bash
-tox -- --benchmark-only --dev-image
-```
-
-This will run all benchmarks with a small 100x100x100 numpy array, which is
-useful for quick test runs during development. You can also override the default
-number of rounds / warmup rounds for each benchmark with:
-
-```bash
-tox -- --benchmark-only --dev-image --rounds=1 --warmup-rounds=0
-```
-
-Everything after the first `--` will be passed to the internal `pytest` call, so
-you can also add any pytest options you require.
-
-To run a subset of the benchmarks, use the `-e` option:
+To only run benchmarks for a specific package, use the `-e` option:
 
 ```bash
 # tensorstore only
@@ -68,6 +59,43 @@ tox run -e py313-zarrv2
 
 # zarr-python v3 only
 tox run -e py313-zarrv3
+```
+
+To see a list of available environments, use `tox -l`.
+
+### Options for quicker development runs
+
+Removing the `--config` option will use a small `dev` config to test a small
+selection of parameters:
+
+```bash
+tox -- --benchmark-only
+```
+
+You can also use a smaller image (100x100x100 numpy array) by adding
+`--dev-image`:
+
+```bash
+tox -- --benchmark-only --dev-image
+```
+
+You can also override the default number of rounds / warmup rounds for each
+benchmark with:
+
+```bash
+tox -- --benchmark-only --dev-image --rounds=1 --warmup-rounds=0
+```
+
+Everything after the first `--` will be passed to the internal `pytest` call, so
+you can add any pytest options you require.
+
+## Running the tests
+
+Running `tox` without `--benchmark-only`, will run the tests + the benchmarks.
+To only run the tests use:
+
+```bash
+tox -- --benchmark-skip
 ```
 
 ## Creating plots

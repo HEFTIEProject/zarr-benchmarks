@@ -1,16 +1,10 @@
-import json
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import seaborn as sns
 
-
-def load_benchmarks_json(path_to_file: Path) -> dict:
-    with open(path_to_file, "r") as in_file_obj:
-        text = in_file_obj.read()
-        # convert the text into a dictionary
-        return json.loads(text)
+from zarr_benchmarks import utils
 
 
 def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
@@ -65,7 +59,7 @@ def get_benchmarks_dataframe(
 
     benchmark_dfs = []
     for id, json_path in package_paths_dict.items():
-        benchmark_df = prepare_benchmarks_dataframe(load_benchmarks_json(json_path))
+        benchmark_df = prepare_benchmarks_dataframe(utils.read_json_file(json_path))
         benchmark_df.insert(0, "package", id)
         benchmark_dfs.append(benchmark_df)
 
@@ -175,7 +169,7 @@ if __name__ == "__main__":
     read_zarr_v2_chunks_200 = read_zarr_v2[read_zarr_v2.chunk_size == 200]
 
     benchmark_name = Path(zarr_v2_path).stem
-    data = load_benchmarks_json(Path(zarr_v2_path))
+    data = utils.read_json_file(Path(zarr_v2_path))
     machine_info = data["machine_info"]["machine"]
     date = datetime.now().strftime("%Y-%m-%d")
 
