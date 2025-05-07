@@ -110,7 +110,7 @@ python src/zarr_benchmarks/parse_json_for_plots.py
 This will process the latest benchmark results from `data/results` and create
 plots as .png files under `data/plots`. If you want to process older benchmark
 results, you can explicitly provide the ids of the `zarr-python-v2`,
-`zarr-python-v2` and `tensorstore` jsons:
+`zarr-python-v3` and `tensorstore` jsons:
 
 ```bash
 python src/zarr_benchmarks/parse_json_for_plots.py --json_ids 0001 002 0003
