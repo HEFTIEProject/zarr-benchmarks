@@ -36,7 +36,8 @@ tox -- --benchmark-only --config=all
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
-with the example Human Organ Atlas image.
+with the example Human Organ Atlas image. All results will be saved as `.json`
+files to the `data/results` directory.
 
 ### Specific config
 
@@ -106,10 +107,23 @@ tox -- --benchmark-skip
 Once in your virtual environment, you can create plots with:
 
 ```bash
-python src/parse_json_for_plots.py
+python src/zarr_benchmarks/parse_json_for_plots.py
 ```
 
-This will create and save plots as .png files under `data/plots`.
+This will process the latest benchmark results from `data/results` and create
+plots as .png files under `data/plots`. If you want to process older benchmark
+results, you can explicitly provide the ids of the `zarr-python-v2`,
+`zarr-python-v3` and `tensorstore` jsons:
+
+```bash
+python src/zarr_benchmarks/parse_json_for_plots.py --json_ids 0001 002 0003
+```
+
+To see more info about what these values represent run:
+
+```bash
+python src/zarr_benchmarks/parse_json_for_plots.py -h
+```
 
 ## Development dependencies
 

@@ -1,3 +1,4 @@
+import argparse
 from datetime import datetime
 from pathlib import Path
 
@@ -44,10 +45,16 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
             "compression_level",
             "compression_ratio",
             "params.chunk_size",
+            "params.blosc_shuffle",
         ]
         + stats_cols
     ]
-    benchmark_df = benchmark_df.rename(columns={"params.chunk_size": "chunk_size"})
+    benchmark_df = benchmark_df.rename(
+        columns={
+            "params.chunk_size": "chunk_size",
+            "params.blosc_shuffle": "blosc_shuffle",
+        }
+    )
 
     return benchmark_df
 
@@ -96,7 +103,10 @@ def plot_relplot_benchmarks(
     if output_filename is not None:
         save_plot_as_png(
             graph,
-            f"data/plots/{group}_relplot_{output_filename}.png",
+            Path(__file__).parents[2]
+            / "data"
+            / "plots"
+            / f"{group}_relplot_{output_filename}.png",
         )
 
 
@@ -116,6 +126,7 @@ def plot_relplot_subplots_benchmarks(
         col=hue,
         hue=hue,
         facet_kws=dict(sharex=True, sharey=True),
+        col_wrap=3,
     )
 
     x_axis_label, y_axis_label = get_axis_labels(x_axis, y_axis, group)
@@ -124,7 +135,10 @@ def plot_relplot_subplots_benchmarks(
     if output_filename is not None:
         save_plot_as_png(
             graph,
-            f"data/plots/{group}_subplot_relplot_{output_filename}.png",
+            Path(__file__).parents[2]
+            / "data"
+            / "plots"
+            / f"{group}_subplot_relplot_{output_filename}.png",
         )
 
 
@@ -142,16 +156,14 @@ def get_axis_labels(x_axis: str, y_axis: str, group: str) -> tuple[str, str]:
     return x_axis_label, y_axis_label
 
 
-def save_plot_as_png(grid: sns.FacetGrid, output_filename: str) -> None:
-    Path(output_filename).parent.mkdir(parents=True, exist_ok=True)
-    grid.savefig(output_filename, format="png", dpi=300)
+def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    grid.savefig(output_path, format="png", dpi=300)
 
 
-if __name__ == "__main__":
-    zarr_v2_path = "data/json/0007_zarr-python-v2.json"
-    zarr_v3_path = "data/json/0008_zarr-python-v3.json"
-    tensorstore_path = "data/json/0009_tensorstore.json"
-
+def create_read_write_plots(
+    zarr_v2_path: Path, zarr_v3_path: Path, tensorstore_path: Path
+) -> None:
     package_paths_dict = {
         "zarr_python_2": zarr_v2_path,
         "zarr_python_3": zarr_v3_path,
@@ -161,12 +173,20 @@ if __name__ == "__main__":
     benchmarks_df = get_benchmarks_dataframe(
         package_paths_dict,
     )
-    benchmarks_zarr_v2 = benchmarks_df[benchmarks_df.package == "zarr_python_2"]
+
+    read_write_benchmarks = benchmarks_df[
+        (benchmarks_df.chunk_size.isin([64, 128]))
+        & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
+    ]
+
+    benchmarks_zarr_v2 = read_write_benchmarks[
+        read_write_benchmarks.package == "zarr_python_2"
+    ]
     write_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "write"]
     read_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "read"]
 
-    write_zarr_v2_chunks_200 = write_zarr_v2[write_zarr_v2.chunk_size == 200]
-    read_zarr_v2_chunks_200 = read_zarr_v2[read_zarr_v2.chunk_size == 200]
+    write_zarr_v2_chunks_128 = write_zarr_v2[write_zarr_v2.chunk_size == 128]
+    read_zarr_v2_chunks_128 = read_zarr_v2[read_zarr_v2.chunk_size == 128]
 
     benchmark_name = Path(zarr_v2_path).stem
     data = utils.read_json_file(Path(zarr_v2_path))
@@ -175,7 +195,7 @@ if __name__ == "__main__":
 
     output_filename = date + "_" + machine_info + "_" + benchmark_name
     plot_relplot_benchmarks(
-        write_zarr_v2_chunks_200,
+        write_zarr_v2_chunks_128,
         group="write",
         x_axis="stats.mean",
         y_axis="compression_ratio",
@@ -186,7 +206,7 @@ if __name__ == "__main__":
     )
 
     plot_relplot_benchmarks(
-        read_zarr_v2_chunks_200,
+        read_zarr_v2_chunks_128,
         group="read",
         x_axis="stats.mean",
         y_axis="compression_ratio",
@@ -197,7 +217,7 @@ if __name__ == "__main__":
     )
 
     plot_relplot_subplots_benchmarks(
-        write_zarr_v2_chunks_200,
+        write_zarr_v2_chunks_128,
         group="write",
         x_axis="stats.mean",
         y_axis="compression_level",
@@ -205,12 +225,57 @@ if __name__ == "__main__":
         output_filename=output_filename,
     )
     plot_relplot_subplots_benchmarks(
-        read_zarr_v2_chunks_200,
+        read_zarr_v2_chunks_128,
         group="read",
         x_axis="stats.mean",
         y_axis="compression_level",
         hue="compressor",
         output_filename=output_filename,
     )
+
+
+def create_all_plots(json_ids: list[str] | None = None) -> None:
+    """Create all plots. If json_ids aren't provided, process the latest benchmark results inside data/results.
+
+    :param json_ids: optional list of json ids e.g. ["0001", "0002", "0003"] of the zarr-python-v2,
+    zarr-python-v3 and tensorstore json to process.
+    """
+    result_path = Path(__file__).parents[2] / "data" / "results"
+    sub_dirs = [sub_path for sub_path in result_path.iterdir() if sub_path.is_dir()]
+
+    if len(sub_dirs) != 1:
+        raise ValueError("Expected only one sub-directory inside data/results")
+    result_path = sub_dirs[0]
+
+    if json_ids is None:
+        # Find the latest 3 json ids in the sub-dir
+        all_ids = []
+        for result_json in result_path.glob("*.json"):
+            all_ids.append(result_json.stem.split("_")[0])
+
+        json_ids = sorted(all_ids)[-3:]
+
+    zarr_v2_path = result_path / f"{json_ids[0]}_zarr-python-v2.json"
+    zarr_v3_path = result_path / f"{json_ids[1]}_zarr-python-v3.json"
+    tensorstore_path = result_path / f"{json_ids[2]}_tensorstore.json"
+
+    create_read_write_plots(zarr_v2_path, zarr_v3_path, tensorstore_path)
+
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Create plots from benchmark results. By default, processes the latest benchmark results from "
+        "data/results. To override this, provide --json_ids."
+    )
+    parser.add_argument(
+        "--json_ids",
+        nargs=3,
+        metavar="JSON_ID",
+        help="provide the ids of the zarr-python-v2, zarr-python-v3 and tensorstore json files you want to process e.g. 0001 0002 0003",
+    )
+    args = parser.parse_args()
+
+    create_all_plots(args.json_ids)
