@@ -34,7 +34,7 @@ tox -- --benchmark-only --config=all
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
 with the example Human Organ Atlas image. All results will be saved as `.json`
-files to the `data/json` directory.
+files to the `data/results` directory.
 
 ### Specific config
 
