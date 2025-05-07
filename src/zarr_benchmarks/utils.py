@@ -2,10 +2,8 @@ import json
 import os
 import pathlib
 import shutil
-from typing import Literal
 
 import imageio.v3 as iio
-import numcodecs
 import numpy as np
 import numpy.typing as npt
 
@@ -42,18 +40,6 @@ def get_directory_size(path: pathlib.Path) -> int:
             total_size += os.path.getsize(fp)
 
     return total_size
-
-
-def get_numcodec_shuffle(shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]) -> int:
-    match shuffle:
-        case "shuffle":
-            return numcodecs.Blosc.SHUFFLE
-        case "noshuffle":
-            return numcodecs.Blosc.NOSHUFFLE
-        case "bitshuffle":
-            return numcodecs.Blosc.BITSHUFFLE
-        case _:
-            raise ValueError(f"invalid shuffle value for blosc {shuffle}")
 
 
 def read_json_file(path_to_file: pathlib.Path) -> dict:
