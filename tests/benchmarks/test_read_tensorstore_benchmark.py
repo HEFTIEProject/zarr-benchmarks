@@ -1,7 +1,6 @@
 import pytest
 
-from zarr_benchmarks import read_write_tensorstore
-
+read_write_tensorstore = pytest.importorskip("zarr_benchmarks.read_write_tensorstore")
 pytestmark = [pytest.mark.tensorstore]
 
 
