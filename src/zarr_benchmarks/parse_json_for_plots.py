@@ -234,31 +234,48 @@ def create_read_write_plots(
     )
 
 
-def create_all_plots(
-    json_dir: str, zarr_v2_id: str, zarr_v3_id: str, tensorstore_id: str
-) -> None:
-    json_dir_path = Path(__file__).parents[2] / "data" / "json" / json_dir
-    create_read_write_plots(
-        json_dir_path / f"{zarr_v2_id}_zarr-python-v2.json",
-        json_dir_path / f"{zarr_v3_id}_zarr-python-v3.json",
-        json_dir_path / f"{tensorstore_id}_tensorstore.json",
-    )
+def create_all_plots(json_ids: list[str] | None = None) -> None:
+    """Create all plots. If json_ids aren't provided, process the latest benchmark results inside data/results.
+
+    :param json_ids: optional list of json ids e.g. ["0001", "0002", "0003"] of the zarr-python-v2,
+    zarr-python-v3 and tensorstore json to process.
+    """
+    result_path = Path(__file__).parents[2] / "data" / "results"
+    sub_dirs = [sub_path for sub_path in result_path.iterdir() if sub_path.is_dir()]
+
+    if len(sub_dirs) != 1:
+        raise ValueError("Expected only one sub-directory inside data/results")
+    result_path = sub_dirs[0]
+
+    if json_ids is None:
+        # Find the latest 3 json ids in the sub-dir
+        all_ids = []
+        for result_json in result_path.glob("*.json"):
+            all_ids.append(result_json.stem.split("_")[0])
+
+        json_ids = sorted(all_ids)[-3:]
+
+    zarr_v2_path = result_path / f"{json_ids[0]}_zarr-python-v2.json"
+    zarr_v3_path = result_path / f"{json_ids[1]}_zarr-python-v3.json"
+    tensorstore_path = result_path / f"{json_ids[2]}_tensorstore.json"
+
+    create_read_write_plots(zarr_v2_path, zarr_v3_path, tensorstore_path)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "json_dir",
-        help="name of directory inside data/json to process files from e.g. 'Windows-CPython-3.13-64bit'",
+    parser = argparse.ArgumentParser(
+        description="Create plots from benchmark results. By default, processes the latest benchmark results from "
+        "data/results. To override this, provide --json_ids."
     )
-    parser.add_argument("zarr_v2_id", help="id of zarr-python-v2 json file e.g. 0001")
-    parser.add_argument("zarr_v3_id", help="id of zarr-python-v3 json file e.g. 0001")
-    parser.add_argument("tensorstore_id", help="id of tensorstore json file e.g. 0001")
+    parser.add_argument(
+        "--json_ids",
+        nargs=3,
+        metavar="JSON_ID",
+        help="provide the ids of the zarr-python-v2, zarr-python-v3 and tensorstore json files you want to process e.g. 0001 0002 0003",
+    )
     args = parser.parse_args()
 
-    create_all_plots(
-        args.json_dir, args.zarr_v2_id, args.zarr_v3_id, args.tensorstore_id
-    )
+    create_all_plots(args.json_ids)
