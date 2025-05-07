@@ -34,7 +34,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .
+          pip install .[plots]
 
       - name: Run benchmarks and tests with tox
         run: |
