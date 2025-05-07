@@ -104,19 +104,16 @@ tox -- --benchmark-skip
 Once in your virtual environment, you can create plots with:
 
 ```bash
-python src/zarr_benchmarks/parse_json_for_plots.py sub-dir zarr-v2-id zarr-v3-id tensorstore-id
+python src/zarr_benchmarks/parse_json_for_plots.py
 ```
 
-This will create and save plots as .png files under `data/plots`.
-
-You'll need to replace `sub-dir` / `zarr-v2-id` / `zarr-v3-id` /
-`tensorstore-id` with the relevant values. For example, to process benchmark
-output files - `0001_zarr-python-v2.json`, `0002_zarr-python-v2.json`,
-`0003_tensorstore.json` - stored in a directory called
-`Windows-CPython-3.13-64bit`, run:
+This will process the latest benchmark results from `data/results` and create
+plots as .png files under `data/plots`. If you want to process older benchmark
+results, you can explicitly provide the ids of the `zarr-python-v2`,
+`zarr-python-v2` and `tensorstore` jsons:
 
 ```bash
-python src/zarr_benchmarks/parse_json_for_plots.py Windows-CPython-3.13-64bit 0001 002 0003
+python src/zarr_benchmarks/parse_json_for_plots.py --json_ids 0001 002 0003
 ```
 
 To see more info about what these values represent run:
