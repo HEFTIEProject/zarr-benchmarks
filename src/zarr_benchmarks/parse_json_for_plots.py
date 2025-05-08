@@ -80,8 +80,8 @@ def plot_relplot_benchmarks(
     x_axis: str,
     y_axis: str,
     hue: str,
-    size: str,
     title: str,
+    size: str | None = None,
     output_filename: str | None = None,
 ) -> None:
     graph = sns.relplot(
@@ -161,19 +161,73 @@ def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
     grid.savefig(output_path, format="png", dpi=300)
 
 
-def create_read_write_plots(
-    zarr_v2_path: Path, zarr_v3_path: Path, tensorstore_path: Path
+def create_chunk_size_plots(
+    benchmarks_df: pd.DataFrame,
 ) -> None:
-    package_paths_dict = {
-        "zarr_python_2": zarr_v2_path,
-        "zarr_python_3": zarr_v3_path,
-        "tensorstore": tensorstore_path,
-    }
+    chunk_size_benchmarks = benchmarks_df[
+        (benchmarks_df.compressor == "blosc-zstd")
+        & (benchmarks_df.compression_level == 3)
+        & (benchmarks_df.blosc_shuffle == "shuffle")
+    ]
 
-    benchmarks_df = get_benchmarks_dataframe(
-        package_paths_dict,
+    # pdb.set_trace()
+
+    plot_relplot_subplots_benchmarks(
+        chunk_size_benchmarks,
+        group="write",
+        x_axis="chunk_size",
+        y_axis="compression_ratio",
+        hue="package",
+        output_filename="chunk_size_compression_ratio",
     )
 
+    chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
+
+    plot_relplot_subplots_benchmarks(
+        chunk_size_write,
+        group="write",
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        output_filename="chunk_size_write",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_write,
+        group="write",
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        title="chunk_size_write_all",
+        output_filename="chunk_size_write_all",
+    )
+
+    chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
+
+    plot_relplot_subplots_benchmarks(
+        chunk_size_read,
+        group="read",
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        output_filename="chunk_size_read",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_read,
+        group="read",
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        title="chunk_size_read_all",
+        output_filename="chunk_size_read_all",
+    )
+
+
+def create_read_write_plots(
+    benchmarks_df: pd.DataFrame,
+    zarr_v2_path: str,
+) -> None:
     read_write_benchmarks = benchmarks_df[
         (benchmarks_df.chunk_size.isin([64, 128]))
         & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
@@ -259,7 +313,18 @@ def create_all_plots(json_ids: list[str] | None = None) -> None:
     zarr_v3_path = result_path / f"{json_ids[1]}_zarr-python-v3.json"
     tensorstore_path = result_path / f"{json_ids[2]}_tensorstore.json"
 
-    create_read_write_plots(zarr_v2_path, zarr_v3_path, tensorstore_path)
+    package_paths_dict = {
+        "zarr_python_2": zarr_v2_path,
+        "zarr_python_3": zarr_v3_path,
+        "tensorstore": tensorstore_path,
+    }
+
+    benchmarks_df = get_benchmarks_dataframe(
+        package_paths_dict,
+    )
+
+    # create_read_write_plots(benchmarks_df, zarr_v2_path)
+    create_chunk_size_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
