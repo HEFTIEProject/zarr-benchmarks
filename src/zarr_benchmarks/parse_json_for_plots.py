@@ -10,6 +10,7 @@ from zarr_benchmarks import utils
 
 def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
     benchmark_df = pd.json_normalize(json_dict["benchmarks"])
+    benchmark_df["machine"] = json_dict["machine_info"]["machine"]
 
     # copy compression ratio from read benchmarks to write benchmarks
     param_cols = [col for col in benchmark_df if col.startswith("params")]
@@ -40,6 +41,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
     stats_cols = [col for col in benchmark_df if col.startswith("stats")]
     benchmark_df = benchmark_df[
         [
+            "machine",
             "group",
             "compressor",
             "compression_level",
@@ -286,30 +288,20 @@ def create_chunk_size_plots(
     )
 
 
-def create_read_write_plots(
-    benchmarks_df: pd.DataFrame,
-    zarr_v2_path: str,
+def create_read_write_plots_for_package(
+    read_write_benchmarks: pd.DataFrame, package: str
 ) -> None:
-    read_write_benchmarks = benchmarks_df[
-        (benchmarks_df.chunk_size.isin([64, 128]))
-        & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
-    ]
-
-    benchmarks_zarr_v2 = read_write_benchmarks[
-        read_write_benchmarks.package == "zarr_python_2"
-    ]
+    benchmarks_zarr_v2 = read_write_benchmarks[read_write_benchmarks.package == package]
     write_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "write"]
     read_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "read"]
 
     write_zarr_v2_chunks_128 = write_zarr_v2[write_zarr_v2.chunk_size == 128]
     read_zarr_v2_chunks_128 = read_zarr_v2[read_zarr_v2.chunk_size == 128]
 
-    benchmark_name = Path(zarr_v2_path).stem
-    data = utils.read_json_file(Path(zarr_v2_path))
-    machine_info = data["machine_info"]["machine"]
+    machine_info = read_write_benchmarks["machine"].iloc[0]
     date = datetime.now().strftime("%Y-%m-%d")
 
-    output_filename = date + "_" + machine_info + "_" + benchmark_name
+    output_filename = f"{date}_{machine_info}_{package}"
     plot_relplot_benchmarks(
         write_zarr_v2_chunks_128,
         group="write",
@@ -348,6 +340,17 @@ def create_read_write_plots(
         hue="compressor",
         output_filename=output_filename,
     )
+
+
+def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
+    read_write_benchmarks = benchmarks_df[
+        (benchmarks_df.chunk_size.isin([64, 128]))
+        & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
+    ]
+
+    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
 
 
 def create_all_plots(json_ids: list[str] | None = None) -> None:
@@ -385,7 +388,7 @@ def create_all_plots(json_ids: list[str] | None = None) -> None:
         package_paths_dict,
     )
 
-    # create_read_write_plots(benchmarks_df, zarr_v2_path)
+    create_read_write_plots(benchmarks_df)
     create_chunk_size_plots(benchmarks_df)
     create_shuffle_plots(benchmarks_df)
 
