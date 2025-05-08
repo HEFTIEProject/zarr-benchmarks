@@ -118,14 +118,18 @@ def plot_relplot_subplots_benchmarks(
     group: str,
     x_axis: str,
     y_axis: str,
-    hue: str,
+    col: str,
+    hue: str | None = None,
     output_filename: str | None = None,
 ) -> None:
+    if hue is None:
+        hue = col
+
     graph = sns.relplot(
         data=data,
         x=x_axis,
         y=y_axis,
-        col=hue,
+        col=col,
         hue=hue,
         facet_kws=dict(sharex=True, sharey=True),
         col_wrap=3,
@@ -234,14 +238,12 @@ def create_chunk_size_plots(
         & (benchmarks_df.blosc_shuffle == "shuffle")
     ]
 
-    # pdb.set_trace()
-
     plot_relplot_subplots_benchmarks(
         chunk_size_benchmarks,
         group="write",
         x_axis="chunk_size",
         y_axis="compression_ratio",
-        hue="package",
+        col="package",
         output_filename="chunk_size_compression_ratio",
     )
 
@@ -252,7 +254,7 @@ def create_chunk_size_plots(
         group="write",
         y_axis="stats.mean",
         x_axis="chunk_size",
-        hue="package",
+        col="package",
         output_filename="chunk_size_write",
     )
 
@@ -273,7 +275,7 @@ def create_chunk_size_plots(
         group="read",
         y_axis="stats.mean",
         x_axis="chunk_size",
-        hue="package",
+        col="package",
         output_filename="chunk_size_read",
     )
 
@@ -291,19 +293,19 @@ def create_chunk_size_plots(
 def create_read_write_plots_for_package(
     read_write_benchmarks: pd.DataFrame, package: str
 ) -> None:
-    benchmarks_zarr_v2 = read_write_benchmarks[read_write_benchmarks.package == package]
-    write_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "write"]
-    read_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "read"]
+    package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
+    write = package_benchmarks[package_benchmarks.group == "write"]
+    read = package_benchmarks[package_benchmarks.group == "read"]
 
-    write_zarr_v2_chunks_128 = write_zarr_v2[write_zarr_v2.chunk_size == 128]
-    read_zarr_v2_chunks_128 = read_zarr_v2[read_zarr_v2.chunk_size == 128]
+    write_chunks_128 = write[write.chunk_size == 128]
+    read_chunks_128 = read[read.chunk_size == 128]
 
     machine_info = read_write_benchmarks["machine"].iloc[0]
     date = datetime.now().strftime("%Y-%m-%d")
 
     output_filename = f"{date}_{machine_info}_{package}"
     plot_relplot_benchmarks(
-        write_zarr_v2_chunks_128,
+        write_chunks_128,
         group="write",
         x_axis="stats.mean",
         y_axis="compression_ratio",
@@ -314,7 +316,7 @@ def create_read_write_plots_for_package(
     )
 
     plot_relplot_benchmarks(
-        read_zarr_v2_chunks_128,
+        read_chunks_128,
         group="read",
         x_axis="stats.mean",
         y_axis="compression_ratio",
@@ -325,19 +327,19 @@ def create_read_write_plots_for_package(
     )
 
     plot_relplot_subplots_benchmarks(
-        write_zarr_v2_chunks_128,
+        write_chunks_128,
         group="write",
         x_axis="stats.mean",
         y_axis="compression_level",
-        hue="compressor",
+        col="compressor",
         output_filename=output_filename,
     )
     plot_relplot_subplots_benchmarks(
-        read_zarr_v2_chunks_128,
+        read_chunks_128,
         group="read",
         x_axis="stats.mean",
         y_axis="compression_level",
-        hue="compressor",
+        col="compressor",
         output_filename=output_filename,
     )
 
@@ -351,6 +353,35 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
     create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
     create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+
+    read_chunks_128 = read_write_benchmarks[
+        (read_write_benchmarks.group == "read")
+        & (read_write_benchmarks.chunk_size == 128)
+    ]
+    write_chunks_128 = read_write_benchmarks[
+        (read_write_benchmarks.group == "write")
+        & (read_write_benchmarks.chunk_size == 128)
+    ]
+
+    plot_relplot_subplots_benchmarks(
+        read_chunks_128,
+        group="read",
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="package",
+        hue="compressor",
+        output_filename="read_all_packages",
+    )
+
+    plot_relplot_subplots_benchmarks(
+        write_chunks_128,
+        group="write",
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="package",
+        hue="compressor",
+        output_filename="write_all_packages",
+    )
 
 
 def create_all_plots(json_ids: list[str] | None = None) -> None:
