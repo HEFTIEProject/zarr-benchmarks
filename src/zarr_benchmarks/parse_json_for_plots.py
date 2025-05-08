@@ -161,6 +161,68 @@ def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
     grid.savefig(output_path, format="png", dpi=300)
 
 
+def create_shuffle_plots(
+    benchmarks_df: pd.DataFrame,
+) -> None:
+    shuffle_benchmarks = benchmarks_df[
+        (benchmarks_df.compressor == "blosc-zstd")
+        & (benchmarks_df.compression_level == 3)
+        & (benchmarks_df.chunk_size == 128)
+    ]
+
+    graph = sns.catplot(
+        data=shuffle_benchmarks,
+        x="blosc_shuffle",
+        y="compression_ratio",
+        hue="package",
+        kind="bar",
+        height=4,
+        aspect=1.5,
+    )
+
+    save_plot_as_png(
+        graph,
+        Path(__file__).parents[2]
+        / "data"
+        / "plots"
+        / "blosc_shuffle_compression_ratio.png",
+    )
+
+    write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
+
+    graph = sns.catplot(
+        data=write,
+        x="blosc_shuffle",
+        y="stats.mean",
+        hue="package",
+        kind="bar",
+        height=4,
+        aspect=1.5,
+    )
+
+    save_plot_as_png(
+        graph,
+        Path(__file__).parents[2] / "data" / "plots" / "blosc_shuffle_write.png",
+    )
+
+    read = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
+
+    graph = sns.catplot(
+        data=read,
+        x="blosc_shuffle",
+        y="stats.mean",
+        hue="package",
+        kind="bar",
+        height=4,
+        aspect=1.5,
+    )
+
+    save_plot_as_png(
+        graph,
+        Path(__file__).parents[2] / "data" / "plots" / "blosc_shuffle_read.png",
+    )
+
+
 def create_chunk_size_plots(
     benchmarks_df: pd.DataFrame,
 ) -> None:
@@ -325,6 +387,7 @@ def create_all_plots(json_ids: list[str] | None = None) -> None:
 
     # create_read_write_plots(benchmarks_df, zarr_v2_path)
     create_chunk_size_plots(benchmarks_df)
+    create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
