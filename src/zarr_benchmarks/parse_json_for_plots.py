@@ -157,6 +157,38 @@ def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
     plt.close()
 
 
+def plot_catplot_benchmarks(
+    data: pd.DataFrame,
+    *,
+    x_axis: str,
+    y_axis: str,
+    sub_dir: str,
+    output_filename: str,
+    title: str | None = None,
+    hue: str | None = None,
+) -> None:
+    graph = sns.catplot(
+        data=data,
+        x=x_axis,
+        y=y_axis,
+        hue=hue,
+        kind="bar",
+        height=4,
+        aspect=1.5,
+    )
+    x_axis_label, y_axis_label = get_axis_labels(data, x_axis, y_axis)
+    graph.set_axis_labels(x_axis_label, y_axis_label)
+
+    if title is not None:
+        graph.figure.suptitle(title)
+        graph.figure.subplots_adjust(top=0.9)
+
+    save_plot_as_png(
+        graph,
+        get_output_path(data, sub_dir, output_filename),
+    )
+
+
 def create_shuffle_plots(
     benchmarks_df: pd.DataFrame,
 ) -> None:
@@ -170,49 +202,31 @@ def create_shuffle_plots(
     write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
     read = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
 
-    graph = sns.catplot(
+    plot_catplot_benchmarks(
         data=read,
-        x="blosc_shuffle",
-        y="compression_ratio",
+        x_axis="blosc_shuffle",
+        y_axis="compression_ratio",
+        sub_dir=sub_dir,
+        output_filename="compression_ratio",
         hue="package",
-        kind="bar",
-        height=4,
-        aspect=1.5,
     )
 
-    save_plot_as_png(
-        graph,
-        get_output_path(shuffle_benchmarks, sub_dir, "compression_ratio"),
-    )
-
-    graph = sns.catplot(
+    plot_catplot_benchmarks(
         data=write,
-        x="blosc_shuffle",
-        y="stats.mean",
+        x_axis="blosc_shuffle",
+        y_axis="stats.mean",
+        sub_dir=sub_dir,
+        output_filename="write",
         hue="package",
-        kind="bar",
-        height=4,
-        aspect=1.5,
     )
 
-    save_plot_as_png(
-        graph,
-        get_output_path(shuffle_benchmarks, sub_dir, "write"),
-    )
-
-    graph = sns.catplot(
+    plot_catplot_benchmarks(
         data=read,
-        x="blosc_shuffle",
-        y="stats.mean",
+        x_axis="blosc_shuffle",
+        y_axis="stats.mean",
+        sub_dir=sub_dir,
+        output_filename="read",
         hue="package",
-        kind="bar",
-        height=4,
-        aspect=1.5,
-    )
-
-    save_plot_as_png(
-        graph,
-        get_output_path(shuffle_benchmarks, sub_dir, "read"),
     )
 
 
