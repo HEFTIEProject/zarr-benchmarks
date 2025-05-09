@@ -94,7 +94,10 @@ def plot_relplot_benchmarks(
         plot_name = output_filename
     else:
         facet_kws = dict(sharex=True, sharey=True)
-        col_wrap = 3
+        if len(data[col].unique()) < 3:
+            col_wrap = 2
+        else:
+            col_wrap = 3
         plot_name = output_filename + "_subplots"
 
     graph = sns.relplot(
@@ -297,6 +300,30 @@ def create_read_write_plots_for_package(
     write = package_benchmarks[package_benchmarks.group == "write"]
     read = package_benchmarks[package_benchmarks.group == "read"]
 
+    plot_relplot_benchmarks(
+        write,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        col="chunk_size",
+        title=f"{package}_chunk_size_all",
+        sub_dir="write",
+        output_filename=f"{package}_chunk_size_all",
+    )
+
+    plot_relplot_benchmarks(
+        read,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        col="chunk_size",
+        title=f"{package}_chunk_size_all",
+        sub_dir="read",
+        output_filename=f"{package}_chunk_size_all",
+    )
+
     write_chunks_128 = write[write.chunk_size == 128]
     read_chunks_128 = read[read.chunk_size == 128]
 
@@ -306,9 +333,9 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=package,
+        title=f"{package}_chunk_size128",
         sub_dir="write",
-        output_filename=package,
+        output_filename=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
@@ -317,27 +344,27 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=package,
+        title=f"{package}_chunk_size128",
         sub_dir="read",
-        output_filename=package,
+        output_filename=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
         write_chunks_128,
         x_axis="stats.mean",
-        y_axis="compression_level",
+        y_axis="compression_ratio",
         col="compressor",
         sub_dir="write",
-        output_filename=package,
+        output_filename=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
         read_chunks_128,
         x_axis="stats.mean",
-        y_axis="compression_level",
+        y_axis="compression_ratio",
         col="compressor",
         sub_dir="read",
-        output_filename=package,
+        output_filename=f"{package}_chunk_size128",
     )
 
 
