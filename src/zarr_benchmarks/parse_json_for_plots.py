@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 import seaborn as sns
+from matplotlib import pyplot as plt
 
 from zarr_benchmarks import utils
 
@@ -153,6 +154,7 @@ def get_output_path(benchmarks_df: pd.DataFrame, sub_dir: str, plot_name: str) -
 def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     grid.savefig(output_path, format="png", dpi=300)
+    plt.close()
 
 
 def create_shuffle_plots(
