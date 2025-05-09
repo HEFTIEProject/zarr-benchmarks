@@ -4,12 +4,14 @@ from pathlib import Path
 
 import pandas as pd
 import seaborn as sns
+from matplotlib import pyplot as plt
 
 from zarr_benchmarks import utils
 
 
 def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
     benchmark_df = pd.json_normalize(json_dict["benchmarks"])
+    benchmark_df["machine"] = json_dict["machine_info"]["system"]
 
     # copy compression ratio from read benchmarks to write benchmarks
     param_cols = [col for col in benchmark_df if col.startswith("params")]
@@ -40,6 +42,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
     stats_cols = [col for col in benchmark_df if col.startswith("stats")]
     benchmark_df = benchmark_df[
         [
+            "machine",
             "group",
             "compressor",
             "compression_level",
@@ -76,14 +79,27 @@ def get_benchmarks_dataframe(
 def plot_relplot_benchmarks(
     data: pd.DataFrame,
     *,
-    group: str,
     x_axis: str,
     y_axis: str,
-    hue: str,
-    size: str,
-    title: str,
-    output_filename: str | None = None,
+    sub_dir: str,
+    output_filename: str,
+    title: str | None = None,
+    hue: str | None = None,
+    size: str | None = None,
+    col: str | None = None,
 ) -> None:
+    if col is None:
+        facet_kws = None
+        col_wrap = None
+        plot_name = output_filename
+    else:
+        facet_kws = dict(sharex=True, sharey=True)
+        if len(data[col].unique()) < 3:
+            col_wrap = 2
+        else:
+            col_wrap = 3
+        plot_name = output_filename + "_subplots"
+
     graph = sns.relplot(
         data=data,
         x=x_axis,
@@ -91,146 +107,306 @@ def plot_relplot_benchmarks(
         hue=hue,
         style=hue,
         size=size,
+        col=col,
         height=4,
         aspect=1.5,
+        facet_kws=facet_kws,
+        col_wrap=col_wrap,
     )
-    x_axis_label, y_axis_label = get_axis_labels(x_axis, y_axis, group)
+    x_axis_label, y_axis_label = get_axis_labels(data, x_axis, y_axis)
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
-    graph.figure.suptitle(title)
-    graph.figure.subplots_adjust(top=0.9)
+    if title is not None:
+        graph.figure.suptitle(title)
+        graph.figure.subplots_adjust(top=0.9)
 
-    if output_filename is not None:
-        save_plot_as_png(
-            graph,
-            Path(__file__).parents[2]
-            / "data"
-            / "plots"
-            / f"{group}_relplot_{output_filename}.png",
-        )
-
-
-def plot_relplot_subplots_benchmarks(
-    data: pd.DataFrame,
-    *,
-    group: str,
-    x_axis: str,
-    y_axis: str,
-    hue: str,
-    output_filename: str | None = None,
-) -> None:
-    graph = sns.relplot(
-        data=data,
-        x=x_axis,
-        y=y_axis,
-        col=hue,
-        hue=hue,
-        facet_kws=dict(sharex=True, sharey=True),
-        col_wrap=3,
+    save_plot_as_png(
+        graph,
+        get_output_path(data, sub_dir, plot_name),
     )
 
-    x_axis_label, y_axis_label = get_axis_labels(x_axis, y_axis, group)
-    graph.set_axis_labels(x_axis_label, y_axis_label)
 
-    if output_filename is not None:
-        save_plot_as_png(
-            graph,
-            Path(__file__).parents[2]
-            / "data"
-            / "plots"
-            / f"{group}_subplot_relplot_{output_filename}.png",
-        )
+def get_axis_labels(
+    benchmark_df: pd.DataFrame, x_axis: str, y_axis: str
+) -> tuple[str, str]:
+    group = benchmark_df.group.unique()
+    if len(group) != 1:
+        raise ValueError("Expected only one group value in dataframe")
 
-
-def get_axis_labels(x_axis: str, y_axis: str, group: str) -> tuple[str, str]:
     if x_axis.startswith("stats"):
-        x_axis_label = f"{x_axis.split('.')[-1]} {group} time (s)"
+        x_axis_label = f"{x_axis.split('.')[-1]} {group[0]} time (s)"
     else:
         x_axis_label = x_axis.capitalize().replace("_", " ")
 
     if y_axis.startswith("stats"):
-        y_axis_label = f"{y_axis.split('.')[-1]} {group} time (s)"
+        y_axis_label = f"{y_axis.split('.')[-1]} {group[0]} time (s)"
     else:
         y_axis_label = y_axis.capitalize().replace("_", " ")
 
     return x_axis_label, y_axis_label
 
 
+def get_output_path(benchmarks_df: pd.DataFrame, sub_dir: str, plot_name: str) -> Path:
+    machine_info = benchmarks_df["machine"].iloc[0]
+    date = datetime.now().strftime("%Y-%m-%d")
+
+    plots_dir = Path(__file__).parents[2] / "data" / "plots" / sub_dir
+    return plots_dir / f"{plot_name}_{date}_{machine_info}.png"
+
+
 def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     grid.savefig(output_path, format="png", dpi=300)
+    plt.close()
 
 
-def create_read_write_plots(
-    zarr_v2_path: Path, zarr_v3_path: Path, tensorstore_path: Path
+def plot_catplot_benchmarks(
+    data: pd.DataFrame,
+    *,
+    x_axis: str,
+    y_axis: str,
+    sub_dir: str,
+    output_filename: str,
+    title: str | None = None,
+    hue: str | None = None,
 ) -> None:
-    package_paths_dict = {
-        "zarr_python_2": zarr_v2_path,
-        "zarr_python_3": zarr_v3_path,
-        "tensorstore": tensorstore_path,
-    }
+    graph = sns.catplot(
+        data=data,
+        x=x_axis,
+        y=y_axis,
+        hue=hue,
+        kind="bar",
+        height=4,
+        aspect=1.5,
+    )
+    x_axis_label, y_axis_label = get_axis_labels(data, x_axis, y_axis)
+    graph.set_axis_labels(x_axis_label, y_axis_label)
 
-    benchmarks_df = get_benchmarks_dataframe(
-        package_paths_dict,
+    if title is not None:
+        graph.figure.suptitle(title)
+        graph.figure.subplots_adjust(top=0.9)
+
+    save_plot_as_png(
+        graph,
+        get_output_path(data, sub_dir, output_filename),
     )
 
+
+def create_shuffle_plots(
+    benchmarks_df: pd.DataFrame,
+) -> None:
+    shuffle_benchmarks = benchmarks_df[
+        (benchmarks_df.compressor == "blosc-zstd")
+        & (benchmarks_df.compression_level == 3)
+        & (benchmarks_df.chunk_size == 128)
+    ]
+    sub_dir = "shuffle"
+
+    write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
+    read = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
+
+    plot_catplot_benchmarks(
+        data=read,
+        x_axis="blosc_shuffle",
+        y_axis="compression_ratio",
+        sub_dir=sub_dir,
+        output_filename="compression_ratio",
+        hue="package",
+    )
+
+    plot_catplot_benchmarks(
+        data=write,
+        x_axis="blosc_shuffle",
+        y_axis="stats.mean",
+        sub_dir=sub_dir,
+        output_filename="write",
+        hue="package",
+    )
+
+    plot_catplot_benchmarks(
+        data=read,
+        x_axis="blosc_shuffle",
+        y_axis="stats.mean",
+        sub_dir=sub_dir,
+        output_filename="read",
+        hue="package",
+    )
+
+
+def create_chunk_size_plots(
+    benchmarks_df: pd.DataFrame,
+) -> None:
+    chunk_size_benchmarks = benchmarks_df[
+        (benchmarks_df.compressor == "blosc-zstd")
+        & (benchmarks_df.compression_level == 3)
+        & (benchmarks_df.blosc_shuffle == "shuffle")
+    ]
+
+    chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
+    chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
+
+    plot_relplot_benchmarks(
+        chunk_size_read,
+        x_axis="chunk_size",
+        y_axis="compression_ratio",
+        col="package",
+        sub_dir="chunk_size",
+        output_filename="compression_ratio",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_write,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        col="package",
+        sub_dir="chunk_size",
+        output_filename="write",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_write,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        title="chunk_size_write_all",
+        sub_dir="chunk_size",
+        output_filename="write",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_read,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        col="package",
+        sub_dir="chunk_size",
+        output_filename="read",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_read,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        title="chunk_size_read_all",
+        sub_dir="chunk_size",
+        output_filename="read",
+    )
+
+
+def create_read_write_plots_for_package(
+    read_write_benchmarks: pd.DataFrame, package: str
+) -> None:
+    package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
+    write = package_benchmarks[package_benchmarks.group == "write"]
+    read = package_benchmarks[package_benchmarks.group == "read"]
+
+    plot_relplot_benchmarks(
+        write,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        col="chunk_size",
+        title=f"{package}_chunk_size_all",
+        sub_dir="write",
+        output_filename=f"{package}_chunk_size_all",
+    )
+
+    plot_relplot_benchmarks(
+        read,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        col="chunk_size",
+        title=f"{package}_chunk_size_all",
+        sub_dir="read",
+        output_filename=f"{package}_chunk_size_all",
+    )
+
+    write_chunks_128 = write[write.chunk_size == 128]
+    read_chunks_128 = read[read.chunk_size == 128]
+
+    plot_relplot_benchmarks(
+        write_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        title=f"{package}_chunk_size128",
+        sub_dir="write",
+        output_filename=f"{package}_chunk_size128",
+    )
+
+    plot_relplot_benchmarks(
+        read_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        title=f"{package}_chunk_size128",
+        sub_dir="read",
+        output_filename=f"{package}_chunk_size128",
+    )
+
+    plot_relplot_benchmarks(
+        write_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="compressor",
+        sub_dir="write",
+        output_filename=f"{package}_chunk_size128",
+    )
+
+    plot_relplot_benchmarks(
+        read_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="compressor",
+        sub_dir="read",
+        output_filename=f"{package}_chunk_size128",
+    )
+
+
+def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     read_write_benchmarks = benchmarks_df[
         (benchmarks_df.chunk_size.isin([64, 128]))
         & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
     ]
 
-    benchmarks_zarr_v2 = read_write_benchmarks[
-        read_write_benchmarks.package == "zarr_python_2"
+    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+
+    read_chunks_128 = read_write_benchmarks[
+        (read_write_benchmarks.group == "read")
+        & (read_write_benchmarks.chunk_size == 128)
     ]
-    write_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "write"]
-    read_zarr_v2 = benchmarks_zarr_v2[benchmarks_zarr_v2.group == "read"]
+    write_chunks_128 = read_write_benchmarks[
+        (read_write_benchmarks.group == "write")
+        & (read_write_benchmarks.chunk_size == 128)
+    ]
 
-    write_zarr_v2_chunks_128 = write_zarr_v2[write_zarr_v2.chunk_size == 128]
-    read_zarr_v2_chunks_128 = read_zarr_v2[read_zarr_v2.chunk_size == 128]
-
-    benchmark_name = Path(zarr_v2_path).stem
-    data = utils.read_json_file(Path(zarr_v2_path))
-    machine_info = data["machine_info"]["machine"]
-    date = datetime.now().strftime("%Y-%m-%d")
-
-    output_filename = date + "_" + machine_info + "_" + benchmark_name
     plot_relplot_benchmarks(
-        write_zarr_v2_chunks_128,
-        group="write",
+        read_chunks_128,
         x_axis="stats.mean",
         y_axis="compression_ratio",
+        col="package",
         hue="compressor",
         size="compression_level",
-        title="zarr_python_2",
-        output_filename=output_filename,
+        sub_dir="read",
+        output_filename="all_packages",
     )
 
     plot_relplot_benchmarks(
-        read_zarr_v2_chunks_128,
-        group="read",
+        write_chunks_128,
         x_axis="stats.mean",
         y_axis="compression_ratio",
+        col="package",
         hue="compressor",
         size="compression_level",
-        title="zarr_python_2",
-        output_filename=output_filename,
-    )
-
-    plot_relplot_subplots_benchmarks(
-        write_zarr_v2_chunks_128,
-        group="write",
-        x_axis="stats.mean",
-        y_axis="compression_level",
-        hue="compressor",
-        output_filename=output_filename,
-    )
-    plot_relplot_subplots_benchmarks(
-        read_zarr_v2_chunks_128,
-        group="read",
-        x_axis="stats.mean",
-        y_axis="compression_level",
-        hue="compressor",
-        output_filename=output_filename,
+        sub_dir="write",
+        output_filename="all_packages",
     )
 
 
@@ -259,7 +435,19 @@ def create_all_plots(json_ids: list[str] | None = None) -> None:
     zarr_v3_path = result_path / f"{json_ids[1]}_zarr-python-v3.json"
     tensorstore_path = result_path / f"{json_ids[2]}_tensorstore.json"
 
-    create_read_write_plots(zarr_v2_path, zarr_v3_path, tensorstore_path)
+    package_paths_dict = {
+        "zarr_python_2": zarr_v2_path,
+        "zarr_python_3": zarr_v3_path,
+        "tensorstore": tensorstore_path,
+    }
+
+    benchmarks_df = get_benchmarks_dataframe(
+        package_paths_dict,
+    )
+
+    create_read_write_plots(benchmarks_df)
+    create_chunk_size_plots(benchmarks_df)
+    create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
