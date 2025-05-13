@@ -119,7 +119,7 @@ results, you can explicitly provide the ids of the `zarr-python-v2`,
 python src/zarr_benchmarks/parse_json_for_plots.py --json_ids 0001 002 0003
 ```
 
-To see more info about what these values represent run:
+To see more info about what these values represent and additional options run:
 
 ```bash
 python src/zarr_benchmarks/parse_json_for_plots.py -h
