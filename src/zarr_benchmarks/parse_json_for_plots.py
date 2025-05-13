@@ -129,6 +129,8 @@ def plot_relplot_benchmarks(
     )
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     graph.set_axis_labels(x_axis_label, y_axis_label)
+    if sub_dir_name == "read" or sub_dir_name == "write":
+        graph.set(xscale="log")
 
     if title is not None:
         graph.figure.suptitle(title)
