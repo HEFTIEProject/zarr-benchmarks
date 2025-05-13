@@ -127,12 +127,12 @@ def plot_relplot_benchmarks(
         facet_kws=facet_kws,
         col_wrap=col_wrap,
     )
-    x_axis_label, y_axis_label = get_axis_labels(data, x_axis, y_axis)
+    x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
         graph.figure.suptitle(title)
-        graph.figure.subplots_adjust(top=0.9)
+        graph.tight_layout()
 
     save_plot_as_png(
         graph,
@@ -141,7 +141,7 @@ def plot_relplot_benchmarks(
 
 
 def get_axis_labels(
-    benchmark_df: pd.DataFrame, x_axis: str, y_axis: str
+    benchmark_df: pd.DataFrame, *, x_axis: str, y_axis: str
 ) -> tuple[str, str]:
     group = benchmark_df.group.unique()
     if len(group) != 1:
@@ -208,12 +208,12 @@ def plot_catplot_benchmarks(
         height=4,
         aspect=1.5,
     )
-    x_axis_label, y_axis_label = get_axis_labels(data, x_axis, y_axis)
+    x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
         graph.figure.suptitle(title)
-        graph.figure.subplots_adjust(top=0.9)
+        graph.tight_layout()
 
     save_plot_as_png(
         graph,
