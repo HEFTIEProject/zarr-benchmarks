@@ -88,6 +88,20 @@ def plot_relplot_benchmarks(
     size: str | None = None,
     col: str | None = None,
 ) -> None:
+    """Generate a scatter plot using seaborn's relplot function with a dataframe as input.
+    Calls a function to save the plot as a PNG file.
+
+    Args:
+        data (pd.DataFrame): Contains the data to be plotted.
+        x_axis (str): name of dataframe column to be used for x-axis
+        y_axis (str): name of dataframe column to be used for y-axis
+        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plot_name (str): name of the plot which will be used for the start of the final filename
+        title (str | None, optional): title of the plot. Defaults to None.
+        hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
+        size (str | None, optional): name of dataframe column to be used for size of datapoints. Defaults to None.
+        col (str | None, optional): name of dataframe column to be used for splitting into subplots. Defaults to None.
+    """
     if col is None:
         facet_kws = None
         col_wrap = None
@@ -172,6 +186,19 @@ def plot_catplot_benchmarks(
     title: str | None = None,
     hue: str | None = None,
 ) -> None:
+    """Generate a bar plot using seaborn's catplot function with a dataframe as input.
+    Calls a function to save the plot as a PNG file.
+
+
+    Args:
+        data (pd.DataFrame): Contains the data to be plotted.
+        x_axis (str): name of dataframe column to be used for x-axis
+        y_axis (str): name of dataframe column to be used for y-axis
+        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plot_name (str): name of the plot which will be used for the start of the final filename
+        title (str | None, optional): title of the plot. Defaults to None.
+        hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
+    """
     graph = sns.catplot(
         data=data,
         x=x_axis,
