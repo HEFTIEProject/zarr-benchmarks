@@ -6,7 +6,7 @@ import numpy.typing as npt
 import zarr
 from numcodecs import Blosc, GZip, Zstd
 
-from zarr_benchmarks import utils
+from zarr_benchmarks import read_write_zarr_utils, utils
 
 
 def get_compression_ratio(store_path: pathlib.Path) -> float:
@@ -50,7 +50,7 @@ def write_zarr_array(
 def get_blosc_compressor(
     cname: str, clevel: int, shuffle: Literal["shuffle", "noshuffle", "bitshuffle"]
 ) -> numcodecs.abc.Codec:
-    shuffle_int = utils.get_numcodec_shuffle(shuffle)
+    shuffle_int = read_write_zarr_utils.get_numcodec_shuffle(shuffle)
     return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
 
 

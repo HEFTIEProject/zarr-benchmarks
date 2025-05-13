@@ -12,14 +12,10 @@ classifiers = [
 ]
 dependencies = [
     "imageio",
-    "matplotlib",
-    "pandas",
     "pytest",
     "pytest-benchmark",
-    "seaborn",
-    "tensorstore",
     "tox",
-    "zarr",
+    "jsonschema"
 ]
 description = "zarr benchmarks"
 license = {file = "LICENSE"}
@@ -31,6 +27,22 @@ version = "0.0.1"
 [project.optional-dependencies]
 dev = [
     "pre-commit",
+]
+plots = [
+    "matplotlib",
+    "seaborn",
+    "pandas",
+]
+tensorstore = [
+    "tensorstore==0.1.73",
+]
+zarr-python-v2 = [
+    "numcodecs==0.15.1",
+    "zarr==2.18.4",
+]
+zarr-python-v3 = [
+    "numcodecs==0.15.1",
+    "zarr==3.0.6",
 ]
 
 [project.urls]

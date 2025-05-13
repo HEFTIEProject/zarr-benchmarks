@@ -34,8 +34,12 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install tox
+          pip install .[plots]
 
       - name: Run benchmarks and tests with tox
         run: |
           tox -- --dev-image --rounds=1 --warmup-rounds=0
+
+      - name: Run plotting script on benchmark output
+        run: |
+          python src/zarr_benchmarks/parse_json_for_plots.py

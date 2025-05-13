@@ -1,30 +1,16 @@
 import pytest
 
-from tests.benchmarks.benchmark_parameters import (
-    BLOSC_CLEVEL,
-    BLOSC_CNAME,
-    BLOSC_SHUFFLE,
-    CHUNK_SIZE,
-    GZIP_LEVEL,
-    ZSTD_LEVEL,
-)
 from zarr_benchmarks.utils import remove_output_dir
 
 try:
     from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
 except ImportError:
-    from zarr_benchmarks import (  # type: ignore[no-redef]
-        read_write_zarr_v2 as read_write_zarr,
-    )
+    read_write_zarr = pytest.importorskip("zarr_benchmarks.read_write_zarr_v2")
 
 pytestmark = [pytest.mark.zarr_python]
 
 
 @pytest.mark.benchmark(group="write")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("blosc_clevel", BLOSC_CLEVEL)
-@pytest.mark.parametrize("blosc_shuffle", BLOSC_SHUFFLE)
-@pytest.mark.parametrize("blosc_cname", BLOSC_CNAME)
 def test_write_blosc(
     benchmark,
     image,
@@ -59,8 +45,6 @@ def test_write_blosc(
 
 
 @pytest.mark.benchmark(group="write")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("gzip_level", GZIP_LEVEL)
 def test_write_gzip(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, gzip_level
 ):
@@ -85,8 +69,6 @@ def test_write_gzip(
 
 
 @pytest.mark.benchmark(group="write")
-@pytest.mark.parametrize("chunk_size", CHUNK_SIZE)
-@pytest.mark.parametrize("zstd_level", ZSTD_LEVEL)
 def test_write_zstd(
     benchmark, image, rounds, warmup_rounds, store_path, chunk_size, zstd_level
 ):

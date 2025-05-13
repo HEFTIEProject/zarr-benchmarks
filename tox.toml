@@ -7,13 +7,14 @@ commands = [
         "pytest",
         "--benchmark-save=tensorstore",
         "--benchmark-save-data",
+        "--benchmark-storage=data/results",
         "-m",
         "tensorstore",
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["tensorstore==0.1.73"]
 description = "Run benchmarks under tensorstore"
+extras = ["tensorstore"]
 
 [env.py313-zarrv2]
 commands = [
@@ -21,13 +22,14 @@ commands = [
         "pytest",
         "--benchmark-save=zarr-python-v2",
         "--benchmark-save-data",
+        "--benchmark-storage=data/results",
         "-m",
         "zarr_python",
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["zarr==2.18.4", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 2"
+extras = ["zarr-python-v2"]
 
 [env.py313-zarrv3]
 commands = [
@@ -35,10 +37,11 @@ commands = [
         "pytest",
         "--benchmark-save=zarr-python-v3",
         "--benchmark-save-data",
+        "--benchmark-storage=data/results",
         "-m",
         "zarr_python",
         {extend = true, replace = "posargs"},
     ],
 ]
-deps = ["zarr==3.0.6", "numcodecs==0.15.1"]
 description = "Run benchmarks under zarr-python version 3"
+extras = ["zarr-python-v3"]
