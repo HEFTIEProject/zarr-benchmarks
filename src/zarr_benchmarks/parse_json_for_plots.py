@@ -81,8 +81,8 @@ def plot_relplot_benchmarks(
     *,
     x_axis: str,
     y_axis: str,
-    sub_dir: str,
-    output_filename: str,
+    sub_dir_name: str,
+    plot_name: str,
     title: str | None = None,
     hue: str | None = None,
     size: str | None = None,
@@ -91,14 +91,14 @@ def plot_relplot_benchmarks(
     if col is None:
         facet_kws = None
         col_wrap = None
-        plot_name = output_filename
+        plot_name = plot_name
     else:
         facet_kws = dict(sharex=True, sharey=True)
         if len(data[col].unique()) < 3:
             col_wrap = 2
         else:
             col_wrap = 3
-        plot_name = output_filename + "_subplots"
+        plot_name = plot_name + "_subplots"
 
     graph = sns.relplot(
         data=data,
@@ -122,7 +122,7 @@ def plot_relplot_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir, plot_name),
+        get_output_path(data, sub_dir_name, plot_name),
     )
 
 
@@ -146,11 +146,13 @@ def get_axis_labels(
     return x_axis_label, y_axis_label
 
 
-def get_output_path(benchmarks_df: pd.DataFrame, sub_dir: str, plot_name: str) -> Path:
+def get_output_path(
+    benchmarks_df: pd.DataFrame, sub_dir_name: str, plot_name: str
+) -> Path:
     machine_info = benchmarks_df["machine"].iloc[0]
     date = datetime.now().strftime("%Y-%m-%d")
 
-    plots_dir = Path(__file__).parents[2] / "data" / "plots" / sub_dir
+    plots_dir = Path(__file__).parents[2] / "data" / "plots" / sub_dir_name
     return plots_dir / f"{plot_name}_{date}_{machine_info}.png"
 
 
@@ -165,8 +167,8 @@ def plot_catplot_benchmarks(
     *,
     x_axis: str,
     y_axis: str,
-    sub_dir: str,
-    output_filename: str,
+    sub_dir_name: str,
+    plot_name: str,
     title: str | None = None,
     hue: str | None = None,
 ) -> None:
@@ -188,7 +190,7 @@ def plot_catplot_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir, output_filename),
+        get_output_path(data, sub_dir_name, plot_name),
     )
 
 
@@ -200,7 +202,7 @@ def create_shuffle_plots(
         & (benchmarks_df.compression_level == 3)
         & (benchmarks_df.chunk_size == 128)
     ]
-    sub_dir = "shuffle"
+    sub_dir_name = "shuffle"
 
     write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
     read = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
@@ -209,8 +211,8 @@ def create_shuffle_plots(
         data=read,
         x_axis="blosc_shuffle",
         y_axis="compression_ratio",
-        sub_dir=sub_dir,
-        output_filename="compression_ratio",
+        sub_dir_name=sub_dir_name,
+        plot_name="compression_ratio",
         hue="package",
     )
 
@@ -218,8 +220,8 @@ def create_shuffle_plots(
         data=write,
         x_axis="blosc_shuffle",
         y_axis="stats.mean",
-        sub_dir=sub_dir,
-        output_filename="write",
+        sub_dir_name=sub_dir_name,
+        plot_name="write",
         hue="package",
     )
 
@@ -227,8 +229,8 @@ def create_shuffle_plots(
         data=read,
         x_axis="blosc_shuffle",
         y_axis="stats.mean",
-        sub_dir=sub_dir,
-        output_filename="read",
+        sub_dir_name=sub_dir_name,
+        plot_name="read",
         hue="package",
     )
 
@@ -250,8 +252,8 @@ def create_chunk_size_plots(
         x_axis="chunk_size",
         y_axis="compression_ratio",
         col="package",
-        sub_dir="chunk_size",
-        output_filename="compression_ratio",
+        sub_dir_name="chunk_size",
+        plot_name="compression_ratio",
     )
 
     plot_relplot_benchmarks(
@@ -259,8 +261,8 @@ def create_chunk_size_plots(
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
-        sub_dir="chunk_size",
-        output_filename="write",
+        sub_dir_name="chunk_size",
+        plot_name="write",
     )
 
     plot_relplot_benchmarks(
@@ -269,8 +271,8 @@ def create_chunk_size_plots(
         x_axis="chunk_size",
         hue="package",
         title="chunk_size_write_all",
-        sub_dir="chunk_size",
-        output_filename="write",
+        sub_dir_name="chunk_size",
+        plot_name="write",
     )
 
     plot_relplot_benchmarks(
@@ -278,8 +280,8 @@ def create_chunk_size_plots(
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
-        sub_dir="chunk_size",
-        output_filename="read",
+        sub_dir_name="chunk_size",
+        plot_name="read",
     )
 
     plot_relplot_benchmarks(
@@ -288,8 +290,8 @@ def create_chunk_size_plots(
         x_axis="chunk_size",
         hue="package",
         title="chunk_size_read_all",
-        sub_dir="chunk_size",
-        output_filename="read",
+        sub_dir_name="chunk_size",
+        plot_name="read",
     )
 
 
@@ -308,8 +310,8 @@ def create_read_write_plots_for_package(
         size="compression_level",
         col="chunk_size",
         title=f"{package}_chunk_size_all",
-        sub_dir="write",
-        output_filename=f"{package}_chunk_size_all",
+        sub_dir_name="write",
+        plot_name=f"{package}_chunk_size_all",
     )
 
     plot_relplot_benchmarks(
@@ -320,8 +322,8 @@ def create_read_write_plots_for_package(
         size="compression_level",
         col="chunk_size",
         title=f"{package}_chunk_size_all",
-        sub_dir="read",
-        output_filename=f"{package}_chunk_size_all",
+        sub_dir_name="read",
+        plot_name=f"{package}_chunk_size_all",
     )
 
     write_chunks_128 = write[write.chunk_size == 128]
@@ -334,8 +336,8 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         title=f"{package}_chunk_size128",
-        sub_dir="write",
-        output_filename=f"{package}_chunk_size128",
+        sub_dir_name="write",
+        plot_name=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
@@ -345,8 +347,8 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         title=f"{package}_chunk_size128",
-        sub_dir="read",
-        output_filename=f"{package}_chunk_size128",
+        sub_dir_name="read",
+        plot_name=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
@@ -354,8 +356,8 @@ def create_read_write_plots_for_package(
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
-        sub_dir="write",
-        output_filename=f"{package}_chunk_size128",
+        sub_dir_name="write",
+        plot_name=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
@@ -363,8 +365,8 @@ def create_read_write_plots_for_package(
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
-        sub_dir="read",
-        output_filename=f"{package}_chunk_size128",
+        sub_dir_name="read",
+        plot_name=f"{package}_chunk_size128",
     )
 
 
@@ -394,8 +396,8 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
         col="package",
         hue="compressor",
         size="compression_level",
-        sub_dir="read",
-        output_filename="all_packages",
+        sub_dir_name="read",
+        plot_name="all_packages",
     )
 
     plot_relplot_benchmarks(
@@ -405,8 +407,8 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
         col="package",
         hue="compressor",
         size="compression_level",
-        sub_dir="write",
-        output_filename="all_packages",
+        sub_dir_name="write",
+        plot_name="all_packages",
     )
 
 
