@@ -445,9 +445,10 @@ def create_all_plots(
     """Create all plots. By default, process the latest benchmark results inside data/results. Set example_results
     to process from the example_results/ directory instead.
 
-    :param json_ids: optional list of json ids e.g. ["0001", "0002", "0003"] of the zarr-python-v2,
-    zarr-python-v3 and tensorstore json to process.
-    :param example_results: whether to process jsons from example_results/ rather than data/results.
+    Args:
+        json_ids (list[str] | None, optional): optional list of json ids e.g. ["0001", "0002", "0003"] of the
+        zarr-python-v2, zarr-python-v3 and tensorstore json to process.
+        example_results (bool | None, optional): whether to process jsons from example_results/ rather than data/results.
     """
 
     if example_results:
