@@ -444,7 +444,6 @@ def create_all_plots(
 ) -> None:
     """Create all plots. By default, process the latest benchmark results inside data/results. Set example_results
     to process from the example_results/ directory instead.
-
     Args:
         json_ids (list[str] | None, optional): optional list of json ids e.g. ["0001", "0002", "0003"] of the
         zarr-python-v2, zarr-python-v3 and tensorstore json to process.
@@ -461,6 +460,7 @@ def create_all_plots(
             raise ValueError("Expected only one sub-directory inside data/results")
         result_path = sub_dirs[0]
 
+    print(f"📈 Generating plots from results in {result_path}...")
     if json_ids is None:
         # Find the latest 3 json ids in the sub-dir
         all_ids = []

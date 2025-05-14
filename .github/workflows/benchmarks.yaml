@@ -42,8 +42,8 @@ jobs:
 
       - name: Run plotting script on benchmark output
         run: |
-          python src/zarr_benchmarks/parse_json_for_plots.py
+          python src/zarr_benchmarks/create_plots.py
 
       - name: Run plotting script on example results
         run: |
-          python src/zarr_benchmarks/parse_json_for_plots.py --example_results
+          python src/zarr_benchmarks/create_plots.py --example_results
