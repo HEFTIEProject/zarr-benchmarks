@@ -107,7 +107,7 @@ tox -- --benchmark-skip
 Once in your virtual environment, you can create plots with:
 
 ```bash
-python src/zarr_benchmarks/parse_json_for_plots.py
+python src/zarr_benchmarks/create_plots.py
 ```
 
 This will process the latest benchmark results from `data/results` and create
@@ -116,13 +116,13 @@ results, you can explicitly provide the ids of the `zarr-python-v2`,
 `zarr-python-v3` and `tensorstore` jsons:
 
 ```bash
-python src/zarr_benchmarks/parse_json_for_plots.py --json_ids 0001 002 0003
+python src/zarr_benchmarks/create_plots.py --json_ids 0001 002 0003
 ```
 
 To see more info about what these values represent and additional options run:
 
 ```bash
-python src/zarr_benchmarks/parse_json_for_plots.py -h
+python src/zarr_benchmarks/create_plots.py -h
 ```
 
 ## Development dependencies
