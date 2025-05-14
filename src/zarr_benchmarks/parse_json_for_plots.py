@@ -128,7 +128,9 @@ def plot_relplot_benchmarks(
         col_wrap=col_wrap,
     )
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
-    if sub_dir_name == "read" or sub_dir_name == "write":
+    [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
+
+    if x_max / x_min > 10:
         graph.set(xscale="log")
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
