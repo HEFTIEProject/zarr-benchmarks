@@ -440,14 +440,14 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
 
 
 def create_all_plots(
-    json_ids: list[str] | None = None, example_results: bool | None = True
+    json_ids: list[str] | None = None, example_results: bool = False
 ) -> None:
     """Create all plots. By default, process the latest benchmark results inside data/results. Set example_results
     to process from the example_results/ directory instead.
     Args:
         json_ids (list[str] | None, optional): optional list of json ids e.g. ["0001", "0002", "0003"] of the
         zarr-python-v2, zarr-python-v3 and tensorstore json to process.
-        example_results (bool | None, optional): whether to process jsons from example_results/ rather than data/results.
+        example_results (bool, optional): whether to process jsons from example_results/ rather than data/results.
     """
 
     if example_results:
