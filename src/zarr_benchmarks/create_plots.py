@@ -128,6 +128,10 @@ def plot_relplot_benchmarks(
         col_wrap=col_wrap,
     )
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
+    [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
+
+    if x_max / x_min > 10:
+        graph.set(xscale="log")
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
@@ -439,19 +443,28 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     )
 
 
-def create_all_plots(json_ids: list[str] | None = None) -> None:
-    """Create all plots. If json_ids aren't provided, process the latest benchmark results inside data/results.
-
-    :param json_ids: optional list of json ids e.g. ["0001", "0002", "0003"] of the zarr-python-v2,
-    zarr-python-v3 and tensorstore json to process.
+def create_all_plots(
+    json_ids: list[str] | None = None, example_results: bool = False
+) -> None:
+    """Create all plots. By default, process the latest benchmark results inside data/results. Set example_results
+    to process from the example_results/ directory instead.
+    Args:
+        json_ids (list[str] | None, optional): optional list of json ids e.g. ["0001", "0002", "0003"] of the
+        zarr-python-v2, zarr-python-v3 and tensorstore json to process.
+        example_results (bool, optional): whether to process jsons from example_results/ rather than data/results.
     """
-    result_path = Path(__file__).parents[2] / "data" / "results"
-    sub_dirs = [sub_path for sub_path in result_path.iterdir() if sub_path.is_dir()]
 
-    if len(sub_dirs) != 1:
-        raise ValueError("Expected only one sub-directory inside data/results")
-    result_path = sub_dirs[0]
+    if example_results:
+        result_path = Path(__file__).parents[2] / "example_results"
+    else:
+        result_path = Path(__file__).parents[2] / "data" / "results"
+        sub_dirs = [sub_path for sub_path in result_path.iterdir() if sub_path.is_dir()]
 
+        if len(sub_dirs) != 1:
+            raise ValueError("Expected only one sub-directory inside data/results")
+        result_path = sub_dirs[0]
+
+    print(f"📈 Generating plots from results in {result_path}...")
     if json_ids is None:
         # Find the latest 3 json ids in the sub-dir
         all_ids = []
@@ -485,7 +498,7 @@ def create_all_plots(json_ids: list[str] | None = None) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Create plots from benchmark results. By default, processes the latest benchmark results from "
-        "data/results. To override this, provide --json_ids."
+        "data/results. To override this, provide --json_ids and/or --example_results."
     )
     parser.add_argument(
         "--json_ids",
@@ -493,6 +506,11 @@ if __name__ == "__main__":
         metavar="JSON_ID",
         help="provide the ids of the zarr-python-v2, zarr-python-v3 and tensorstore json files you want to process e.g. 0001 0002 0003",
     )
+    parser.add_argument(
+        "--example_results",
+        help="Process files from the example_results/ directory (rather than data/results default).",
+        action="store_true",
+    )
     args = parser.parse_args()
 
-    create_all_plots(args.json_ids)
+    create_all_plots(args.json_ids, args.example_results)
