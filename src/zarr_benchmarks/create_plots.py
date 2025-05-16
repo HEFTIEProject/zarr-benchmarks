@@ -37,13 +37,15 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
     )
     benchmark_df.loc[~benchmark_df["params.gzip_level"].isna(), "compressor"] = "gzip"
     benchmark_df.loc[~benchmark_df["params.zstd_level"].isna(), "compressor"] = "zstd"
-    benchmark_df.loc[~benchmark_df["params.no_compressor"].isna(), "compressor"] = (
-        "none"
-    )
 
-    # Give 'no compressor' rows an arbitrary compression level, so they can be shown on plots where point size is
-    # related to compression level
-    benchmark_df.loc[benchmark_df["compressor"] == "none", "compression_level"] = 10
+    if "params.no_compressor" in benchmark_df:
+        benchmark_df.loc[~benchmark_df["params.no_compressor"].isna(), "compressor"] = (
+            "none"
+        )
+
+        # Give 'no compressor' rows an arbitrary compression level, so they can be shown on plots where point size is
+        # related to compression level
+        benchmark_df.loc[benchmark_df["compressor"] == "none", "compression_level"] = 10
 
     # remove un-needed columns
     stats_cols = [col for col in benchmark_df if col.startswith("stats")]
