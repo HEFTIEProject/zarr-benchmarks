@@ -61,7 +61,7 @@ def image(dev_image):
     test runs during development."""
 
     if dev_image:
-        return np.random.rand(100, 100, 100)
+        return np.random.rand(128, 128, 128)
 
     return get_image(
         image_dir_path=pathlib.Path(
