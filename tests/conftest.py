@@ -61,7 +61,7 @@ def image(dev_image):
     test runs during development."""
 
     if dev_image:
-        return np.random.rand(100, 100, 100)
+        return np.random.rand(128, 128, 128)
 
     return get_image(
         image_dir_path=pathlib.Path(
@@ -76,7 +76,7 @@ def store_path():
     return pathlib.Path("data/output/heart-example.zarr")
 
 
-def expand_min_max(config: dict) -> dict:
+def _expand_min_max(config: dict) -> dict:
     """Expand min/max keys in config to a list of the full range of values."""
 
     for key in ["chunk_size", "blosc_clevel", "gzip_level", "zstd_level"]:
@@ -87,7 +87,16 @@ def expand_min_max(config: dict) -> dict:
     return config
 
 
-def parse_config_files(config_name: str) -> list[dict]:
+def _parse_config_file(config_path: pathlib.Path) -> dict:
+    config = _expand_min_max(read_json_file(config_path))
+
+    # make bool 'no_compressor' a list, to match the other parameters (allows itertools.product to work)
+    config["no_compressor"] = [config["no_compressor"]]
+
+    return config
+
+
+def _parse_config_files(config_name: str) -> list[dict]:
     """Parse json config files. 'all' will parse every config in tests/benchmark_configs (except for dev, which contains
     a small set of parameters for development runs)."""
 
@@ -97,11 +106,11 @@ def parse_config_files(config_name: str) -> list[dict]:
     if config_name == "all":
         for config_file in configs_dir.glob("*.json"):
             if config_file.stem != "dev":
-                config = expand_min_max(read_json_file(config_file))
+                config = _parse_config_file(config_file)
                 configs.append(config)
     else:
         config_file = configs_dir / f"{config_name}.json"
-        config = expand_min_max(read_json_file(config_file))
+        config = _parse_config_file(config_file)
         configs.append(config)
 
     return configs
@@ -112,7 +121,7 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
     once per test function, during the collection stage."""
 
     config_name = metafunc.config.getoption("config")
-    configs = parse_config_files(config_name)
+    configs = _parse_config_files(config_name)
 
     # keys from the config, that are used as arguments for this function
     used_config_keys = [key for key in configs[0] if key in metafunc.fixturenames]

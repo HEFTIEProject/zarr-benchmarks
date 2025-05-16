@@ -40,7 +40,7 @@ def write_zarr_array(
     *,
     overwrite: bool,
     chunks: tuple[int],
-    compressor: dict,
+    compressor: dict | None,
     write_empty_chunks: bool = True,
 ) -> None:
     """Write the v2 zarr spec with tensorstore"""

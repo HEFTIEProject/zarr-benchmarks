@@ -91,3 +91,29 @@ def test_read_zstd(
         rounds=rounds,
         warmup_rounds=warmup_rounds,
     )
+
+
+@pytest.mark.benchmark(group="read")
+def test_read_no_compressor(
+    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, no_compressor
+):
+    if not no_compressor:
+        pytest.skip("config didn't include no compressor")
+
+    read_write_zarr.write_zarr_array(
+        image=image,
+        store_path=store_path,
+        overwrite=True,
+        chunks=(chunk_size, chunk_size, chunk_size),
+        compressor=None,
+    )
+
+    compression_ratio = read_write_zarr.get_compression_ratio(store_path)
+    benchmark.extra_info["compression_ratio"] = compression_ratio
+
+    benchmark.pedantic(
+        read_write_zarr.read_zarr_array,
+        args=(store_path,),
+        rounds=rounds,
+        warmup_rounds=warmup_rounds,
+    )
