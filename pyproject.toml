@@ -2,6 +2,7 @@
 build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
+
 [project]
 authors = [
     { email = "arc.collaborations@ucl.ac.uk", name = "Centre for Advanced Research Computing" },
@@ -15,7 +16,7 @@ description = "zarr benchmarks"
 license = { file = "LICENSE" }
 name = "zarr_benchmarks"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = "==3.13.*"
 version = "0.0.1"
 
 [project.optional-dependencies]
