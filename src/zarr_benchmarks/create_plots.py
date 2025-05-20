@@ -2,6 +2,7 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -76,6 +77,194 @@ def get_benchmarks_dataframe(
     return pd.concat(benchmark_dfs, ignore_index=True)
 
 
+# # Add error bars using matplotlib
+# def add_error_bars(x, y, **kwargs):
+#     ax = plt.gca()
+#     xerr_lower = 2 * data["stats.stddev"]
+#     xerr_upper = 2 * data["stats.stddev"]
+#     xerr = np.array([xerr_lower, xerr_upper])
+#     xerr = xerr[:, : len(x)]
+#     ax.errorbar(x, y, xerr=xerr, fmt="o", markersize=0.5, **kwargs)
+#                 #color=color, label=label, **kwargs)
+
+
+def set_axes_limits(graph, data, plot_name):
+    range = []
+    limits = []
+    for compressor, ax in graph.axes_dict.items():
+        # Filter data for this compressor
+        compressor_data = data[data.compressor == compressor]
+        if compressor_data.empty:
+            print(f"Skipping compressor {compressor} for {plot_name} (no data)")
+            continue
+        try:
+            x_min = compressor_data["stats.min"].min()
+            x_max = compressor_data["stats.max"].max()
+            range.append(x_max - x_min)
+            limits.append((x_min, x_max))
+        except KeyError:
+            print(
+                f"KeyError: stats.min not found for compressor {compressor} for {plot_name}"
+            )
+            continue
+
+    # Ensure equal aspect ratio
+    # ax.set_aspect(aspect='auto', adjustable='datalim')
+    if not range:
+        print(f"Skipping compressor for {plot_name} (no data)")
+        return
+
+    max_range = max(range)
+    # np.round(max_range + max_range*0.5,1)
+
+    for compressor, ax in graph.axes_dict.items():
+        # Set the x-axis limits for each subplot
+        x_min = min(data[data.compressor == compressor]["stats.min"])
+        x_max = max(data[data.compressor == compressor]["stats.max"])
+        if x_max - x_min == max_range:
+            central_value = (x_min + x_max) / 2
+            # print("central_value:", central_value)
+            # print("org_xmin:", central_value - max_range / 2)
+            # print("org_xmax:", central_value + max_range / 2)
+            x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
+            x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+            ax.set_xlim(x_lim_min, x_lim_max)
+            print("final max_range:", x_lim_max - x_lim_min)
+            print("final x_min:", x_lim_min)
+            print("final x_max:", x_lim_max)
+        else:
+            central_value = (x_min + x_max) / 2
+            x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
+            x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+            ax.set_xlim(x_lim_min, x_lim_max)
+            print("range:", x_lim_max - x_lim_min)
+            print("x_min:", x_lim_min)
+            print("x_max:", x_lim_max)
+
+
+def plot_errorbars_benchmarks(
+    data: pd.DataFrame,
+    *,
+    x_axis: str,
+    y_axis: str,
+    sub_dir_name: str,
+    plot_name: str,
+    option: str,
+    title: str | None = None,
+    hue: str | None = None,
+    size: str | None = None,
+    col: str | None = None,
+) -> None:
+    """Generate a scatter plot using seaborn's relplot function with a dataframe as input.
+    Calls a function to save the plot as a PNG file.
+
+    Args:
+        data (pd.DataFrame): Contains the data to be plotted.
+        x_axis (str): name of dataframe column to be used for x-axis
+        y_axis (str): name of dataframe column to be used for y-axis
+        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plot_name (str): name of the plot which will be used for the start of the final filename
+        title (str | None, optional): title of the plot. Defaults to None.
+        hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
+        size (str | None, optional): name of dataframe column to be used for size of datapoints. Defaults to None.
+        col (str | None, optional): name of dataframe column to be used for splitting into subplots. Defaults to None.
+    """
+    if col is None:
+        facet_kws = None
+        col_wrap = None
+        plot_name = plot_name
+    else:
+        facet_kws = dict(sharex=True, sharey=True)
+        if len(data[col].unique()) < 3:
+            col_wrap = 2
+        else:
+            col_wrap = 3
+        plot_name = plot_name + "_subplots"
+
+    if option == "line":
+        graph = sns.relplot(
+            data=data,
+            x=x_axis,
+            y=y_axis,
+            hue=hue,
+            style=hue,
+            size=size,
+            col=col,
+            height=4,
+            aspect=1.5,
+            facet_kws=facet_kws,
+            col_wrap=col_wrap,
+        )
+    elif option == "errorbar":
+        x = data["stats.mean"]
+        y = data["compression_ratio"]
+
+        # xerr_lower = x - df["stats.min"]
+        # xerr_upper = df["stats.max"] - x
+        xerr_lower = 2 * data["stats.stddev"]
+        xerr_upper = 2 * data["stats.stddev"]
+        xerr = np.array([xerr_lower, xerr_upper])
+        # print("xerr lower:", xerr[0])
+        # print("xerr upper:", xerr[1])
+
+        fig, ax = plt.subplots(figsize=(7, 4))
+
+        # standard error bars
+        ax.errorbar(x, y, xerr=xerr, fmt="o", markersize=2)
+
+        # tidy up the figure
+        # ax.set_xlim((2.3, 2.8))
+        ax.set_title("Errorbar upper and lower limits")
+        # ax.set_xscale('log')
+        plt.show()
+    elif option == "seaborn_sp":
+        # compressors = data[col].unique()
+        # custom_palette = dict(zip(compressors, sns.color_palette("tab10", n_colors=len(compressors))))
+
+        graph = sns.relplot(
+            data=data,
+            x=x_axis,
+            y=y_axis,
+            hue=hue,
+            # style=hue,
+            size=size,
+            col=col,
+            height=4,
+            aspect=1.5,
+            facet_kws=facet_kws,
+            col_wrap=col_wrap,
+        )
+
+        # Add error bars using matplotlib
+        def add_error_bars(x, y, **kwargs):
+            ax = plt.gca()
+            xerr_lower = 2 * data["stats.stddev"]
+            xerr_upper = 2 * data["stats.stddev"]
+            xerr = np.array([xerr_lower, xerr_upper])
+            xerr = xerr[:, : len(x)]
+            ax.errorbar(x, y, xerr=xerr, fmt="o", markersize=0.5, **kwargs)
+            # color=color, label=label, **kwargs)
+
+        graph.map(add_error_bars, x_axis, y_axis)
+        set_axes_limits(graph, data, plot_name)
+
+    x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
+    [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
+
+    if x_max / x_min > 10:
+        graph.set(xscale="log")
+    graph.set_axis_labels(x_axis_label, y_axis_label)
+
+    if title is not None:
+        graph.figure.suptitle(title)
+        graph.tight_layout()
+
+    save_plot_as_png(
+        graph,
+        get_output_path(data, sub_dir_name, plot_name),
+    )
+
+
 def plot_relplot_benchmarks(
     data: pd.DataFrame,
     *,
@@ -127,6 +316,11 @@ def plot_relplot_benchmarks(
         facet_kws=facet_kws,
         col_wrap=col_wrap,
     )
+
+    # Option 1: kind="line"
+    # Option 2: matplotlib errorbar
+    # Option 3: seaborn subplots with colours and error bars
+
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
 
@@ -326,6 +520,94 @@ def create_chunk_size_plots(
     )
 
 
+def create_read_write_errorbar_plots_for_package(
+    read_write_benchmarks: pd.DataFrame, package: str
+) -> None:
+    package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
+    write = package_benchmarks[package_benchmarks.group == "write"]
+    read = package_benchmarks[package_benchmarks.group == "read"]
+
+    # Option 1 == line: kind="line"
+    # Option 2 == errorbar: matplotlib errorbarplot
+    # Option 3 == seaborn_sb: seaborn subplots with colours and error bars - no style
+    option = "seaborn_sp"
+    # option = "errorbar"
+    # option = "line"
+
+    plot_errorbars_benchmarks(
+        write,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        col="chunk_size",
+        title=f"{package}_chunk_size_all",
+        sub_dir_name="write",
+        plot_name=f"{package}_chunk_size_all",
+        option=option,
+    )
+
+    plot_errorbars_benchmarks(
+        read,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        col="chunk_size",
+        title=f"{package}_chunk_size_all",
+        sub_dir_name="read",
+        plot_name=f"{package}_chunk_size_all",
+        option=option,
+    )
+
+    write_chunks_128 = write[write.chunk_size == 128]
+    read_chunks_128 = read[read.chunk_size == 128]
+
+    plot_errorbars_benchmarks(
+        write_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        title=f"{package}_chunk_size128",
+        sub_dir_name="write",
+        plot_name=f"{package}_chunk_size128",
+        option=option,
+    )
+
+    plot_errorbars_benchmarks(
+        read_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        hue="compressor",
+        size="compression_level",
+        title=f"{package}_chunk_size128",
+        sub_dir_name="read",
+        plot_name=f"{package}_chunk_size128",
+        option=option,
+    )
+
+    plot_errorbars_benchmarks(
+        write_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="compressor",
+        sub_dir_name="write",
+        plot_name=f"{package}_chunk_size128",
+        option=option,
+    )
+
+    plot_errorbars_benchmarks(
+        read_chunks_128,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="compressor",
+        sub_dir_name="read",
+        plot_name=f"{package}_chunk_size128",
+        option=option,
+    )
+
+
 def create_read_write_plots_for_package(
     read_write_benchmarks: pd.DataFrame, package: str
 ) -> None:
@@ -407,9 +689,13 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
         & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
     ]
 
-    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
-    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
-    create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+    # create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    # create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    # create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "tensorstore")
 
     read_chunks_128 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
@@ -488,8 +774,8 @@ def create_all_plots(
     )
 
     create_read_write_plots(benchmarks_df)
-    create_chunk_size_plots(benchmarks_df)
-    create_shuffle_plots(benchmarks_df)
+    # create_chunk_size_plots(benchmarks_df)
+    # create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
