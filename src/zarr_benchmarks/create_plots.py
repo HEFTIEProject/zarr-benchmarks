@@ -114,32 +114,43 @@ def set_axes_limits(graph, data, plot_name):
         print(f"Skipping compressor for {plot_name} (no data)")
         return
 
+    print("range:", range)
     max_range = max(range)
-    # np.round(max_range + max_range*0.5,1)
+    print("max_range:", max_range)
+    if max_range > 0.1:
+        for compressor, ax in graph.axes_dict.items():
+            # Set the x-axis limits for each subplot
+            x_min = min(data[data.compressor == compressor]["stats.min"])
+            x_max = max(data[data.compressor == compressor]["stats.max"])
+            central_value = (x_min + x_max) / 2
+            x_lim_min = central_value - x_min
+            x_lim_max = central_value + x_max
+            ax.set_xlim(x_min - 0.5, x_max + 0.5)
 
-    for compressor, ax in graph.axes_dict.items():
-        # Set the x-axis limits for each subplot
-        x_min = min(data[data.compressor == compressor]["stats.min"])
-        x_max = max(data[data.compressor == compressor]["stats.max"])
-        if x_max - x_min == max_range:
-            central_value = (x_min + x_max) / 2
-            # print("central_value:", central_value)
-            # print("org_xmin:", central_value - max_range / 2)
-            # print("org_xmax:", central_value + max_range / 2)
-            x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-            x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
-            ax.set_xlim(x_lim_min, x_lim_max)
-            # print("final max_range:", x_lim_max - x_lim_min)
-            # print("final x_min:", x_lim_min)
-            # print("final x_max:", x_lim_max)
-        else:
-            central_value = (x_min + x_max) / 2
-            x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-            x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
-            ax.set_xlim(x_lim_min, x_lim_max)
-            # print("range:", x_lim_max - x_lim_min)
-            # print("x_min:", x_lim_min)
-            # print("x_max:", x_lim_max)
+    else:
+        for compressor, ax in graph.axes_dict.items():
+            # Set the x-axis limits for each subplot
+            x_min = min(data[data.compressor == compressor]["stats.min"])
+            x_max = max(data[data.compressor == compressor]["stats.max"])
+            if x_max - x_min == max_range:
+                central_value = (x_min + x_max) / 2
+                # print("central_value:", central_value)
+                # print("org_xmin:", central_value - max_range / 2)
+                # print("org_xmax:", central_value + max_range / 2)
+                x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
+                x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+                ax.set_xlim(x_lim_min, x_lim_max)
+                # print("final max_range:", x_lim_max - x_lim_min)
+                # print("final x_min:", x_lim_min)
+                # print("final x_max:", x_lim_max)
+            else:
+                central_value = (x_min + x_max) / 2
+                x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
+                x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+                ax.set_xlim(x_lim_min, x_lim_max)
+                # print("range:", x_lim_max - x_lim_min)
+                # print("x_min:", x_lim_min)
+                # print("x_max:", x_lim_max)
 
 
 def plot_errorbars_benchmarks(
@@ -173,7 +184,7 @@ def plot_errorbars_benchmarks(
         col_wrap = None
         plot_name = plot_name
     else:
-        facet_kws = dict(sharex=True, sharey=True)
+        facet_kws = dict(sharex=False, sharey=False)
         if len(data[col].unique()) < 3:
             col_wrap = 2
         else:
@@ -196,8 +207,6 @@ def plot_errorbars_benchmarks(
         col_wrap=col_wrap,
     )
 
-    print("graph.axes_dict:", graph.axes_dict)
-
     # Add error bars using matplotlib
     def add_error_bars(x, y, **kwargs):
         ax = plt.gca()
@@ -205,18 +214,21 @@ def plot_errorbars_benchmarks(
         xerr_upper = 2 * data["stats.stddev"]
         xerr = np.array([xerr_lower, xerr_upper])
         xerr = xerr[:, : len(x)]
+        print("xerr:", xerr)
         ax.errorbar(x, y, xerr=xerr, fmt="o", markersize=0.5, **kwargs)
+
+    print("plot_name:", plot_name)
 
     graph.map(add_error_bars, x_axis, y_axis)
 
     set_axes_limits(graph, data, plot_name)
 
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
-    [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
+    # [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
 
-    if x_max / x_min > 10:
-        graph.set(xscale="log")
-    graph.set_axis_labels(x_axis_label, y_axis_label)
+    # if x_max / x_min > 10:
+    #     graph.set(xscale="log")
+    # graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
         graph.figure.suptitle(title)
