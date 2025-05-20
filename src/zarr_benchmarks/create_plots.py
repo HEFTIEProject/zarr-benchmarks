@@ -104,28 +104,18 @@ def set_axes_limits(graph, data, plot_name):
     max_range = max(range)
     max_x_max_min_ratio = max(x_max_min_ratio)
 
-    # [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
-
     def set_limits_custom(x_min, x_max, max_range):
         if x_max - x_min == max_range:
             central_value = (x_min + x_max) / 2
-            # print("central_value:", central_value)
-            # print("org_xmin:", central_value - max_range / 2)
-            # print("org_xmax:", central_value + max_range / 2)
             x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
             x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
             ax.set_xlim(x_lim_min, x_lim_max)
-            # print("final max_range:", x_lim_max - x_lim_min)
-            # print("final x_min:", x_lim_min)
-            # print("final x_max:", x_lim_max)
+
         else:
             central_value = (x_min + x_max) / 2
             x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
             x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
             ax.set_xlim(x_lim_min, x_lim_max)
-            # print("range:", x_lim_max - x_lim_min)
-            # print("x_min:", x_lim_min)
-            # print("x_max:", x_lim_max)
 
     if max_x_max_min_ratio > 10:
         graph.set(xscale="log")
@@ -141,25 +131,6 @@ def set_axes_limits(graph, data, plot_name):
             x_min = min(data[data.compressor == compressor]["stats.min"])
             x_max = max(data[data.compressor == compressor]["stats.max"])
             set_limits_custom(x_min, x_max, max_range)
-            # if x_max - x_min == max_range:
-            #     central_value = (x_min + x_max) / 2
-            #     # print("central_value:", central_value)
-            #     # print("org_xmin:", central_value - max_range / 2)
-            #     # print("org_xmax:", central_value + max_range / 2)
-            #     x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-            #     x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
-            #     ax.set_xlim(x_lim_min, x_lim_max)
-            #     # print("final max_range:", x_lim_max - x_lim_min)
-            #     # print("final x_min:", x_lim_min)
-            #     # print("final x_max:", x_lim_max)
-            # else:
-            #     central_value = (x_min + x_max) / 2
-            #     x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-            #     x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
-            #     ax.set_xlim(x_lim_min, x_lim_max)
-            #     # print("range:", x_lim_max - x_lim_min)
-            #     # print("x_min:", x_lim_min)
-            #     # print("x_max:", x_lim_max)
 
 
 def plot_errorbars_benchmarks(
@@ -200,8 +171,6 @@ def plot_errorbars_benchmarks(
             col_wrap = 3
         plot_name = plot_name + "_subplots"
 
-    print("get_output_path:", get_output_path(data, sub_dir_name, plot_name))
-
     graph = sns.relplot(
         data=data,
         x=x_axis,
@@ -222,20 +191,14 @@ def plot_errorbars_benchmarks(
         xerr_upper = 2 * data["stats.stddev"]
         xerr = np.array([xerr_lower, xerr_upper])
         xerr = xerr[:, : len(x)]
-        # print("xerr:", xerr)
         ax.errorbar(x, y, xerr=xerr, fmt="o", markersize=0.5, **kwargs)
-
-    # print("plot_name:", plot_name)
 
     graph.map(add_error_bars, x_axis, y_axis)
 
     set_axes_limits(graph, data, plot_name)
 
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
-    # [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
 
-    # if x_max / x_min > 10:
-    #     graph.set(xscale="log")
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
