@@ -263,10 +263,6 @@ def plot_relplot_benchmarks(
         col_wrap=col_wrap,
     )
 
-    # Option 1: kind="line"
-    # Option 2: matplotlib errorbar
-    # Option 3: seaborn subplots with colours and error bars
-
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
 
