@@ -578,9 +578,9 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
         & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
     ]
 
-    # create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
-    # create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
-    # create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
 
     create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_2")
     create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_3")
@@ -663,8 +663,8 @@ def create_all_plots(
     )
 
     create_read_write_plots(benchmarks_df)
-    # create_chunk_size_plots(benchmarks_df)
-    # create_shuffle_plots(benchmarks_df)
+    create_chunk_size_plots(benchmarks_df)
+    create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
