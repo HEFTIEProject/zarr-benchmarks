@@ -90,3 +90,28 @@ def test_write_zstd(
         rounds=rounds,
         warmup_rounds=warmup_rounds,
     )
+
+
+@pytest.mark.benchmark(group="write")
+def test_write_no_compressor(
+    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, no_compressor
+):
+    if not no_compressor:
+        pytest.skip("config didn't include no compressor")
+
+    def setup():
+        remove_output_dir(store_path)
+        return (), {
+            "image": image,
+            "store_path": store_path,
+            "overwrite": False,
+            "chunks": (chunk_size, chunk_size, chunk_size),
+            "compressor": None,
+        }
+
+    benchmark.pedantic(
+        read_write_zarr.write_zarr_array,
+        setup=setup,
+        rounds=rounds,
+        warmup_rounds=warmup_rounds,
+    )
