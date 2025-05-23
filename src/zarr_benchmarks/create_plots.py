@@ -480,8 +480,8 @@ def create_read_write_errorbar_plots_for_package(
         col="compressor",
         size="compression_level",
         title=f"{package}_chunk_size128",
-        sub_dir_name="write",
-        plot_name=f"3{package}_chunk_size128",
+        sub_dir_name="write_errorbars",
+        plot_name=f"{package}_chunk_size128",
     )
 
     plot_errorbars_benchmarks(
@@ -492,8 +492,8 @@ def create_read_write_errorbar_plots_for_package(
         col="compressor",
         size="compression_level",
         title=f"{package}_chunk_size128",
-        sub_dir_name="read",
-        plot_name=f"1{package}_chunk_size128",
+        sub_dir_name="read_errorbars",
+        plot_name=f"{package}_chunk_size128",
     )
 
 
