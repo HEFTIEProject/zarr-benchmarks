@@ -24,6 +24,7 @@ Install the relevant dependencies with:
 ```bash
 # Run from the top level of this repository
 pip install .[plots]
+uv pip install -e ".[plots]"
 ```
 
 Note: there are a number of optional dependencies that can be installed, if
