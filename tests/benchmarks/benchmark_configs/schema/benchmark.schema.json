@@ -140,6 +140,10 @@
           "required": ["min", "max"]
         }
       ]
+    },
+    "no_compressor": {
+      "description": "Whether to run benchmarks with no compressor.",
+      "type": "boolean"
     }
   },
   "additionalProperties": false,
@@ -149,6 +153,7 @@
     "blosc_shuffle",
     "blosc_cname",
     "gzip_level",
-    "zstd_level"
+    "zstd_level",
+    "no_compressor"
   ]
 }

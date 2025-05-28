@@ -4,5 +4,6 @@
   "blosc_shuffle": ["bitshuffle", "shuffle", "noshuffle"],
   "blosc_cname": ["zstd"],
   "gzip_level": [],
-  "zstd_level": []
+  "zstd_level": [],
+  "no_compressor": false
 }
