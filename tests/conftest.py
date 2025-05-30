@@ -56,18 +56,14 @@ def dev_image(request):
 
 @pytest.fixture(scope="session")
 def image(dev_image):
-    """If '--dev_image' isn't set, read the image from a series of jpeg. This process is quite slow, so we only do it once
-    per testing session. If '--dev_image' is set, use a small 100x100x100 numpy array instead - this is useful for quick
+    """If '--dev_image' isn't set, use the heart image from zenodo. This process is quite slow, so we only do it once
+    per testing session. If '--dev_image' is set, use a small 128x128x128 numpy array instead - this is useful for quick
     test runs during development."""
 
     if dev_image:
         return np.random.rand(128, 128, 128)
 
-    return get_image(
-        image_dir_path=pathlib.Path(
-            "data/input/_200.64um_LADAF-2021-17_heart_complete-organ_pag-0.10_0.03_jp2_"
-        )
-    )
+    return get_image()
 
 
 @pytest.fixture()

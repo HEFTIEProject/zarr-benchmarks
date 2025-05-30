@@ -3,21 +3,40 @@ import os
 import pathlib
 import shutil
 
-import imageio.v3 as iio
-import numpy as np
 import numpy.typing as npt
+import pooch
+
+try:
+    from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
+except ImportError:
+    try:
+        from zarr_benchmarks import (  # type: ignore[no-redef]
+            read_write_zarr_v2 as read_write_zarr,
+        )
+    except ImportError:
+        from zarr_benchmarks import (  # type: ignore[no-redef]
+            read_write_tensorstore as read_write_zarr,
+        )
+
+ZENODO = pooch.create(
+    # Use the default cache folder for the operating system
+    path=pooch.os_cache("zarr-benchmarks"),
+    base_url="doi:10.5281/zenodo.15544055",
+    registry=None,
+)
+ZENODO.load_registry_from_doi()
 
 
-def get_image(image_dir_path: pathlib.Path) -> npt.NDArray:
-    """Read a series of jpeg to one 3D numpy array"""
-    image_slices = []
-    for image_slice in image_dir_path.iterdir():
-        if not image_slice.is_file():
-            continue
+def get_image() -> npt.NDArray:
+    """Fetch zarr image from zenodo (if not already cached), and return as a 3D numpy array"""
 
-        image_slices.append(iio.imread(image_slice))
+    heart_image = "200.64um_LADAF-2021-17_heart_complete-organ_pag.zarr"
+    unpack = pooch.Unzip(members=[heart_image])
+    ZENODO.fetch(f"{heart_image}.zip", processor=unpack)
+    heart_image_path = ZENODO.path / f"{heart_image}.zip.unzip" / heart_image
 
-    image = np.stack(image_slices, axis=0)
+    # open zarr
+    image = read_write_zarr.read_zarr_array(heart_image_path)
 
     return image
 
