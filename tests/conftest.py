@@ -4,7 +4,8 @@ import pathlib
 import numpy as np
 import pytest
 
-from zarr_benchmarks.utils import get_image, read_json_file
+from zarr_benchmarks.fetch_datasets import get_image
+from zarr_benchmarks.utils import read_json_file
 
 
 def pytest_addoption(parser):
