@@ -145,25 +145,19 @@ def create_chunk_size_plots(
         & (benchmarks_df.blosc_shuffle == "shuffle")
     ]
 
+    chunk_size_compression_ratio = chunk_size_benchmarks[
+        chunk_size_benchmarks.group == "compression_ratio"
+    ]
     chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
     chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
 
     plot_relplot_benchmarks(
-        chunk_size_read,
-        x_axis="chunk_size",
+        chunk_size_write,
         y_axis="compression_ratio",
-        col="package",
+        x_axis="chunk_size",
+        title="chunk_size_compression_ratio_all",
         sub_dir_name="chunk_size",
         plot_name="compression_ratio",
-    )
-
-    plot_relplot_benchmarks(
-        chunk_size_write,
-        y_axis="stats.mean",
-        x_axis="chunk_size",
-        col="package",
-        sub_dir_name="chunk_size",
-        plot_name="write",
     )
 
     plot_relplot_benchmarks(
@@ -174,15 +168,6 @@ def create_chunk_size_plots(
         title="chunk_size_write_all",
         sub_dir_name="chunk_size",
         plot_name="write",
-    )
-
-    plot_relplot_benchmarks(
-        chunk_size_read,
-        y_axis="stats.mean",
-        x_axis="chunk_size",
-        col="package",
-        sub_dir_name="chunk_size",
-        plot_name="read",
     )
 
     plot_relplot_benchmarks(
