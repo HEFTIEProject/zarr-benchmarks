@@ -158,7 +158,7 @@ def plot_relplot_benchmarks(
     else:
         facet_kws = dict(sharex=True, sharey=True)
         if len(data[col].unique()) < 3:
-            col_wrap = 2
+            col_wrap = 1
         else:
             col_wrap = 3
         plot_name = plot_name + "_subplots"
