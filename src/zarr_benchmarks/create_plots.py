@@ -258,49 +258,6 @@ def create_read_write_plots_for_package(
         plot_name=f"{package}_chunk_size_all",
     )
 
-    write_chunks_128 = write[write.chunk_size == 128]
-    read_chunks_128 = read[read.chunk_size == 128]
-
-    plot_relplot_benchmarks(
-        write_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
-        hue="compressor",
-        size="compression_level",
-        title=f"{package}_chunk_size128",
-        sub_dir_name="write",
-        plot_name=f"{package}_chunk_size128",
-    )
-
-    plot_relplot_benchmarks(
-        read_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
-        hue="compressor",
-        size="compression_level",
-        title=f"{package}_chunk_size128",
-        sub_dir_name="read",
-        plot_name=f"{package}_chunk_size128",
-    )
-
-    plot_relplot_benchmarks(
-        write_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
-        col="compressor",
-        sub_dir_name="write",
-        plot_name=f"{package}_chunk_size128",
-    )
-
-    plot_relplot_benchmarks(
-        read_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
-        col="compressor",
-        sub_dir_name="read",
-        plot_name=f"{package}_chunk_size128",
-    )
-
 
 def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     read_write_benchmarks = benchmarks_df[
