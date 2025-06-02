@@ -145,9 +145,6 @@ def create_chunk_size_plots(
         & (benchmarks_df.blosc_shuffle == "shuffle")
     ]
 
-    chunk_size_compression_ratio = chunk_size_benchmarks[
-        chunk_size_benchmarks.group == "compression_ratio"
-    ]
     chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
     chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
 
