@@ -152,7 +152,7 @@ def plot_relplot_benchmarks(
         col (str | None, optional): name of dataframe column to be used for splitting into subplots. Defaults to None.
     """
     if col is None:
-        facet_kws = None
+        facet_kws = {}
         col_wrap = None
         plot_name = plot_name
     else:
@@ -163,6 +163,7 @@ def plot_relplot_benchmarks(
             col_wrap = 3
         plot_name = plot_name + "_subplots"
 
+    facet_kws["despine"] = False
     graph = sns.relplot(
         data=data,
         x=x_axis,
