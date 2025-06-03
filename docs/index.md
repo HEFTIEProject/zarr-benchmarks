@@ -12,7 +12,25 @@ What choices to make isn't obvious, hence this project.
 
 ## Summary
 
-> Put top level recommendations here
+- [tensorstore](https://google.github.io/tensorstore/) is faster than [Zarr-python 3](https://zarr.readthedocs.io/en/stable/) is faster than [Zarr-python 2](https://zarr.readthedocs.io/en/v2.18.5/).
+
+All data we used for these tests is available at **put DOI here**.
+
+### Dense image data
+
+We used a **(shape)** shaped image with uint16 data type.
+
+- Use Blosc with zstd, with a compression level of 9
+- Use a compression level of 4 for quicker wrtie times but slightly smaller compression ratios (but similar read times).
+
+### Dense label data
+
+We used a **(shape)** shaped image with **dtype** data type.
+
+- ...
+- ...
+
+### Sparse label data
 
 ## Compressors
 
