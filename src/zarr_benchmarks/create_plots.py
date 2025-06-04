@@ -12,6 +12,12 @@ from zarr_benchmarks.plotting_functions import (
 
 
 def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
+    """Prepare a pandas DataFrame from the pytest-benchmark json results.
+    Args:
+        json_dict (dict): the json dictionary from the pytest-benchmark results.
+    Returns:
+        pd.DataFrame: a DataFrame with the relevant benchmark data.
+    """
     benchmark_df = pd.json_normalize(json_dict["benchmarks"])
     benchmark_df["machine"] = json_dict["machine_info"]["system"]
 
