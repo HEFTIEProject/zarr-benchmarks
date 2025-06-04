@@ -365,9 +365,11 @@ def create_shuffle_plots(
         & (benchmarks_df.chunk_size == 128)
     ]
     sub_dir_name = "shuffle"
-
     write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
+    write = write[write.package == "tensorstore"]
     read = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
+    read = read[read.package == "tensorstore"]
+    title = "Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
         data=read,
@@ -375,7 +377,7 @@ def create_shuffle_plots(
         y_axis="compression_ratio",
         sub_dir_name=sub_dir_name,
         plot_name="compression_ratio",
-        hue="package",
+        title=title,
     )
 
     plot_catplot_benchmarks(
@@ -384,7 +386,7 @@ def create_shuffle_plots(
         y_axis="stats.mean",
         sub_dir_name=sub_dir_name,
         plot_name="write",
-        hue="package",
+        title=title,
     )
 
     plot_catplot_benchmarks(
@@ -393,7 +395,7 @@ def create_shuffle_plots(
         y_axis="stats.mean",
         sub_dir_name=sub_dir_name,
         plot_name="read",
-        hue="package",
+        title=title,
     )
 
 
@@ -653,8 +655,8 @@ def create_all_plots(
         package_paths_dict,
     )
 
-    create_read_write_plots(benchmarks_df)
-    create_chunk_size_plots(benchmarks_df)
+    # create_read_write_plots(benchmarks_df)
+    # create_chunk_size_plots(benchmarks_df)
     create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
