@@ -2,7 +2,6 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -175,15 +174,11 @@ def plot_errorbars_benchmarks(
     )
 
     # Add error bars using matplotlib
-    def add_error_bars(x, y, **kwargs):
+    def add_error_bars(x, y, x_stddev, **kwargs):
         ax = plt.gca()
-        xerr_lower = 2 * data["stats.stddev"]
-        xerr_upper = 2 * data["stats.stddev"]
-        xerr = np.array([xerr_lower, xerr_upper])
-        xerr = xerr[:, : len(x)]
-        ax.errorbar(x, y, xerr=xerr, fmt="o", markersize=0.5, **kwargs)
+        ax.errorbar(x, y, xerr=2 * x_stddev, fmt="none", **kwargs)
 
-    graph.map(add_error_bars, x_axis, y_axis)
+    graph.map(add_error_bars, x_axis, y_axis, "stats.stddev")
 
     set_axes_limits(graph, data, plot_name)
 
