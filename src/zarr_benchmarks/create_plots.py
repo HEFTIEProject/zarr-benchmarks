@@ -131,6 +131,8 @@ def plot_relplot_benchmarks(
         style=hue,
         size=size,
         col=col,
+        height=4,
+        aspect=1.5,
         facet_kws=facet_kws,
         col_wrap=col_wrap,
     )
@@ -214,6 +216,8 @@ def plot_catplot_benchmarks(
         y=y_axis,
         hue=hue,
         kind="bar",
+        height=4,
+        aspect=1.5,
     )
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     graph.set_axis_labels(x_axis_label, y_axis_label)
