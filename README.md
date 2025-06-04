@@ -26,6 +26,12 @@ Install the relevant dependencies with:
 pip install .[plots]
 ```
 
+If using `uv`, you can also install the dependencies with:
+
+```bash
+uv pip install -e ".[plots]"
+```
+
 Note: there are a number of optional dependencies that can be installed, if
 required. See the [development dependencies](#development-dependencies) section.
 
@@ -38,6 +44,10 @@ tox -- --benchmark-only --config=all
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
 with the example Human Organ Atlas image. All results will be saved as `.json`
 files to the `data/results` directory.
+
+Note: the first time this command is run, the required datasets will be
+downloaded from Zenodo and cached locally on your computer. Later runs will
+re-use this data, and should be faster.
 
 ### Specific config
 
