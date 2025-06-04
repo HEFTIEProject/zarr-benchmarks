@@ -45,7 +45,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
 
         # Give 'no compressor' rows an arbitrary compression level, so they can be shown on plots where point size is
         # related to compression level
-        benchmark_df.loc[benchmark_df["compressor"] == "none", "compression_level"] = 18
+        benchmark_df.loc[benchmark_df["compressor"] == "none", "compression_level"] = 19
 
     # remove un-needed columns
     stats_cols = [col for col in benchmark_df if col.startswith("stats")]
