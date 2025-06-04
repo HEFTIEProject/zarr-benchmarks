@@ -1,18 +1,19 @@
-from pathlib import Path
-from typing import Callable
-
 import numpy as np
+import pytest
+
+from zarr_benchmarks.read_write_zarr import read_write_zarr
+
+pytestmark = [pytest.mark.tensorstore, pytest.mark.zarr_python]
 
 
-def assert_empty_chunks_written(
-    output_dir: Path, write_zarr_array: Callable, write_empty_chunks: bool
-) -> None:
+@pytest.mark.parametrize("write_empty_chunks", [True, False])
+def test_write_empty_chunks(tmp_path, write_empty_chunks):
     """Check an empty chunk is written to file when write_empty_chunks=True"""
 
     image = np.zeros(shape=(1, 1, 1))
-    store_path = output_dir / "image.zarr"
+    store_path = tmp_path / "image.zarr"
 
-    write_zarr_array(
+    read_write_zarr.write_zarr_array(
         image,
         store_path,
         overwrite=True,
