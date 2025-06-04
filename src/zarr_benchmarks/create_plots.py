@@ -77,25 +77,20 @@ def get_benchmarks_dataframe(
     return pd.concat(benchmark_dfs, ignore_index=True)
 
 
-def set_axes_limits(graph, data, plot_name):
+def set_axes_limits(graph: sns.relplot, data: pd.DataFrame, plot_name: str) -> None:
+    """Set all subplots to cover the same total x axis range (= max_range across all subplots),
+    centred on their central x value.
+    """
+
     range = []
     x_max_min_ratio = []
     for compressor, ax in graph.axes_dict.items():
         # Filter data for this compressor
         compressor_data = data[data.compressor == compressor]
-        if compressor_data.empty:
-            print(f"Skipping compressor {compressor} for {plot_name} (no data)")
-            continue
-        try:
-            x_min = compressor_data["stats.min"].min()
-            x_max = compressor_data["stats.max"].max()
-            range.append(x_max - x_min)
-            x_max_min_ratio.append((x_max / x_min))
-        except KeyError:
-            print(
-                f"KeyError: stats.min not found for compressor {compressor} for {plot_name}"
-            )
-            continue
+        x_min = compressor_data["stats.min"].min()
+        x_max = compressor_data["stats.max"].max()
+        range.append(x_max - x_min)
+        x_max_min_ratio.append((x_max / x_min))
 
     if not range:
         print(f"Skipping compressor for {plot_name} (no data)")
@@ -104,18 +99,13 @@ def set_axes_limits(graph, data, plot_name):
     max_range = max(range)
     max_x_max_min_ratio = max(x_max_min_ratio)
 
-    def set_limits_custom(x_min, x_max, max_range):
-        if x_max - x_min == max_range:
-            central_value = (x_min + x_max) / 2
-            x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-            x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
-            ax.set_xlim(x_lim_min, x_lim_max)
-
-        else:
-            central_value = (x_min + x_max) / 2
-            x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-            x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
-            ax.set_xlim(x_lim_min, x_lim_max)
+    def set_limits_custom(x_min: int, x_max: int, max_range: int) -> None:
+        central_value = (x_min + x_max) / 2
+        x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
+        if x_lim_min < 0:
+            x_lim_min = x_min
+        x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+        ax.set_xlim(x_lim_min, x_lim_max)
 
     if max_x_max_min_ratio > 10:
         graph.set(xscale="log")
@@ -136,8 +126,6 @@ def set_axes_limits(graph, data, plot_name):
 def plot_errorbars_benchmarks(
     data: pd.DataFrame,
     *,
-    x_axis: str,
-    y_axis: str,
     sub_dir_name: str,
     plot_name: str,
     title: str | None = None,
@@ -145,7 +133,7 @@ def plot_errorbars_benchmarks(
     size: str | None = None,
     col: str | None = None,
 ) -> None:
-    """Generate a scatter plot using seaborn's relplot function with a dataframe as input.
+    """Generate a scatter plot including errorbars using seaborn's relplot function with a dataframe as input.
     Calls a function to save the plot as a PNG file.
 
     Args:
@@ -159,6 +147,8 @@ def plot_errorbars_benchmarks(
         size (str | None, optional): name of dataframe column to be used for size of datapoints. Defaults to None.
         col (str | None, optional): name of dataframe column to be used for splitting into subplots. Defaults to None.
     """
+    x_axis = "stats.mean"
+    y_axis = "compression_ratio"
     if col is None:
         facet_kws = None
         col_wrap = None
@@ -202,6 +192,7 @@ def plot_errorbars_benchmarks(
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
+        title = title + " - 2 standard deviations errorbars"
         graph.figure.suptitle(title)
         graph.tight_layout()
 
@@ -474,8 +465,6 @@ def create_read_write_errorbar_plots_for_package(
 
     plot_errorbars_benchmarks(
         write_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
         hue="compressor",
         col="compressor",
         size="compression_level",
@@ -486,8 +475,6 @@ def create_read_write_errorbar_plots_for_package(
 
     plot_errorbars_benchmarks(
         read_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
         hue="compressor",
         col="compressor",
         size="compression_level",
