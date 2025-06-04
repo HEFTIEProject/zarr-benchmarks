@@ -26,6 +26,12 @@ Install the relevant dependencies with:
 pip install .[plots]
 ```
 
+If using `uv`, you can also install the dependencies with:
+
+```bash
+uv pip install -e ".[plots]"
+```
+
 Note: there are a number of optional dependencies that can be installed, if
 required. See the [development dependencies](#development-dependencies) section.
 
