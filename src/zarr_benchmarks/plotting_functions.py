@@ -177,12 +177,13 @@ def plot_relplot_benchmarks(
         col_wrap=col_wrap,
     )
 
-    if col:
-        for col_val, ax in graph.axes_dict.items():
+    if y_axis == "compression_ratio" and x_axis == "stats.mean":
+        if col:  # If we have subplots, add a horizontal line at y=1 to each subplot
+            for col_val, ax in graph.axes_dict.items():
+                ax.axhline(y=1, color="gray", linestyle="--", linewidth=1, label="none")
+        else:
+            ax = graph.ax
             ax.axhline(y=1, color="gray", linestyle="--", linewidth=1, label="none")
-    else:
-        ax = graph.ax
-        ax.axhline(y=1, color="gray", linestyle="--", linewidth=1, label="none")
 
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
