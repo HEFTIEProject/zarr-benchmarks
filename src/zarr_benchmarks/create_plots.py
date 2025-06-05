@@ -1,15 +1,23 @@
 import argparse
-from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-import seaborn as sns
-from matplotlib import pyplot as plt
 
 from zarr_benchmarks import utils
+from zarr_benchmarks.plotting_functions import (
+    plot_catplot_benchmarks,
+    plot_errorbars_benchmarks,
+    plot_relplot_benchmarks,
+)
 
 
 def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
+    """Prepare a pandas DataFrame from the pytest-benchmark json results.
+    Args:
+        json_dict (dict): the json dictionary from the pytest-benchmark results.
+    Returns:
+        pd.DataFrame: a DataFrame with the relevant benchmark data.
+    """
     benchmark_df = pd.json_normalize(json_dict["benchmarks"])
     benchmark_df["machine"] = json_dict["machine_info"]["system"]
 
@@ -83,155 +91,6 @@ def get_benchmarks_dataframe(
         benchmark_dfs.append(benchmark_df)
 
     return pd.concat(benchmark_dfs, ignore_index=True)
-
-
-def plot_relplot_benchmarks(
-    data: pd.DataFrame,
-    *,
-    x_axis: str,
-    y_axis: str,
-    sub_dir_name: str,
-    plot_name: str,
-    title: str | None = None,
-    hue: str | None = None,
-    size: str | None = None,
-    col: str | None = None,
-) -> None:
-    """Generate a scatter plot using seaborn's relplot function with a dataframe as input.
-    Calls a function to save the plot as a PNG file.
-
-    Args:
-        data (pd.DataFrame): Contains the data to be plotted.
-        x_axis (str): name of dataframe column to be used for x-axis
-        y_axis (str): name of dataframe column to be used for y-axis
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
-        plot_name (str): name of the plot which will be used for the start of the final filename
-        title (str | None, optional): title of the plot. Defaults to None.
-        hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
-        size (str | None, optional): name of dataframe column to be used for size of datapoints. Defaults to None.
-        col (str | None, optional): name of dataframe column to be used for splitting into subplots. Defaults to None.
-    """
-    if col is None:
-        facet_kws = None
-        col_wrap = None
-        plot_name = plot_name
-    else:
-        facet_kws = dict(sharex=True, sharey=True)
-        if len(data[col].unique()) < 3:
-            col_wrap = 2
-        else:
-            col_wrap = 3
-        plot_name = plot_name + "_subplots"
-
-    graph = sns.relplot(
-        data=data,
-        x=x_axis,
-        y=y_axis,
-        hue=hue,
-        style=hue,
-        size=size,
-        col=col,
-        height=4,
-        aspect=1.5,
-        facet_kws=facet_kws,
-        col_wrap=col_wrap,
-    )
-    x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
-    [x_min, x_max] = graph.data[x_axis].min(), graph.data[x_axis].max()
-
-    if x_max / x_min > 10:
-        graph.set(xscale="log")
-    graph.set_axis_labels(x_axis_label, y_axis_label)
-
-    if title is not None:
-        graph.figure.suptitle(title)
-        graph.tight_layout()
-
-    save_plot_as_png(
-        graph,
-        get_output_path(data, sub_dir_name, plot_name),
-    )
-
-
-def get_axis_labels(
-    benchmark_df: pd.DataFrame, *, x_axis: str, y_axis: str
-) -> tuple[str, str]:
-    group = benchmark_df.group.unique()
-    if len(group) != 1:
-        raise ValueError("Expected only one group value in dataframe")
-
-    if x_axis.startswith("stats"):
-        x_axis_label = f"{x_axis.split('.')[-1]} {group[0]} time (s)"
-    else:
-        x_axis_label = x_axis.capitalize().replace("_", " ")
-
-    if y_axis.startswith("stats"):
-        y_axis_label = f"{y_axis.split('.')[-1]} {group[0]} time (s)"
-    else:
-        y_axis_label = y_axis.capitalize().replace("_", " ")
-
-    return x_axis_label, y_axis_label
-
-
-def get_output_path(
-    benchmarks_df: pd.DataFrame, sub_dir_name: str, plot_name: str
-) -> Path:
-    machine_info = benchmarks_df["machine"].iloc[0]
-    date = datetime.now().strftime("%Y-%m-%d")
-
-    plots_dir = Path(__file__).parents[2] / "data" / "plots" / sub_dir_name
-    return plots_dir / f"{plot_name}_{date}_{machine_info}.png"
-
-
-def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    grid.savefig(output_path, format="png", dpi=300)
-    plt.close()
-
-
-def plot_catplot_benchmarks(
-    data: pd.DataFrame,
-    *,
-    x_axis: str,
-    y_axis: str,
-    sub_dir_name: str,
-    plot_name: str,
-    title: str | None = None,
-    hue: str | None = None,
-) -> None:
-    """Generate a bar plot using seaborn's catplot function with a dataframe as input.
-    Calls a function to save the plot as a PNG file.
-
-
-    Args:
-        data (pd.DataFrame): Contains the data to be plotted.
-        x_axis (str): name of dataframe column to be used for x-axis
-        y_axis (str): name of dataframe column to be used for y-axis
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
-        plot_name (str): name of the plot which will be used for the start of the final filename
-        title (str | None, optional): title of the plot. Defaults to None.
-        hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
-    """
-    graph = sns.catplot(
-        data=data,
-        x=x_axis,
-        y=y_axis,
-        hue=hue,
-        kind="bar",
-        height=4,
-        aspect=1.5,
-    )
-    x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
-    graph.set_axis_labels(x_axis_label, y_axis_label)
-
-    if title is not None:
-        graph.figure.suptitle(title)
-        graph.tight_layout()
-
-    save_plot_as_png(
-        graph,
-        get_output_path(data, sub_dir_name, plot_name),
-    )
 
 
 def create_shuffle_plots(
@@ -335,6 +194,37 @@ def create_chunk_size_plots(
     )
 
 
+def create_read_write_errorbar_plots_for_package(
+    read_write_benchmarks: pd.DataFrame, package: str
+) -> None:
+    package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
+    write = package_benchmarks[package_benchmarks.group == "write"]
+    read = package_benchmarks[package_benchmarks.group == "read"]
+
+    write_chunks_128 = write[write.chunk_size == 128]
+    read_chunks_128 = read[read.chunk_size == 128]
+
+    plot_errorbars_benchmarks(
+        write_chunks_128,
+        hue="compressor",
+        col="compressor",
+        size="compression_level",
+        title=f"{package}_chunk_size128",
+        sub_dir_name="write_errorbars",
+        plot_name=f"{package}_chunk_size128",
+    )
+
+    plot_errorbars_benchmarks(
+        read_chunks_128,
+        hue="compressor",
+        col="compressor",
+        size="compression_level",
+        title=f"{package}_chunk_size128",
+        sub_dir_name="read_errorbars",
+        plot_name=f"{package}_chunk_size128",
+    )
+
+
 def create_read_write_plots_for_package(
     read_write_benchmarks: pd.DataFrame, package: str
 ) -> None:
@@ -419,6 +309,10 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
     create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
     create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "tensorstore")
 
     read_chunks_128 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
