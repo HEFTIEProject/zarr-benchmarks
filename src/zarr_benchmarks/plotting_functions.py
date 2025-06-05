@@ -201,17 +201,15 @@ def get_axis_labels(
     if len(group) != 1:
         raise ValueError("Expected only one group value in dataframe")
 
-    if x_axis.startswith("stats"):
-        x_axis_label = f"{x_axis.split('.')[-1]} {group[0]} time (s)"
-    else:
-        x_axis_label = x_axis.capitalize().replace("_", " ")
+    axis_labels = {}
+    for axis in (x_axis, y_axis):
+        if axis.startswith("stats"):
+            axis_label = f"{axis.split('.')[-1].capitalize()} {group[0]} time (s)"
+        else:
+            axis_label = axis.capitalize().replace("_", " ")
+        axis_labels[axis] = axis_label
 
-    if y_axis.startswith("stats"):
-        y_axis_label = f"{y_axis.split('.')[-1]} {group[0]} time (s)"
-    else:
-        y_axis_label = y_axis.capitalize().replace("_", " ")
-
-    return x_axis_label, y_axis_label
+    return axis_labels[x_axis], axis_labels[y_axis]
 
 
 def get_output_path(
