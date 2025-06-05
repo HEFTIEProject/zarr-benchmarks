@@ -92,6 +92,7 @@ def get_benchmarks_dataframe(
 
     return pd.concat(benchmark_dfs, ignore_index=True)
 
+
 def create_shuffle_plots(
     benchmarks_df: pd.DataFrame,
 ) -> None:
