@@ -67,8 +67,6 @@ def plot_errorbars_benchmarks(
 
     Args:
         data (pd.DataFrame): Contains the data to be plotted.
-        x_axis (str): name of dataframe column to be used for x-axis
-        y_axis (str): name of dataframe column to be used for y-axis
         sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
