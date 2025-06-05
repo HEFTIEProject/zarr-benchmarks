@@ -107,12 +107,17 @@ def set_axes_limits(graph: sns.relplot, data: pd.DataFrame, plot_name: str) -> N
     max_range = max(range)
     max_x_max_min_ratio = max(x_max_min_ratio)
 
-    def set_limits_custom(x_min: int, x_max: int, max_range: int) -> None:
+    def get_limits_custom(
+        x_min: int, x_max: int, max_range: int
+    ) -> tuple[float, float]:
         central_value = (x_min + x_max) / 2
         x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-        if x_lim_min < 0:
-            x_lim_min = x_min
+        # if x_lim_min < 0:
+        #     x_lim_min = x_min
         x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+        return x_lim_min, x_lim_max
+
+    def set_limits_custom(x_lim_min: float, x_lim_max: float) -> None:
         ax.set_xlim(x_lim_min, x_lim_max)
 
     if max_x_max_min_ratio > 10:
@@ -121,14 +126,18 @@ def set_axes_limits(graph: sns.relplot, data: pd.DataFrame, plot_name: str) -> N
             # Set the x-axis limits for each subplot
             x_min = graph.data["stats.min"].min()
             x_max = graph.data["stats.min"].max()
-            set_limits_custom(x_min, x_max, max_range)
+            x_lim_min, x_lim_max = get_limits_custom(x_min, x_max, max_range)
+            if x_lim_min < 0:
+                graph.set(xscale="linear")
+            set_limits_custom(x_lim_min, x_lim_max)
 
     else:
         for compressor, ax in graph.axes_dict.items():
             # Set the x-axis limits for each subplot
             x_min = min(data[data.compressor == compressor]["stats.min"])
             x_max = max(data[data.compressor == compressor]["stats.max"])
-            set_limits_custom(x_min, x_max, max_range)
+            x_lim_min, x_lim_max = get_limits_custom(x_min, x_max, max_range)
+            set_limits_custom(x_lim_min, x_lim_max)
 
 
 def plot_errorbars_benchmarks(
@@ -569,9 +578,9 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
         & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
     ]
 
-    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
-    create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
-    create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
+    # create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    # create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    # create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
 
     create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_2")
     create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_3")
@@ -654,8 +663,8 @@ def create_all_plots(
     )
 
     create_read_write_plots(benchmarks_df)
-    create_chunk_size_plots(benchmarks_df)
-    create_shuffle_plots(benchmarks_df)
+    # create_chunk_size_plots(benchmarks_df)
+    # create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
