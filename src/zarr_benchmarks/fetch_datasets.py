@@ -1,17 +1,7 @@
 import numpy.typing as npt
 import pooch
 
-try:
-    from zarr_benchmarks import read_write_zarr_v3 as read_write_zarr
-except ImportError:
-    try:
-        from zarr_benchmarks import (  # type: ignore[no-redef]
-            read_write_zarr_v2 as read_write_zarr,
-        )
-    except ImportError:
-        from zarr_benchmarks import (  # type: ignore[no-redef]
-            read_write_tensorstore as read_write_zarr,
-        )
+from zarr_benchmarks.read_write_zarr import read_write_zarr
 
 ZENODO = pooch.create(
     # Use the default cache folder for the operating system
