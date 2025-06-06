@@ -253,6 +253,12 @@ def plot_catplot_benchmarks(
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
     """
+    # Before plotting, set the desired order
+    shuffle_order = ["noshuffle", "bitshuffle", "shuffle"]
+    data[x_axis] = pd.Categorical(
+        data["blosc_shuffle"], categories=shuffle_order, ordered=True
+    )
+
     graph = sns.catplot(
         data=data,
         x=x_axis,
@@ -262,6 +268,8 @@ def plot_catplot_benchmarks(
         height=4,
         aspect=1.5,
     )
+    if y_axis == "compression_ratio":
+        graph.set(ylim=(1, None))
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
