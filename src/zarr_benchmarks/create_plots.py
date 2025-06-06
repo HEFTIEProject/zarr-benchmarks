@@ -392,8 +392,8 @@ def create_all_plots(
         package_paths_dict,
     )
 
-    # create_read_write_plots(benchmarks_df)
-    # create_chunk_size_plots(benchmarks_df)
+    create_read_write_plots(benchmarks_df)
+    create_chunk_size_plots(benchmarks_df)
     create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
