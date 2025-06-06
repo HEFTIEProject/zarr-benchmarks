@@ -260,10 +260,12 @@ def plot_catplot_benchmarks(
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
     """
     # Before plotting, set the desired order
-    shuffle_order = ["noshuffle", "bitshuffle", "shuffle"]
-    data[x_axis] = pd.Categorical(
-        data["blosc_shuffle"], categories=shuffle_order, ordered=True
-    )
+    if x_axis == "blosc_shuffle":
+        data = data.copy()
+        shuffle_order = ["noshuffle", "bitshuffle", "shuffle"]
+        data[x_axis] = pd.Categorical(
+            data["blosc_shuffle"], categories=shuffle_order, ordered=True
+        )
 
     graph = sns.catplot(
         data=data,
