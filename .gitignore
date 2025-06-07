@@ -125,3 +125,6 @@ data/
 tmp/
 .vscode/
 .benchmarks/
+
+# macOS
+.DS_Store
