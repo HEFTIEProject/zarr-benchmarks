@@ -13,7 +13,7 @@ def get_limits_custom(x_min: int, x_max: int, max_range: int) -> tuple[float, fl
     return x_lim_min, x_lim_max
 
 
-def set_axes_limits(graph: sns.relplot, data: pd.DataFrame, plot_name: str) -> None:
+def set_axes_limits(graph: sns.relplot, data: pd.DataFrame) -> None:
     """Set all subplots to cover the same total x axis range (= max_range across all subplots),
     centred on their central x value.
     """
@@ -105,7 +105,7 @@ def plot_errorbars_benchmarks(
 
     graph.map(add_error_bars, x_axis, y_axis, "stats.stddev")
 
-    set_axes_limits(graph, data, plot_name)
+    set_axes_limits(graph, data)
 
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
 
