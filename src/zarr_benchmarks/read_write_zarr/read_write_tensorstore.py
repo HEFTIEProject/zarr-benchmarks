@@ -18,7 +18,7 @@ def get_compression_ratio(store_path: pathlib.Path) -> float:
 def open_zarr_array(store_path: pathlib.Path) -> ts.TensorStore:
     return ts.open(
         {
-            "driver": "zarr",
+            "driver": "zarr",  # zarr3 for spec v3
             "kvstore": {
                 "driver": "file",
                 "path": str(store_path.resolve()),
@@ -34,19 +34,14 @@ def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
     return read_image
 
 
-def write_zarr_array(
+def write_zarr_array_v2(
     image: npt.NDArray,
     store_path: pathlib.Path,
     *,
-    overwrite: bool,
     chunks: tuple[int],
     compressor: dict | None,
     write_empty_chunks: bool = True,
 ) -> None:
-    """Write the v2 zarr spec with tensorstore"""
-    if overwrite:
-        utils.remove_output_dir(store_path)
-
     dataset = ts.open(
         {
             "driver": "zarr",
@@ -69,6 +64,78 @@ def write_zarr_array(
 
     write_future = dataset[:].write(image)
     write_future.result()
+
+
+def write_zarr_array_v3(
+    image: npt.NDArray,
+    store_path: pathlib.Path,
+    *,
+    chunks: tuple[int],
+    compressor: dict | None,
+    write_empty_chunks: bool = True,
+) -> None:
+    dataset = ts.open(
+        {
+            "driver": "zarr3",
+            "kvstore": {
+                "driver": "file",
+                "path": str(store_path.resolve()),
+            },
+            "metadata": {
+                "zarr_format": 3,
+                "node_type": "array",
+                "data_type": str(image.dtype),
+                "shape": image.shape,
+                "chunk_grid": {
+                    "name": "regular",
+                    "configuration": {"chunk_shape": chunks},
+                },
+                "codecs": [
+                    {"name": "bytes", "configuration": {"endian": "little"}},
+                    {"name": "blosc", "configuration": {"cname": "zstd", "clevel": 1}},
+                ],
+                "fill_value": 0,
+            },
+            "create": True,
+            "delete_existing": False,
+            "store_data_equal_to_fill_value": write_empty_chunks,
+        },
+    ).result()
+
+    write_future = dataset[:].write(image)
+    write_future.result()
+
+
+def write_zarr_array(
+    image: npt.NDArray,
+    store_path: pathlib.Path,
+    *,
+    overwrite: bool,
+    chunks: tuple[int],
+    compressor: dict | None,
+    write_empty_chunks: bool = True,
+    zarr_spec: Literal[2, 3] = 3,
+) -> None:
+    """Write the v2/v3 zarr spec with tensorstore"""
+    if overwrite:
+        utils.remove_output_dir(store_path)
+
+    if zarr_spec == 2:
+        write_zarr_array_v2(
+            image,
+            store_path,
+            chunks=chunks,
+            compressor=compressor,
+            write_empty_chunks=write_empty_chunks,
+        )
+    else:
+        write_zarr_array_v3(
+            image,
+            store_path,
+            chunks=chunks,
+            compressor=compressor,
+            write_empty_chunks=write_empty_chunks,
+        )
 
 
 def get_blosc_compressor(
