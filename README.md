@@ -17,13 +17,13 @@ the choice of options for folks reading and writing 3D imaging data.
 
 ## Running the benchmarks
 
-### All benchmarks
+### Installation
 
 Install the relevant dependencies with:
 
 ```bash
 # Run from the top level of this repository
-pip install .[plots]
+pip install -e .[plots]
 ```
 
 If using `uv`, you can also install the dependencies with:
@@ -35,19 +35,32 @@ uv pip install -e ".[plots]"
 Note: there are a number of optional dependencies that can be installed, if
 required. See the [development dependencies](#development-dependencies) section.
 
-Then run tox with:
+### All benchmarks
+
+To run all benchmarks (with all images) run the following tox commands:
 
 ```bash
-tox -- --benchmark-only --config=all
+# Run with an image of a heart from the Human Organ Atlas
+tox -- --benchmark-only --image=heart --config=all
+
+# Run with a dense segmentation (small subset of C3 segmentation data from the H01 release)
+tox -- --benchmark-only --image=dense --config=all
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
-with the example Human Organ Atlas image. All results will be saved as `.json`
-files to the `data/results` directory.
+with the given images. Each tox command will generate three result `.json` files
+in the `data/results` directory - one for `zarr-python` version 2
+(`{id}_zarr-python-v2.json`), one for `zarr-python` version 3
+(`{id}_zarr-python-v3.json`) and one for tensorstore (`{id}_tensorstore.json`).
+`{id}` is a four digit number (e.g. `0001`) that increments automatically for
+every new `tox` run.
 
-Note: the first time this command is run, the required datasets will be
-downloaded from Zenodo and cached locally on your computer. Later runs will
-re-use this data, and should be faster.
+Note: the first time these commands are run, the required datasets will be
+downloaded from
+[HEFTIE's Zenodo repository](https://doi.org/10.5281/zenodo.15544055) and cached
+locally on your computer. Later runs will re-use this data, and should be
+faster. Information about the source of these datasets is provided in the
+`LICENSE` file within each `.zarr` file on Zenodo.
 
 ### Specific config
 
@@ -57,7 +70,7 @@ selection of parameters for quick test runs). To run with parameters from a
 single config file use e.g.
 
 ```bash
-tox -- --benchmark-only --config=shuffle
+tox -- --benchmark-only --image=heart --config=shuffle
 ```
 
 ### Specific package
@@ -83,21 +96,21 @@ Removing the `--config` option will use a small `dev` config to test a small
 selection of parameters:
 
 ```bash
-tox -- --benchmark-only
+tox -- --benchmark-only --image=heart
 ```
 
-You can also use a smaller image (100x100x100 numpy array) by adding
-`--dev-image`:
+You can also use a smaller image (128x128x128 numpy array) by using
+`--image=dev` (this is also the default if no `--image` option is provided):
 
 ```bash
-tox -- --benchmark-only --dev-image
+tox -- --benchmark-only --image=dev
 ```
 
 You can also override the default number of rounds / warmup rounds for each
 benchmark with:
 
 ```bash
-tox -- --benchmark-only --dev-image --rounds=1 --warmup-rounds=0
+tox -- --benchmark-only --image=dev --rounds=1 --warmup-rounds=0
 ```
 
 Everything after the first `--` will be passed to the internal `pytest` call, so
