@@ -25,9 +25,8 @@ def _fetch_from_zenodo(image_name: str) -> npt.NDArray:
     return image
 
 
-def get_image() -> npt.NDArray:
+def get_heart() -> npt.NDArray:
     """Fetch image of a heart from the human organ atlas."""
-
     return _fetch_from_zenodo("200.64um_LADAF-2021-17_heart_complete-organ_pag.zarr")
 
 
