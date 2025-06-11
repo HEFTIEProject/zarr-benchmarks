@@ -23,7 +23,7 @@ def test_read_blosc(
         pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
 
     blosc_compressor = read_write_zarr.get_blosc_compressor(
-        blosc_cname, blosc_clevel, blosc_shuffle, zarr_spec
+        blosc_cname, blosc_clevel, blosc_shuffle, zarr_spec=zarr_spec
     )
 
     read_write_zarr.write_zarr_array(
@@ -35,7 +35,9 @@ def test_read_blosc(
         zarr_spec=zarr_spec,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path, zarr_spec)
+    compression_ratio = read_write_zarr.get_compression_ratio(
+        store_path, zarr_spec=zarr_spec
+    )
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(
@@ -63,7 +65,9 @@ def test_read_gzip(
     if zarr_spec == 3 and is_zarr_python_v2():
         pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
 
-    gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level, zarr_spec)
+    gzip_compressor = read_write_zarr.get_gzip_compressor(
+        gzip_level, zarr_spec=zarr_spec
+    )
 
     read_write_zarr.write_zarr_array(
         image=image,
@@ -74,7 +78,9 @@ def test_read_gzip(
         zarr_spec=zarr_spec,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path, zarr_spec)
+    compression_ratio = read_write_zarr.get_compression_ratio(
+        store_path, zarr_spec=zarr_spec
+    )
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(
@@ -102,7 +108,9 @@ def test_read_zstd(
     if zarr_spec == 3 and is_zarr_python_v2():
         pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
 
-    zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level, zarr_spec)
+    zstd_compressor = read_write_zarr.get_zstd_compressor(
+        zstd_level, zarr_spec=zarr_spec
+    )
 
     read_write_zarr.write_zarr_array(
         image=image,
@@ -113,7 +121,9 @@ def test_read_zstd(
         zarr_spec=zarr_spec,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path, zarr_spec)
+    compression_ratio = read_write_zarr.get_compression_ratio(
+        store_path, zarr_spec=zarr_spec
+    )
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(
@@ -153,7 +163,9 @@ def test_read_no_compressor(
         zarr_spec=zarr_spec,
     )
 
-    compression_ratio = read_write_zarr.get_compression_ratio(store_path, zarr_spec)
+    compression_ratio = read_write_zarr.get_compression_ratio(
+        store_path, zarr_spec=zarr_spec
+    )
     benchmark.extra_info["compression_ratio"] = compression_ratio
 
     benchmark.pedantic(
