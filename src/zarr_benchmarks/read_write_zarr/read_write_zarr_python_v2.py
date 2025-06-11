@@ -43,7 +43,7 @@ def write_zarr_array(
         chunks=chunks,
         dtype=image.dtype,
         compressor=compressor,
-        zarr_format=zarr_spec,
+        zarr_version=zarr_spec,
         fill_value=0,
         write_empty_chunks=write_empty_chunks,
     )
