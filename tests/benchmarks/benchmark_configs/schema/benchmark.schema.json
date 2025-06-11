@@ -147,34 +147,12 @@
     },
     "zarr_spec": {
       "description": "The zarr specification version",
-      "anyOf": [
-        {
           "type": "array",
           "items": {
             "type": "integer",
             "minimum": 2,
             "maximum": 3
           }
-        },
-        {
-          "type": "object",
-          "properties": {
-            "min": {
-              "description": "Minimum zarr specification version",
-              "type": "integer",
-              "minimum": 2,
-              "maximum": 3
-            },
-            "max": {
-              "description": "Maximum zarr specification version",
-              "type": "integer",
-              "minimum": 2,
-              "maximum": 3
-            }
-          },
-          "required": ["min", "max"]
-        }
-      ]
     }
   },
   "additionalProperties": false,
