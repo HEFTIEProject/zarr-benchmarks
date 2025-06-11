@@ -61,7 +61,7 @@ def get_blosc_compressor(
 
 
 def get_gzip_compressor(
-    level: int, zarr_spec: Literal[2, 3] = 2
+    level: int, **_
 ) -> numcodecs.abc.Codec:
     return GZip(level=level)
 
