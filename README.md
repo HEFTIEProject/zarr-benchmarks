@@ -75,7 +75,7 @@ selection of parameters for quick test runs). To run with parameters from a
 single config file use e.g.
 
 ```bash
-tox -- --benchmark-only --image=heart --config=shuffle
+tox -- --benchmark-only --image=heart --config=shuffle --benchmark-storage=data/results/heart
 ```
 
 ### Specific package
@@ -101,21 +101,21 @@ Removing the `--config` option will use a small `dev` config to test a small
 selection of parameters:
 
 ```bash
-tox -- --benchmark-only --image=heart
+tox -- --benchmark-only --image=heart --benchmark-storage=data/results/heart
 ```
 
 You can also use a smaller image (128x128x128 numpy array) by using
 `--image=dev` (this is also the default if no `--image` option is provided):
 
 ```bash
-tox -- --benchmark-only --image=dev
+tox -- --benchmark-only --image=dev --benchmark-storage=data/results/dev
 ```
 
 You can also override the default number of rounds / warmup rounds for each
 benchmark with:
 
 ```bash
-tox -- --benchmark-only --image=dev --rounds=1 --warmup-rounds=0
+tox -- --benchmark-only --image=dev --rounds=1 --warmup-rounds=0 --benchmark-storage=data/results/dev
 ```
 
 Everything after the first `--` will be passed to the internal `pytest` call, so
