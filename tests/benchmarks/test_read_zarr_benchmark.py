@@ -1,8 +1,7 @@
-import os
-
 import pytest
 
 from zarr_benchmarks.read_write_zarr import read_write_zarr
+from zarr_benchmarks.utils import is_zarr_python_v2
 
 pytestmark = [pytest.mark.tensorstore, pytest.mark.zarr_python]
 
@@ -20,8 +19,9 @@ def test_read_blosc(
     blosc_cname,
     zarr_spec,
 ):
-    if zarr_spec == 3 and os.environ.get("TOX_ENV_NAME") == "py313-zarrv2":
+    if zarr_spec == 3 and is_zarr_python_v2():
         pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+
     blosc_compressor = read_write_zarr.get_blosc_compressor(
         blosc_cname, blosc_clevel, blosc_shuffle, zarr_spec
     )
@@ -60,8 +60,9 @@ def test_read_gzip(
     gzip_level,
     zarr_spec,
 ):
-    if zarr_spec == 3 and os.environ.get("TOX_ENV_NAME") == "py313-zarrv2":
+    if zarr_spec == 3 and is_zarr_python_v2():
         pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+
     gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level, zarr_spec)
 
     read_write_zarr.write_zarr_array(
@@ -98,8 +99,9 @@ def test_read_zstd(
     zstd_level,
     zarr_spec,
 ):
-    if zarr_spec == 3 and os.environ.get("TOX_ENV_NAME") == "py313-zarrv2":
+    if zarr_spec == 3 and is_zarr_python_v2():
         pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+
     zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level, zarr_spec)
 
     read_write_zarr.write_zarr_array(
@@ -138,6 +140,9 @@ def test_read_no_compressor(
 ):
     if not no_compressor:
         pytest.skip("config didn't include no compressor")
+
+    if zarr_spec == 3 and is_zarr_python_v2():
+        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
 
     read_write_zarr.write_zarr_array(
         image=image,

@@ -30,7 +30,7 @@ def write_zarr_array(
     overwrite: bool,
     chunks: tuple[int],
     compressor: numcodecs.abc.Codec | None,
-    zarr_spec: Literal[2, 3] = 2,
+    zarr_spec: Literal[2, 3],
     write_empty_chunks: bool = True,
 ) -> None:
     if overwrite:
@@ -54,19 +54,15 @@ def get_blosc_compressor(
     cname: str,
     clevel: int,
     shuffle: Literal["shuffle", "noshuffle", "bitshuffle"],
-    zarr_spec: Literal[2, 3] = 2,
+    zarr_spec: Literal[2, 3],
 ) -> numcodecs.abc.Codec:
     shuffle_int = read_write_zarr_python_utils.get_numcodec_shuffle(shuffle)
     return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
 
 
-def get_gzip_compressor(
-    level: int, **_
-) -> numcodecs.abc.Codec:
+def get_gzip_compressor(level: int, **_) -> numcodecs.abc.Codec:
     return GZip(level=level)
 
 
-def get_zstd_compressor(
-    level: int, zarr_spec: Literal[2, 3] = 2
-) -> numcodecs.abc.Codec:
+def get_zstd_compressor(level: int, zarr_spec: Literal[2, 3]) -> numcodecs.abc.Codec:
     return Zstd(level=level)

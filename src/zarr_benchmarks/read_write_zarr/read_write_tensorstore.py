@@ -125,7 +125,7 @@ def write_zarr_array(
     chunks: tuple[int],
     compressor: dict | None,
     write_empty_chunks: bool = True,
-    zarr_spec: Literal[2, 3] = 2,
+    zarr_spec: Literal[2, 3],
 ) -> None:
     """Write the v2/v3 zarr spec with tensorstore"""
     if overwrite:
