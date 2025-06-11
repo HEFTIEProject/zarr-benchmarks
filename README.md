@@ -41,19 +41,24 @@ To run all benchmarks (with all images) run the following tox commands:
 
 ```bash
 # Run with an image of a heart from the Human Organ Atlas
-tox -- --benchmark-only --image=heart --config=all
+tox -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 
 # Run with a dense segmentation (small subset of C3 segmentation data from the H01 release)
-tox -- --benchmark-only --image=dense --config=all
+tox -- --benchmark-only --image=dense --config=all --benchmark-storage=data/results/dense
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
 with the given images. Each tox command will generate three result `.json` files
-in the `data/results` directory - one for `zarr-python` version 2
+in the given `--benchmark-storage` directory - one for `zarr-python` version 2
 (`{id}_zarr-python-v2.json`), one for `zarr-python` version 3
 (`{id}_zarr-python-v3.json`) and one for tensorstore (`{id}_tensorstore.json`).
 `{id}` is a four digit number (e.g. `0001`) that increments automatically for
 every new `tox` run.
+
+If `--benchmark-storage` isn't specified, json files will be saved to the
+default `.benchmarks` directory. We recommend setting `--benchmark-storage` to
+an appropriately named sub-directory within `data/results` (as in the example
+above).
 
 Note: the first time these commands are run, the required datasets will be
 downloaded from
