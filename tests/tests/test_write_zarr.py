@@ -9,8 +9,8 @@ from zarr_benchmarks.read_write_zarr import read_write_zarr
 pytestmark = [pytest.mark.tensorstore, pytest.mark.zarr_python]
 
 
-@pytest.mark.parametrize("write_empty_chunks", [True, False])
-def test_write_empty_chunks(tmp_path, write_empty_chunks):
+@pytest.mark.parametrize("write_empty_chunks", [True, False], "zarr_spec", [2, 3])
+def test_write_empty_chunks(tmp_path, write_empty_chunks, zarr_spec):
     """Check an empty chunk is written to file when write_empty_chunks=True"""
 
     image = np.zeros(shape=(1, 1, 1))
@@ -23,6 +23,7 @@ def test_write_empty_chunks(tmp_path, write_empty_chunks):
         chunks=(1, 1, 1),
         compressor=None,
         write_empty_chunks=write_empty_chunks,
+        zarr_spec=zarr_spec,
     )
 
     assert (store_path / ".zarray").exists()
