@@ -97,10 +97,14 @@ def write_zarr_array_v3(
                     "name": "regular",
                     "configuration": {"chunk_shape": chunks},
                 },
-                "codecs": [
-                    {"name": "bytes", "configuration": {"endian": "little"}},
-                    compressor,
-                ],
+                "codecs": (
+                    [
+                        {"name": "bytes", "configuration": {"endian": "little"}},
+                        compressor,
+                    ]
+                    if compressor is not None
+                    else [{"name": "bytes", "configuration": {"endian": "little"}}]
+                ),
                 "fill_value": 0,
             },
             "create": True,
