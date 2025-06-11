@@ -35,7 +35,7 @@ def open_zarr_array(
 
 
 def read_zarr_array(store_path: pathlib.Path, zarr_spec: Literal[2, 3]) -> npt.NDArray:
-    """Read the v2 zarr spec with tensorstore"""
+    """Read the v2/v3 zarr spec with tensorstore"""
     zarr_read = open_zarr_array(store_path, zarr_spec)
     read_image = zarr_read[:].read().result()
     return read_image
