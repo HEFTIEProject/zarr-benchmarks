@@ -21,6 +21,6 @@ def get_image() -> npt.NDArray:
     heart_image_path = ZENODO.path / f"{heart_image}.zip.unzip" / heart_image
 
     # open zarr
-    image = read_write_zarr.read_zarr_array(heart_image_path)
+    image = read_write_zarr.read_zarr_array(heart_image_path, zarr_spec=2)
 
     return image
