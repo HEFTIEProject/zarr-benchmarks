@@ -10,14 +10,14 @@ from zarr_benchmarks import utils
 from zarr_benchmarks.read_write_zarr import read_write_zarr_python_utils
 
 
-def get_compression_ratio(store_path: pathlib.Path) -> float:
+def get_compression_ratio(store_path: pathlib.Path, zarr_spec: Literal[2, 3]) -> float:
     zarr_array = zarr.open_array(store_path, mode="r")
     compression_ratio = zarr_array.nbytes / zarr_array.nbytes_stored()
 
     return compression_ratio
 
 
-def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
+def read_zarr_array(store_path: pathlib.Path, zarr_spec: Literal[2, 3]) -> npt.NDArray:
     zarr_read = zarr.open_array(store_path, mode="r")
     read_image = zarr_read[:]
     return read_image

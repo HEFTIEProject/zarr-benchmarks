@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from zarr_benchmarks.read_write_zarr import read_write_zarr
@@ -19,6 +21,8 @@ def test_write_blosc(
     blosc_cname,
     zarr_spec,
 ):
+    if zarr_spec == 3 and os.environ.get("TOX_ENV_NAME") == "py313-zarrv2":
+        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
     blosc_compressor = read_write_zarr.get_blosc_compressor(
         blosc_cname, blosc_clevel, blosc_shuffle, zarr_spec
     )
@@ -53,6 +57,8 @@ def test_write_gzip(
     gzip_level,
     zarr_spec,
 ):
+    if zarr_spec == 3 and os.environ.get("TOX_ENV_NAME") == "py313-zarrv2":
+        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
     gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level, zarr_spec)
 
     def setup():
@@ -85,6 +91,8 @@ def test_write_zstd(
     zstd_level,
     zarr_spec,
 ):
+    if zarr_spec == 3 and os.environ.get("TOX_ENV_NAME") == "py313-zarrv2":
+        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
     zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level, zarr_spec)
 
     def setup():
