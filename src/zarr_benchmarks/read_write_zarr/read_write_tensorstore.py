@@ -18,7 +18,7 @@ def get_compression_ratio(store_path: pathlib.Path, zarr_spec: Literal[2, 3]) ->
 def open_zarr_array(
     store_path: pathlib.Path, zarr_spec: Literal[2, 3]
 ) -> ts.TensorStore:
-    if zarr_spec == "2":
+    if zarr_spec == 2:
         driver = "zarr"
     else:
         driver = "zarr3"
