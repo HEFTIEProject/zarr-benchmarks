@@ -10,14 +10,14 @@ from zarr_benchmarks import utils
 from zarr_benchmarks.read_write_zarr import read_write_zarr_python_utils
 
 
-def get_compression_ratio(store_path: pathlib.Path) -> float:
+def get_compression_ratio(store_path: pathlib.Path, **_) -> float:
     zarr_array = zarr.open_array(store_path, mode="r")
     compression_ratio = zarr_array.nbytes / zarr_array.nbytes_stored()
 
     return compression_ratio
 
 
-def read_zarr_array(store_path: pathlib.Path) -> npt.NDArray:
+def read_zarr_array(store_path: pathlib.Path, **_) -> npt.NDArray:
     zarr_read = zarr.open_array(store_path, mode="r")
     read_image = zarr_read[:]
     return read_image
@@ -30,7 +30,7 @@ def write_zarr_array(
     overwrite: bool,
     chunks: tuple[int],
     compressor: Any = "auto",
-    zarr_spec: Literal[2, 3] = 2,
+    zarr_spec: Literal[2, 3],
     write_empty_chunks: bool = True,
 ) -> None:
     if overwrite:
@@ -53,7 +53,7 @@ def get_blosc_compressor(
     cname: str,
     clevel: int,
     shuffle: Literal["shuffle", "noshuffle", "bitshuffle"],
-    zarr_spec: Literal[2, 3] = 2,
+    zarr_spec: Literal[2, 3],
 ) -> Any:
     if zarr_spec == 2:
         shuffle_int = read_write_zarr_python_utils.get_numcodec_shuffle(shuffle)
@@ -64,7 +64,7 @@ def get_blosc_compressor(
         raise ValueError(f"invalid zarr spec version {zarr_spec}")
 
 
-def get_gzip_compressor(level: int, zarr_spec: Literal[2, 3] = 2) -> Any:
+def get_gzip_compressor(level: int, zarr_spec: Literal[2, 3]) -> Any:
     if zarr_spec == 2:
         return GZip(level=level)
     elif zarr_spec == 3:
@@ -73,7 +73,7 @@ def get_gzip_compressor(level: int, zarr_spec: Literal[2, 3] = 2) -> Any:
         raise ValueError(f"invalid zarr spec version {zarr_spec}")
 
 
-def get_zstd_compressor(level: int, zarr_spec: Literal[2, 3] = 2) -> Any:
+def get_zstd_compressor(level: int, zarr_spec: Literal[2, 3]) -> Any:
     if zarr_spec == 2:
         return Zstd(level=level)
     elif zarr_spec == 3:

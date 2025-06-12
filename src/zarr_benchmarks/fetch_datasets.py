@@ -20,7 +20,7 @@ def _fetch_from_zenodo(image_name: str) -> npt.NDArray:
     image_path = ZENODO.path / f"{image_name}.zip.unzip" / image_name
 
     # open zarr
-    image = read_write_zarr.read_zarr_array(image_path)
+    image = read_write_zarr.read_zarr_array(image_path, zarr_spec=2)
 
     return image
 

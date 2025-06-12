@@ -8,5 +8,6 @@
   "blosc_cname": ["zstd"],
   "gzip_level": [],
   "zstd_level": [],
-  "no_compressor": false
+  "no_compressor": false,
+  "zarr_spec": [2, 3]
 }

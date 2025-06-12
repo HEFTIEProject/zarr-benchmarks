@@ -15,6 +15,7 @@ def test_write_empty_chunks(tmp_path, write_empty_chunks):
 
     image = np.zeros(shape=(1, 1, 1))
     store_path = tmp_path / "image.zarr"
+    zarr_spec = 2
 
     read_write_zarr.write_zarr_array(
         image,
@@ -22,6 +23,7 @@ def test_write_empty_chunks(tmp_path, write_empty_chunks):
         overwrite=True,
         chunks=(1, 1, 1),
         compressor=None,
+        zarr_spec=zarr_spec,
         write_empty_chunks=write_empty_chunks,
     )
 

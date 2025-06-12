@@ -144,6 +144,15 @@
     "no_compressor": {
       "description": "Whether to run benchmarks with no compressor.",
       "type": "boolean"
+    },
+    "zarr_spec": {
+      "description": "The zarr specification version",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 3
+      }
     }
   },
   "additionalProperties": false,
@@ -154,6 +163,7 @@
     "blosc_cname",
     "gzip_level",
     "zstd_level",
-    "no_compressor"
+    "no_compressor",
+    "zarr_spec"
   ]
 }

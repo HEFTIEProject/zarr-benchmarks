@@ -2,6 +2,18 @@ import json
 import os
 import pathlib
 import shutil
+from importlib.metadata import version
+from importlib.util import find_spec
+
+
+def is_zarr_python_v2() -> bool:
+    """
+    Check if the zarr-python version is v2.
+    """
+    if find_spec("zarr") and version("zarr").split(".")[0] == "2":
+        return True
+
+    return False
 
 
 def remove_output_dir(output_dir: pathlib.Path) -> None:
