@@ -104,6 +104,10 @@ Additional `pytest` commandline options e.g. for setting the number of rounds /
 warmup rounds, are configured in `tests/conftest.py` via the `pytest_addoption`
 function.
 
+Note that `pytest-benchmark` also has
+[various commandline options](https://pytest-benchmark.readthedocs.io/en/latest/usage.html#commandline-options)
+that can be used e.g. `--benchmark-storage` / `--benchmark-only`.
+
 ## Parameters / config
 
 ### Config files
