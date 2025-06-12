@@ -38,7 +38,7 @@ jobs:
 
       - name: Run benchmarks and tests with tox
         run: |
-          tox -- --image=dev --benchmark-storage=data/results --rounds=1 --warmup-rounds=0
+          tox -- --image=dev --benchmark-storage=data/results/dev --rounds=1 --warmup-rounds=0
 
       - name: Run plotting script on benchmark output
         run: |
