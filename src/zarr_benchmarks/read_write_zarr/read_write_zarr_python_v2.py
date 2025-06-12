@@ -54,7 +54,7 @@ def get_blosc_compressor(
     cname: str,
     clevel: int,
     shuffle: Literal["shuffle", "noshuffle", "bitshuffle"],
-    zarr_spec: Literal[2, 3],
+    **_,
 ) -> numcodecs.abc.Codec:
     shuffle_int = read_write_zarr_python_utils.get_numcodec_shuffle(shuffle)
     return Blosc(cname=cname, clevel=clevel, shuffle=shuffle_int)
@@ -64,5 +64,5 @@ def get_gzip_compressor(level: int, **_) -> numcodecs.abc.Codec:
     return GZip(level=level)
 
 
-def get_zstd_compressor(level: int, zarr_spec: Literal[2, 3]) -> numcodecs.abc.Codec:
+def get_zstd_compressor(level: int, **_) -> numcodecs.abc.Codec:
     return Zstd(level=level)
