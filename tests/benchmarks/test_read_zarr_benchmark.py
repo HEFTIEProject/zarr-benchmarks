@@ -43,7 +43,7 @@ def test_read_blosc(
     benchmark.pedantic(
         read_write_zarr.read_zarr_array,
         args=(store_path,),
-        kwargs={"zarr_spec": "zarr_spec"},
+        kwargs={"zarr_spec": zarr_spec},
         rounds=rounds,
         warmup_rounds=warmup_rounds,
     )
@@ -84,7 +84,7 @@ def test_read_gzip(
     benchmark.pedantic(
         read_write_zarr.read_zarr_array,
         args=(store_path,),
-        kwargs={"zarr_spec": "zarr_spec"},
+        kwargs={"zarr_spec": zarr_spec},
         rounds=rounds,
         warmup_rounds=warmup_rounds,
     )
@@ -125,7 +125,7 @@ def test_read_zstd(
     benchmark.pedantic(
         read_write_zarr.read_zarr_array,
         args=(store_path,),
-        kwargs={"zarr_spec": "zarr_spec"},
+        kwargs={"zarr_spec": zarr_spec},
         rounds=rounds,
         warmup_rounds=warmup_rounds,
     )
@@ -165,7 +165,7 @@ def test_read_no_compressor(
     benchmark.pedantic(
         read_write_zarr.read_zarr_array,
         args=(store_path,),
-        kwargs={"zarr_spec": "zarr_spec"},
+        kwargs={"zarr_spec": zarr_spec},
         rounds=rounds,
         warmup_rounds=warmup_rounds,
     )
