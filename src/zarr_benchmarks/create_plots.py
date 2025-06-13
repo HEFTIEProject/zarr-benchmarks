@@ -66,6 +66,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
             "compression_ratio",
             "params.chunk_size",
             "params.blosc_shuffle",
+            "params.zarr_spec",
         ]
         + stats_cols
     ]
@@ -73,6 +74,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
         columns={
             "params.chunk_size": "chunk_size",
             "params.blosc_shuffle": "blosc_shuffle",
+            "params.zarr_spec": "zarr_spec",
         }
     )
 
@@ -100,6 +102,7 @@ def create_shuffle_plots(
         (benchmarks_df.compressor == "blosc-zstd")
         & (benchmarks_df.compression_level == 3)
         & (benchmarks_df.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 2)
     ]
     sub_dir_name = "shuffle"
     write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
@@ -143,6 +146,7 @@ def create_chunk_size_plots(
         (benchmarks_df.compressor == "blosc-zstd")
         & (benchmarks_df.compression_level == 3)
         & (benchmarks_df.blosc_shuffle == "shuffle")
+        & (benchmarks_df.zarr_spec == 2)
     ]
 
     chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
@@ -305,6 +309,7 @@ def create_read_write_plots_for_package(
 def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     read_write_benchmarks = benchmarks_df[
         (benchmarks_df.chunk_size.isin([64, 128]))
+        & (benchmarks_df.zarr_spec == 2)
         & (~benchmarks_df.blosc_shuffle.isin(["noshuffle", "bitshuffle"]))
     ]
 
@@ -319,10 +324,12 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     read_chunks_128 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
         & (read_write_benchmarks.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 2)
     ]
     write_chunks_128 = read_write_benchmarks[
         (read_write_benchmarks.group == "write")
         & (read_write_benchmarks.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 2)
     ]
 
     plot_relplot_benchmarks(
