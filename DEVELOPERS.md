@@ -3,6 +3,13 @@
 This file describes the structure of the `zarr-benchmarks` codebase and explains
 key parts of its implementation.
 
+Details of how to run the benchmarks via the command-line can by found in the
+[README](README.md). An example call is provided below:
+
+```bash
+tox -- --benchmark-only --image=heart --config=all --rounds=3 --warmup-rounds=1 --benchmark-storage=data/results/heart
+```
+
 ## Benchmark libraries
 
 ### pytest-benchmark / pytest
