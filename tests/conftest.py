@@ -4,7 +4,11 @@ import pathlib
 import numpy as np
 import pytest
 
-from zarr_benchmarks.fetch_datasets import get_dense_segmentation, get_heart
+from zarr_benchmarks.fetch_datasets import (
+    get_dense_segmentation,
+    get_heart,
+    get_sparse_segmentation,
+)
 from zarr_benchmarks.utils import read_json_file
 
 
@@ -22,10 +26,11 @@ def pytest_addoption(parser):
         action="store",
         default="dev",
         type=str,
-        choices=["dev", "heart", "dense"],
+        choices=["dev", "heart", "dense", "sparse"],
         help="Type of image to run benchmarks with: 'dev' is a small 128x128x128 numpy array for testing purposes, "
-        "'heart' is an image of a heart from the human organ atlas and 'dense' is a dense segmentation (small subset of "
-        "C3 segmentation data from the H01 release).",
+        "'heart' is an image of a heart from the human organ atlas, 'dense' is a dense segmentation (small subset of "
+        "C3 segmentation data from the H01 release) and 'sparse' is a sparse segmentation (small subset of '104 "
+        "proofread cells' from the H01 release).",
     )
 
     parser.addoption(
@@ -63,14 +68,17 @@ def image(request):
 
     image_type = request.config.getoption("--image")
 
-    if image_type == "dev":
-        return np.random.rand(128, 128, 128)
-    elif image_type == "heart":
-        return get_heart()
-    elif image_type == "dense":
-        return get_dense_segmentation()
-    else:
-        raise ValueError(f"Invalid --image option {image_type}")
+    match image_type:
+        case "dev":
+            return np.random.rand(128, 128, 128)
+        case "heart":
+            return get_heart()
+        case "dense":
+            return get_dense_segmentation()
+        case "sparse":
+            return get_sparse_segmentation()
+        case _:
+            raise ValueError(f"Invalid --image option {image_type}")
 
 
 @pytest.fixture()
