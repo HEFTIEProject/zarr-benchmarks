@@ -52,7 +52,7 @@ def set_axes_limits(graph: sns.relplot, data: pd.DataFrame) -> None:
 def plot_errorbars_benchmarks(
     data: pd.DataFrame,
     *,
-    sub_dir_name: str,
+    plots_dir: Path,
     plot_name: str,
     title: str | None = None,
     hue: str | None = None,
@@ -64,7 +64,7 @@ def plot_errorbars_benchmarks(
 
     Args:
         data (pd.DataFrame): Contains the data to be plotted.
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plots_dir (Path): directory the plot will be saved to.
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
@@ -118,7 +118,7 @@ def plot_errorbars_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir_name, plot_name),
+        get_output_path(data, plots_dir, plot_name),
     )
 
 
@@ -127,7 +127,7 @@ def plot_relplot_benchmarks(
     *,
     x_axis: str,
     y_axis: str,
-    sub_dir_name: str,
+    plots_dir: Path,
     plot_name: str,
     title: str | None = None,
     hue: str | None = None,
@@ -141,7 +141,7 @@ def plot_relplot_benchmarks(
         data (pd.DataFrame): Contains the data to be plotted.
         x_axis (str): name of dataframe column to be used for x-axis
         y_axis (str): name of dataframe column to be used for y-axis
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plots_dir (Path): directory the plot will be saved to.
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
@@ -195,7 +195,7 @@ def plot_relplot_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir_name, plot_name),
+        get_output_path(data, plots_dir, plot_name),
     )
 
 
@@ -218,12 +218,11 @@ def get_axis_labels(
 
 
 def get_output_path(
-    benchmarks_df: pd.DataFrame, sub_dir_name: str, plot_name: str
+    benchmarks_df: pd.DataFrame, plots_dir: Path, plot_name: str
 ) -> Path:
     machine_info = benchmarks_df["machine"].iloc[0]
     date = datetime.now().strftime("%Y-%m-%d")
 
-    plots_dir = Path(__file__).parents[2] / "data" / "plots" / sub_dir_name
     return plots_dir / f"{plot_name}_{date}_{machine_info}.png"
 
 
@@ -238,7 +237,7 @@ def plot_catplot_benchmarks(
     *,
     x_axis: str,
     y_axis: str,
-    sub_dir_name: str,
+    plots_dir: Path,
     plot_name: str,
     title: str | None = None,
     hue: str | None = None,
@@ -251,7 +250,7 @@ def plot_catplot_benchmarks(
         data (pd.DataFrame): Contains the data to be plotted.
         x_axis (str): name of dataframe column to be used for x-axis
         y_axis (str): name of dataframe column to be used for y-axis
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plots_dir (Path): directory the plot will be saved to.
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
@@ -284,5 +283,5 @@ def plot_catplot_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir_name, plot_name),
+        get_output_path(data, plots_dir, plot_name),
     )
