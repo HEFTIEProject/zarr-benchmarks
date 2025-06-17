@@ -1,7 +1,7 @@
 import pytest
 
 from zarr_benchmarks.read_write_zarr import read_write_zarr
-from zarr_benchmarks.utils import remove_output_dir
+from zarr_benchmarks.utils import is_zarr_python_v2, remove_output_dir
 
 pytestmark = [pytest.mark.tensorstore, pytest.mark.zarr_python]
 
@@ -17,9 +17,12 @@ def test_write_blosc(
     blosc_clevel,
     blosc_shuffle,
     blosc_cname,
+    zarr_spec,
 ):
+    if zarr_spec == 3 and is_zarr_python_v2():
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
     blosc_compressor = read_write_zarr.get_blosc_compressor(
-        blosc_cname, blosc_clevel, blosc_shuffle
+        blosc_cname, blosc_clevel, blosc_shuffle, zarr_spec=zarr_spec
     )
 
     def setup():
@@ -30,6 +33,7 @@ def test_write_blosc(
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
             "compressor": blosc_compressor,
+            "zarr_spec": zarr_spec,
         }
 
     benchmark.pedantic(
@@ -42,9 +46,20 @@ def test_write_blosc(
 
 @pytest.mark.benchmark(group="write")
 def test_write_gzip(
-    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, gzip_level
+    benchmark,
+    image,
+    rounds,
+    warmup_rounds,
+    store_path,
+    chunk_size,
+    gzip_level,
+    zarr_spec,
 ):
-    gzip_compressor = read_write_zarr.get_gzip_compressor(gzip_level)
+    if zarr_spec == 3 and is_zarr_python_v2():
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
+    gzip_compressor = read_write_zarr.get_gzip_compressor(
+        gzip_level, zarr_spec=zarr_spec
+    )
 
     def setup():
         remove_output_dir(store_path)
@@ -54,6 +69,7 @@ def test_write_gzip(
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
             "compressor": gzip_compressor,
+            "zarr_spec": zarr_spec,
         }
 
     benchmark.pedantic(
@@ -66,9 +82,20 @@ def test_write_gzip(
 
 @pytest.mark.benchmark(group="write")
 def test_write_zstd(
-    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, zstd_level
+    benchmark,
+    image,
+    rounds,
+    warmup_rounds,
+    store_path,
+    chunk_size,
+    zstd_level,
+    zarr_spec,
 ):
-    zstd_compressor = read_write_zarr.get_zstd_compressor(zstd_level)
+    if zarr_spec == 3 and is_zarr_python_v2():
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
+    zstd_compressor = read_write_zarr.get_zstd_compressor(
+        zstd_level, zarr_spec=zarr_spec
+    )
 
     def setup():
         remove_output_dir(store_path)
@@ -78,6 +105,7 @@ def test_write_zstd(
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
             "compressor": zstd_compressor,
+            "zarr_spec": zarr_spec,
         }
 
     benchmark.pedantic(
@@ -90,10 +118,20 @@ def test_write_zstd(
 
 @pytest.mark.benchmark(group="write")
 def test_write_no_compressor(
-    benchmark, image, rounds, warmup_rounds, store_path, chunk_size, no_compressor
+    benchmark,
+    image,
+    rounds,
+    warmup_rounds,
+    store_path,
+    chunk_size,
+    no_compressor,
+    zarr_spec,
 ):
     if not no_compressor:
         pytest.skip("config didn't include no compressor")
+
+    if zarr_spec == 3 and is_zarr_python_v2():
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
 
     def setup():
         remove_output_dir(store_path)
@@ -103,6 +141,7 @@ def test_write_no_compressor(
             "overwrite": False,
             "chunks": (chunk_size, chunk_size, chunk_size),
             "compressor": None,
+            "zarr_spec": zarr_spec,
         }
 
     benchmark.pedantic(
