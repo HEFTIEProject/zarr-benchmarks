@@ -30,7 +30,7 @@ def write_zarr_array(
     overwrite: bool,
     chunks: tuple[int],
     compressor: numcodecs.abc.Codec | None,
-    zarr_spec: Literal[2, 3],
+    zarr_spec: Literal[2],
     write_empty_chunks: bool = True,
 ) -> None:
     if overwrite:
