@@ -183,17 +183,13 @@ def create_chunk_size_plots(
         (benchmarks_df.compressor == "blosc-zstd")
         & (benchmarks_df.compression_level == 3)
         & (benchmarks_df.blosc_shuffle == "shuffle")
-        & (benchmarks_df.zarr_spec.isin([2, 3]))
     ]
 
-    chunk_size_write_specv2 = chunk_size_benchmarks[
-        chunk_size_benchmarks.group == "write"
-    ]
-    # & chunk_size_benchmarks.zarr_spec == 2]
-    chunk_size_read_specv2 = chunk_size_benchmarks[
-        chunk_size_benchmarks.group == "read"
-    ]
-    # & chunk_size_benchmarks.zarr_spec == 2]
+    chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
+    chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
+
+    chunk_size_write_specv2 = chunk_size_write[chunk_size_write.zarr_spec == 2]
+    chunk_size_read_specv2 = chunk_size_read[chunk_size_read.zarr_spec == 2]
 
     plot_relplot_benchmarks(
         chunk_size_read_specv2,
@@ -245,14 +241,11 @@ def create_chunk_size_plots(
         plot_name="read",
     )
 
-    chunk_size_write_specv3 = chunk_size_benchmarks[
-        chunk_size_benchmarks.group == "write"
-    ]
-    # & chunk_size_benchmarks.zarr_spec == 3]
-    chunk_size_read_specv3 = chunk_size_benchmarks[
-        chunk_size_benchmarks.group == "read"
-    ]
-    # & chunk_size_benchmarks.zarr_spec == 3]
+    chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
+    chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
+
+    chunk_size_write_specv3 = chunk_size_write[chunk_size_write.zarr_spec == 3]
+    chunk_size_read_specv3 = chunk_size_read[chunk_size_read.zarr_spec == 3]
 
     plot_relplot_benchmarks(
         chunk_size_read_specv3,
@@ -630,7 +623,7 @@ def create_all_plots(
         package_paths_dict,
     )
 
-    create_read_write_plots(benchmarks_df)
+    # create_read_write_plots(benchmarks_df)
     create_chunk_size_plots(benchmarks_df)
     # create_shuffle_plots(benchmarks_df)
 
