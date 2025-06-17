@@ -1,0 +1,1230 @@
+{
+  "machine_info": {
+    "node": "Ruaridhs-MacBook-Pro.local",
+    "processor": "arm",
+    "machine": "arm64",
+    "python_compiler": "Clang 18.1.8 ",
+    "python_implementation": "CPython",
+    "python_implementation_version": "3.13.3",
+    "python_version": "3.13.3",
+    "python_build": ["main", "Apr 14 2025 20:44:30"],
+    "release": "24.5.0",
+    "system": "Darwin",
+    "cpu": {
+      "python_version": "3.13.3.final.0 (64 bit)",
+      "cpuinfo_version": [9, 0, 0],
+      "cpuinfo_version_string": "9.0.0",
+      "arch": "ARM_8",
+      "bits": 64,
+      "count": 10,
+      "arch_string_raw": "arm64",
+      "brand_raw": "Apple M1 Pro"
+    }
+  },
+  "commit_info": {
+    "id": "ed8cde6e5e9a2c5fa9678ae51156e2ac4154d2d3",
+    "time": "2025-06-13T07:25:22+01:00",
+    "author_time": "2025-06-13T07:25:22+01:00",
+    "dirty": true,
+    "project": "zarr-benchmarks",
+    "branch": "rmg/spec_v3_plots"
+  },
+  "benchmarks": [
+    {
+      "group": "read",
+      "name": "test_read_blosc[128-1-shuffle-zstd-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_blosc[128-1-shuffle-zstd-2]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 1,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 2
+      },
+      "param": "128-1-shuffle-zstd-2",
+      "extra_info": {
+        "compression_ratio": 1.1361093944751002
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.019173291000242898,
+        "max": 0.02152283300029012,
+        "mean": 0.020268541333583318,
+        "stddev": 0.0011828176156050824,
+        "rounds": 3,
+        "median": 0.02010950000021694,
+        "iqr": 0.0017621565000354167,
+        "q1": 0.01940734325023641,
+        "q3": 0.021169499750271825,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.019173291000242898,
+        "hd15iqr": 0.02152283300029012,
+        "ops": 49.33754153995688,
+        "total": 0.06080562400074996,
+        "data": [
+          0.02010950000021694, 0.019173291000242898, 0.02152283300029012
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_blosc[128-1-shuffle-zstd-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_blosc[128-1-shuffle-zstd-3]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 1,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 3
+      },
+      "param": "128-1-shuffle-zstd-3",
+      "extra_info": {
+        "compression_ratio": 1.0641482803700628
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.028820125000038388,
+        "max": 0.0344542919997366,
+        "mean": 0.03168943066657448,
+        "stddev": 0.002818535241788282,
+        "rounds": 3,
+        "median": 0.03179387499994846,
+        "iqr": 0.004225625249773657,
+        "q1": 0.029563562500015905,
+        "q3": 0.03378918774978956,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.028820125000038388,
+        "hd15iqr": 0.0344542919997366,
+        "ops": 31.556262733832718,
+        "total": 0.09506829199972344,
+        "data": [0.028820125000038388, 0.03179387499994846, 0.0344542919997366],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_blosc[128-3-shuffle-zstd-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_blosc[128-3-shuffle-zstd-2]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 3,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 2
+      },
+      "param": "128-3-shuffle-zstd-2",
+      "extra_info": {
+        "compression_ratio": 1.1391294588311882
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.01821787500011851,
+        "max": 0.020626791999802663,
+        "mean": 0.01909976399989925,
+        "stddev": 0.001327732474917779,
+        "rounds": 3,
+        "median": 0.01845462499977657,
+        "iqr": 0.001806687749763114,
+        "q1": 0.018277062500033026,
+        "q3": 0.02008375024979614,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.01821787500011851,
+        "hd15iqr": 0.020626791999802663,
+        "ops": 52.35666786276914,
+        "total": 0.05729929199969774,
+        "data": [
+          0.020626791999802663, 0.01821787500011851, 0.01845462499977657
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_blosc[128-3-shuffle-zstd-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_blosc[128-3-shuffle-zstd-3]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 3,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 3
+      },
+      "param": "128-3-shuffle-zstd-3",
+      "extra_info": {
+        "compression_ratio": 1.0651659598242629
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.028288208000049053,
+        "max": 0.03063795800017033,
+        "mean": 0.029688722000173584,
+        "stddev": 0.0012381720966073272,
+        "rounds": 3,
+        "median": 0.03014000000030137,
+        "iqr": 0.0017623125000909567,
+        "q1": 0.028751156000112132,
+        "q3": 0.03051346850020309,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.028288208000049053,
+        "hd15iqr": 0.03063795800017033,
+        "ops": 33.682824070168905,
+        "total": 0.08906616600052075,
+        "data": [
+          0.03063795800017033, 0.028288208000049053, 0.03014000000030137
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_gzip[128-1-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_gzip[128-1-2]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 1,
+        "zarr_spec": 2
+      },
+      "param": "128-1-2",
+      "extra_info": {
+        "compression_ratio": 1.053877464718927
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.10230008300004556,
+        "max": 0.10574350000024424,
+        "mean": 0.10371040266666871,
+        "stddev": 0.00180420873962945,
+        "rounds": 3,
+        "median": 0.10308762499971635,
+        "iqr": 0.002582562750149009,
+        "q1": 0.10249696849996326,
+        "q3": 0.10507953125011227,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.10230008300004556,
+        "hd15iqr": 0.10574350000024424,
+        "ops": 9.642234282071572,
+        "total": 0.31113120800000615,
+        "data": [0.10230008300004556, 0.10574350000024424, 0.10308762499971635],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_gzip[128-1-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_gzip[128-1-3]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 1,
+        "zarr_spec": 3
+      },
+      "param": "128-1-3",
+      "extra_info": {
+        "compression_ratio": 1.0538533021421395
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.10164033299997755,
+        "max": 0.11959712499992747,
+        "mean": 0.10940511099988726,
+        "stddev": 0.009221182173811208,
+        "rounds": 3,
+        "median": 0.10697787499975675,
+        "iqr": 0.013467593999962446,
+        "q1": 0.10297471849992235,
+        "q3": 0.11644231249988479,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.10164033299997755,
+        "hd15iqr": 0.11959712499992747,
+        "ops": 9.140340801820772,
+        "total": 0.32821533299966177,
+        "data": [0.11959712499992747, 0.10697787499975675, 0.10164033299997755],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_gzip[128-3-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_gzip[128-3-2]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 3,
+        "zarr_spec": 2
+      },
+      "param": "128-3-2",
+      "extra_info": {
+        "compression_ratio": 1.0544278770121907
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.10152358300001652,
+        "max": 0.10509608399979697,
+        "mean": 0.10371976399998555,
+        "stddev": 0.0019221914298640107,
+        "rounds": 3,
+        "median": 0.10453962500014313,
+        "iqr": 0.0026793757498353443,
+        "q1": 0.10227759350004817,
+        "q3": 0.10495696924988351,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.10152358300001652,
+        "hd15iqr": 0.10509608399979697,
+        "ops": 9.641364012360647,
+        "total": 0.3111592919999566,
+        "data": [0.10152358300001652, 0.10453962500014313, 0.10509608399979697],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_gzip[128-3-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_gzip[128-3-3]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 3,
+        "zarr_spec": 3
+      },
+      "param": "128-3-3",
+      "extra_info": {
+        "compression_ratio": 1.054403689190154
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.10510087500006193,
+        "max": 0.12778750000006767,
+        "mean": 0.11352751399999761,
+        "stddev": 0.012417394710272516,
+        "rounds": 3,
+        "median": 0.10769416699986323,
+        "iqr": 0.0170149687500043,
+        "q1": 0.10574919800001226,
+        "q3": 0.12276416675001656,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.10510087500006193,
+        "hd15iqr": 0.12778750000006767,
+        "ops": 8.808437397827817,
+        "total": 0.3405825419999928,
+        "data": [0.10769416699986323, 0.12778750000006767, 0.10510087500006193],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_zstd[128-1-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_zstd[128-1-2]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 1,
+        "zarr_spec": 2
+      },
+      "param": "128-1-2",
+      "extra_info": {
+        "compression_ratio": 1.065347837591442
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.025989290999859804,
+        "max": 0.026882042000124784,
+        "mean": 0.026445305666584318,
+        "stddev": 0.00044668761759902945,
+        "rounds": 3,
+        "median": 0.026464583999768365,
+        "iqr": 0.0006695632501987347,
+        "q1": 0.026108114249836945,
+        "q3": 0.02677767750003568,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.025989290999859804,
+        "hd15iqr": 0.026882042000124784,
+        "ops": 37.813894556854265,
+        "total": 0.07933591699975295,
+        "data": [
+          0.026882042000124784, 0.026464583999768365, 0.025989290999859804
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_zstd[128-1-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_zstd[128-1-3]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 1,
+        "zarr_spec": 3
+      },
+      "param": "128-1-3",
+      "extra_info": {
+        "compression_ratio": 1.0653213197470262
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.027441583999916475,
+        "max": 0.04010591699989163,
+        "mean": 0.032148527999955455,
+        "stddev": 0.006929673665230023,
+        "rounds": 3,
+        "median": 0.02889808300005825,
+        "iqr": 0.009498249749981369,
+        "q1": 0.02780570874995192,
+        "q3": 0.03730395849993329,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.027441583999916475,
+        "hd15iqr": 0.04010591699989163,
+        "ops": 31.105623249729682,
+        "total": 0.09644558399986636,
+        "data": [
+          0.02889808300005825, 0.04010591699989163, 0.027441583999916475
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_zstd[128-3-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_zstd[128-3-2]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 3,
+        "zarr_spec": 2
+      },
+      "param": "128-3-2",
+      "extra_info": {
+        "compression_ratio": 1.065347837591442
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.027158416000020225,
+        "max": 0.03140991700001905,
+        "mean": 0.029385888666790077,
+        "stddev": 0.0021330394712440674,
+        "rounds": 3,
+        "median": 0.029589333000330953,
+        "iqr": 0.003188625749999119,
+        "q1": 0.027766145250097907,
+        "q3": 0.030954771000097026,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.027158416000020225,
+        "hd15iqr": 0.03140991700001905,
+        "ops": 34.02993904111982,
+        "total": 0.08815766600037023,
+        "data": [
+          0.029589333000330953, 0.03140991700001905, 0.027158416000020225
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_zstd[128-3-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_zstd[128-3-3]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 3,
+        "zarr_spec": 3
+      },
+      "param": "128-3-3",
+      "extra_info": {
+        "compression_ratio": 1.0653213197470262
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.028107416999773704,
+        "max": 0.028942375000042375,
+        "mean": 0.028613805666585296,
+        "stddev": 0.00044497584433219256,
+        "rounds": 3,
+        "median": 0.028791624999939813,
+        "iqr": 0.000626218500201503,
+        "q1": 0.02827846899981523,
+        "q3": 0.028904687500016735,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.028107416999773704,
+        "hd15iqr": 0.028942375000042375,
+        "ops": 34.948164940107304,
+        "total": 0.08584141699975589,
+        "data": [
+          0.028942375000042375, 0.028107416999773704, 0.028791624999939813
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_no_compressor[128-True-2]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_no_compressor[128-True-2]",
+      "params": {
+        "chunk_size": 128,
+        "no_compressor": true,
+        "zarr_spec": 2
+      },
+      "param": "128-True-2",
+      "extra_info": {
+        "compression_ratio": 0.9999857546928304
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.00751941699991221,
+        "max": 0.01190550000001167,
+        "mean": 0.00949558333316721,
+        "stddev": 0.0022249798953826753,
+        "rounds": 3,
+        "median": 0.009061832999577746,
+        "iqr": 0.003289562250074596,
+        "q1": 0.007905020999828594,
+        "q3": 0.01119458324990319,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.00751941699991221,
+        "hd15iqr": 0.01190550000001167,
+        "ops": 105.31211879391243,
+        "total": 0.028486749999501626,
+        "data": [
+          0.00751941699991221, 0.01190550000001167, 0.009061832999577746
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "read",
+      "name": "test_read_no_compressor[128-True-3]",
+      "fullname": "tests/benchmarks/test_read_zarr_benchmark.py::test_read_no_compressor[128-True-3]",
+      "params": {
+        "chunk_size": 128,
+        "no_compressor": true,
+        "zarr_spec": 3
+      },
+      "param": "128-True-3",
+      "extra_info": {
+        "compression_ratio": 0.9999671589193008
+      },
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.0070389170000453305,
+        "max": 0.009272541999962414,
+        "mean": 0.007998806000008093,
+        "stddev": 0.0011494107684446077,
+        "rounds": 3,
+        "median": 0.0076849590000165335,
+        "iqr": 0.0016752187499378124,
+        "q1": 0.007200427500038131,
+        "q3": 0.008875646249975944,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.0070389170000453305,
+        "hd15iqr": 0.009272541999962414,
+        "ops": 125.01865903473447,
+        "total": 0.023996418000024278,
+        "data": [
+          0.0070389170000453305, 0.009272541999962414, 0.0076849590000165335
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_blosc[128-1-shuffle-zstd-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_blosc[128-1-shuffle-zstd-2]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 1,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 2
+      },
+      "param": "128-1-shuffle-zstd-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.03526895899994997,
+        "max": 0.03652274999967631,
+        "mean": 0.035715666666571146,
+        "stddev": 0.0007002863225096019,
+        "rounds": 3,
+        "median": 0.03535529100008716,
+        "iqr": 0.0009403432497947506,
+        "q1": 0.03529054199998427,
+        "q3": 0.03623088524977902,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.03526895899994997,
+        "hd15iqr": 0.03652274999967631,
+        "ops": 27.998917375269706,
+        "total": 0.10714699999971344,
+        "data": [0.03526895899994997, 0.03535529100008716, 0.03652274999967631],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_blosc[128-1-shuffle-zstd-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_blosc[128-1-shuffle-zstd-3]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 1,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 3
+      },
+      "param": "128-1-shuffle-zstd-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.030851542000164045,
+        "max": 0.03641379200007577,
+        "mean": 0.03289447266676385,
+        "stddev": 0.003060955551257886,
+        "rounds": 3,
+        "median": 0.03141808400005175,
+        "iqr": 0.004171687499933796,
+        "q1": 0.03099317750013597,
+        "q3": 0.03516486500006977,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.030851542000164045,
+        "hd15iqr": 0.03641379200007577,
+        "ops": 30.400244142244205,
+        "total": 0.09868341800029157,
+        "data": [
+          0.03141808400005175, 0.030851542000164045, 0.03641379200007577
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_blosc[128-3-shuffle-zstd-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_blosc[128-3-shuffle-zstd-2]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 3,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 2
+      },
+      "param": "128-3-shuffle-zstd-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.03449641699990025,
+        "max": 0.03624029200000223,
+        "mean": 0.035208500333283155,
+        "stddev": 0.000914841553384307,
+        "rounds": 3,
+        "median": 0.03488879199994699,
+        "iqr": 0.0013079062500764849,
+        "q1": 0.03459451074991193,
+        "q3": 0.03590241699998842,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.03449641699990025,
+        "hd15iqr": 0.03624029200000223,
+        "ops": 28.402232146612736,
+        "total": 0.10562550099984946,
+        "data": [0.03449641699990025, 0.03488879199994699, 0.03624029200000223],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_blosc[128-3-shuffle-zstd-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_blosc[128-3-shuffle-zstd-3]",
+      "params": {
+        "chunk_size": 128,
+        "blosc_clevel": 3,
+        "blosc_shuffle": "shuffle",
+        "blosc_cname": "zstd",
+        "zarr_spec": 3
+      },
+      "param": "128-3-shuffle-zstd-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.03175658400004977,
+        "max": 0.03222616699986247,
+        "mean": 0.03195443066670123,
+        "stddev": 0.00024335531747009202,
+        "rounds": 3,
+        "median": 0.03188054100019144,
+        "iqr": 0.00035218724985952576,
+        "q1": 0.03178757325008519,
+        "q3": 0.032139760499944714,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.03175658400004977,
+        "hd15iqr": 0.03222616699986247,
+        "ops": 31.29456476413052,
+        "total": 0.09586329200010368,
+        "data": [0.03222616699986247, 0.03188054100019144, 0.03175658400004977],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_gzip[128-1-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_gzip[128-1-2]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 1,
+        "zarr_spec": 2
+      },
+      "param": "128-1-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.5047105829999055,
+        "max": 0.561766875000103,
+        "mean": 0.5240964720001102,
+        "stddev": 0.03262817346035916,
+        "rounds": 3,
+        "median": 0.5058119580003222,
+        "iqr": 0.04279221900014818,
+        "q1": 0.5049859267500096,
+        "q3": 0.5477781457501578,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.5047105829999055,
+        "hd15iqr": 0.561766875000103,
+        "ops": 1.9080456622493533,
+        "total": 1.5722894160003307,
+        "data": [0.5047105829999055, 0.5058119580003222, 0.561766875000103],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_gzip[128-1-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_gzip[128-1-3]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 1,
+        "zarr_spec": 3
+      },
+      "param": "128-1-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.5036014580000483,
+        "max": 0.5477630410000529,
+        "mean": 0.5216280136667896,
+        "stddev": 0.023170494984822147,
+        "rounds": 3,
+        "median": 0.5135195420002674,
+        "iqr": 0.03312118725000346,
+        "q1": 0.5060809790001031,
+        "q3": 0.5392021662501065,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.5036014580000483,
+        "hd15iqr": 0.5477630410000529,
+        "ops": 1.9170749534145792,
+        "total": 1.5648840410003686,
+        "data": [0.5135195420002674, 0.5477630410000529, 0.5036014580000483],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_gzip[128-3-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_gzip[128-3-2]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 3,
+        "zarr_spec": 2
+      },
+      "param": "128-3-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.5484938750000765,
+        "max": 0.5637013330001537,
+        "mean": 0.5556969303333972,
+        "stddev": 0.007635333186418999,
+        "rounds": 3,
+        "median": 0.5548955829999613,
+        "iqr": 0.011405593500057876,
+        "q1": 0.5500943020000477,
+        "q3": 0.5614998955001056,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.5484938750000765,
+        "hd15iqr": 0.5637013330001537,
+        "ops": 1.799542062253318,
+        "total": 1.6670907910001915,
+        "data": [0.5548955829999613, 0.5637013330001537, 0.5484938750000765],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_gzip[128-3-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_gzip[128-3-3]",
+      "params": {
+        "chunk_size": 128,
+        "gzip_level": 3,
+        "zarr_spec": 3
+      },
+      "param": "128-3-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.5546915410000111,
+        "max": 0.590097791000062,
+        "mean": 0.5752208466666767,
+        "stddev": 0.018367431128168136,
+        "rounds": 3,
+        "median": 0.5808732079999572,
+        "iqr": 0.0265546875000382,
+        "q1": 0.5612369577499976,
+        "q3": 0.5877916452500358,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.5546915410000111,
+        "hd15iqr": 0.590097791000062,
+        "ops": 1.7384627240039339,
+        "total": 1.7256625400000303,
+        "data": [0.5808732079999572, 0.5546915410000111, 0.590097791000062],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_zstd[128-1-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_zstd[128-1-2]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 1,
+        "zarr_spec": 2
+      },
+      "param": "128-1-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.030787874999987253,
+        "max": 0.03225774999964415,
+        "mean": 0.03149086099983833,
+        "stddev": 0.0007370181976766247,
+        "rounds": 3,
+        "median": 0.0314269579998836,
+        "iqr": 0.0011024062497426712,
+        "q1": 0.03094764574996134,
+        "q3": 0.03205005199970401,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.030787874999987253,
+        "hd15iqr": 0.03225774999964415,
+        "ops": 31.755244799598646,
+        "total": 0.094472582999515,
+        "data": [0.0314269579998836, 0.03225774999964415, 0.030787874999987253],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_zstd[128-1-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_zstd[128-1-3]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 1,
+        "zarr_spec": 3
+      },
+      "param": "128-1-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.02972837499964953,
+        "max": 0.031012375000045722,
+        "mean": 0.030382972333124297,
+        "stddev": 0.0006423706707745962,
+        "rounds": 3,
+        "median": 0.030408166999677633,
+        "iqr": 0.0009630000002971428,
+        "q1": 0.029898322999656557,
+        "q3": 0.0308613229999537,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.02972837499964953,
+        "hd15iqr": 0.031012375000045722,
+        "ops": 32.91317218854768,
+        "total": 0.09114891699937289,
+        "data": [
+          0.031012375000045722, 0.02972837499964953, 0.030408166999677633
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_zstd[128-3-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_zstd[128-3-2]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 3,
+        "zarr_spec": 2
+      },
+      "param": "128-3-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.029736500000126398,
+        "max": 0.030311499999697844,
+        "mean": 0.030092333333262406,
+        "stddev": 0.0003109092845462721,
+        "rounds": 3,
+        "median": 0.03022899999996298,
+        "iqr": 0.00043124999967858457,
+        "q1": 0.029859625000085543,
+        "q3": 0.030290874999764128,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.029736500000126398,
+        "hd15iqr": 0.030311499999697844,
+        "ops": 33.23105552917211,
+        "total": 0.09027699999978722,
+        "data": [
+          0.03022899999996298, 0.030311499999697844, 0.029736500000126398
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_zstd[128-3-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_zstd[128-3-3]",
+      "params": {
+        "chunk_size": 128,
+        "zstd_level": 3,
+        "zarr_spec": 3
+      },
+      "param": "128-3-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.030529625000326632,
+        "max": 0.03470141700017848,
+        "mean": 0.03272161100009422,
+        "stddev": 0.002093974065433043,
+        "rounds": 3,
+        "median": 0.03293379099977756,
+        "iqr": 0.003128843999888886,
+        "q1": 0.031130666500189363,
+        "q3": 0.03425951050007825,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.030529625000326632,
+        "hd15iqr": 0.03470141700017848,
+        "ops": 30.560842496328206,
+        "total": 0.09816483300028267,
+        "data": [
+          0.030529625000326632, 0.03470141700017848, 0.03293379099977756
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_no_compressor[128-True-2]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_no_compressor[128-True-2]",
+      "params": {
+        "chunk_size": 128,
+        "no_compressor": true,
+        "zarr_spec": 2
+      },
+      "param": "128-True-2",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.008075374999862106,
+        "max": 0.00842575000024226,
+        "mean": 0.008279333333424196,
+        "stddev": 0.00018213715376498164,
+        "rounds": 3,
+        "median": 0.00833687500016822,
+        "iqr": 0.0002627812502851157,
+        "q1": 0.008140749999938635,
+        "q3": 0.00840353125022375,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.008075374999862106,
+        "hd15iqr": 0.00842575000024226,
+        "ops": 120.78267171137274,
+        "total": 0.024838000000272586,
+        "data": [
+          0.00842575000024226, 0.00833687500016822, 0.008075374999862106
+        ],
+        "iterations": 1
+      }
+    },
+    {
+      "group": "write",
+      "name": "test_write_no_compressor[128-True-3]",
+      "fullname": "tests/benchmarks/test_write_zarr_benchmark.py::test_write_no_compressor[128-True-3]",
+      "params": {
+        "chunk_size": 128,
+        "no_compressor": true,
+        "zarr_spec": 3
+      },
+      "param": "128-True-3",
+      "extra_info": {},
+      "options": {
+        "disable_gc": false,
+        "timer": "perf_counter",
+        "min_rounds": 5,
+        "max_time": 1.0,
+        "min_time": 5e-6,
+        "warmup": false
+      },
+      "stats": {
+        "min": 0.006901125000240427,
+        "max": 0.007281666999915615,
+        "mean": 0.007146542000100453,
+        "stddev": 0.00021289973540288874,
+        "rounds": 3,
+        "median": 0.007256834000145318,
+        "iqr": 0.000285406499756391,
+        "q1": 0.0069900522502166496,
+        "q3": 0.0072754587499730405,
+        "iqr_outliers": 0,
+        "stddev_outliers": 1,
+        "outliers": "1;0",
+        "ld15iqr": 0.006901125000240427,
+        "hd15iqr": 0.007281666999915615,
+        "ops": 139.92781403732656,
+        "total": 0.02143962600030136,
+        "data": [
+          0.006901125000240427, 0.007256834000145318, 0.007281666999915615
+        ],
+        "iterations": 1
+      }
+    }
+  ],
+  "datetime": "2025-06-13T06:55:13.965254+00:00",
+  "version": "5.1.0"
+}

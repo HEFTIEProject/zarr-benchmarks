@@ -102,15 +102,14 @@ def create_shuffle_plots(
         (benchmarks_df.compressor == "blosc-zstd")
         & (benchmarks_df.compression_level == 3)
         & (benchmarks_df.chunk_size == 128)
-        & (benchmarks_df.zarr_spec.isin([2, 3]))
     ]
     sub_dir_name = "shuffle"
     write_specv2 = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
-    #    & shuffle_benchmarks.zarr_spec == 2]
     write_specv2 = write_specv2[write_specv2.package == "tensorstore"]
+    write_specv2 = write_specv2[write_specv2.zarr_spec == 2]
     read_specv2 = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
-    #    & shuffle_benchmarks.zarr_spec == 2]
     read_specv2 = read_specv2[read_specv2.package == "tensorstore"]
+    read_specv2 = read_specv2[read_specv2.zarr_spec == 2]
     title = "Specv2 Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
@@ -141,11 +140,11 @@ def create_shuffle_plots(
     )
 
     write_specv3 = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
-    #    & shuffle_benchmarks.zarr_spec == 3]
     write_specv3 = write_specv3[write_specv3.package == "tensorstore"]
+    write_specv3 = write_specv3[write_specv3.zarr_spec == 3]
     read_specv3 = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
-    #    & shuffle_benchmarks.zarr_spec == 3]
     read_specv3 = read_specv3[read_specv3.package == "tensorstore"]
+    read_specv3 = read_specv3[read_specv3.zarr_spec == 3]
     title = "Specv3 Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
@@ -624,8 +623,8 @@ def create_all_plots(
     )
 
     # create_read_write_plots(benchmarks_df)
-    create_chunk_size_plots(benchmarks_df)
-    # create_shuffle_plots(benchmarks_df)
+    # create_chunk_size_plots(benchmarks_df)
+    create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
     print("Plots saved to 'data/plots'")
