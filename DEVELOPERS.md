@@ -42,8 +42,10 @@ test:
 - [`zarr-python`](https://zarr.readthedocs.io/en/stable/) version 3
 - [`tensorstore`](https://google.github.io/tensorstore/)
 
-Each is installed in a separate `tox` environment, where the benchmarks are run
-via calls to `pytest`.
+Each is installed in a separate `tox` environment (see `tox.toml` file), where
+the benchmarks are run via calls to `pytest`. See the [README](README.md) for
+details of different `tox` commands /options, including
+[options for quicker development runs](README.md#options-for-quicker-development-runs).
 
 ### Fetching / caching test data
 
@@ -67,6 +69,9 @@ Each of these benchmarks runs in all three tox environments i.e. with
 
 All the code for reading / writing Zarr images, as well as fetching datasets and
 making plots is stored under `src/zarr_benchmarks`.
+
+Datasets are fetched through `fetch_datasets.py`, and plots created through
+`create_plots.py` (which calls `plotting_functions.py`).
 
 The read/write code for each Zarr library is stored under
 `src/zarr_benchmarks/read_write_zarr`. To reduce the amount of boilerplate

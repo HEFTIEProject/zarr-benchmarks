@@ -84,13 +84,13 @@ To only run benchmarks for a specific package, use the `-e` option:
 
 ```bash
 # tensorstore only
-tox run -e py313-tensorstore
+tox run -e py313-tensorstore -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 
 # zarr-python v2 only
-tox run -e py313-zarrv2
+tox run -e py313-zarrv2 -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 
 # zarr-python v3 only
-tox run -e py313-zarrv3
+tox run -e py313-zarrv3 -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 ```
 
 To see a list of available environments, use `tox -l`.
@@ -116,6 +116,13 @@ benchmark with:
 
 ```bash
 tox -- --benchmark-only --image=dev --rounds=1 --warmup-rounds=0 --benchmark-storage=data/results/dev
+```
+
+As described in the [specific package section](#specific-package), you can also
+run with a single tox environment via e.g.:
+
+```bash
+tox run -e py313-tensorstore -- --benchmark-only --image=dev --benchmark-storage=data/results/dev
 ```
 
 Everything after the first `--` will be passed to the internal `pytest` call, so
