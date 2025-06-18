@@ -8,14 +8,14 @@ from zarr_benchmarks import utils
 
 
 def get_compression_ratio(store_path: pathlib.Path, zarr_spec: Literal[2, 3]) -> float:
-    zarr_array = open_zarr_array(store_path, zarr_spec)
+    zarr_array = _open_zarr_array(store_path, zarr_spec)
     item_size = zarr_array.dtype.numpy_dtype.itemsize
     nbytes = item_size * zarr_array.size
     nbytes_stored = utils.get_directory_size(store_path)
     return nbytes / nbytes_stored
 
 
-def open_zarr_array(
+def _open_zarr_array(
     store_path: pathlib.Path, zarr_spec: Literal[2, 3]
 ) -> ts.TensorStore:
     if zarr_spec == 2:
@@ -36,12 +36,12 @@ def open_zarr_array(
 
 def read_zarr_array(store_path: pathlib.Path, zarr_spec: Literal[2, 3]) -> npt.NDArray:
     """Read the v2/v3 zarr spec with tensorstore"""
-    zarr_read = open_zarr_array(store_path, zarr_spec)
+    zarr_read = _open_zarr_array(store_path, zarr_spec)
     read_image = zarr_read[:].read().result()
     return read_image
 
 
-def write_zarr_array_v2(
+def _write_zarr_array_v2(
     image: npt.NDArray,
     store_path: pathlib.Path,
     *,
@@ -73,7 +73,7 @@ def write_zarr_array_v2(
     write_future.result()
 
 
-def write_zarr_array_v3(
+def _write_zarr_array_v3(
     image: npt.NDArray,
     store_path: pathlib.Path,
     *,
@@ -132,7 +132,7 @@ def write_zarr_array(
         utils.remove_output_dir(store_path)
 
     if zarr_spec == 2:
-        write_zarr_array_v2(
+        _write_zarr_array_v2(
             image,
             store_path,
             chunks=chunks,
@@ -140,7 +140,7 @@ def write_zarr_array(
             write_empty_chunks=write_empty_chunks,
         )
     else:
-        write_zarr_array_v3(
+        _write_zarr_array_v3(
             image,
             store_path,
             chunks=chunks,
