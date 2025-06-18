@@ -14,5 +14,6 @@
     "min": 1,
     "max": 19
   },
-  "no_compressor": true
+  "no_compressor": true,
+  "zarr_spec": [2, 3]
 }

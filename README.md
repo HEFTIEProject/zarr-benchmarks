@@ -45,6 +45,9 @@ tox -- --benchmark-only --image=heart --config=all --benchmark-storage=data/resu
 
 # Run with a dense segmentation (small subset of C3 segmentation data from the H01 release)
 tox -- --benchmark-only --image=dense --config=all --benchmark-storage=data/results/dense
+
+# Run with a sparse segmentation (small subset of '104 proofread cells' segmentation data from the H01 release)
+tox -- --benchmark-only --image=sparse --config=all --benchmark-storage=data/results/sparse
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`

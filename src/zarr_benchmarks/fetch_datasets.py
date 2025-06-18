@@ -20,7 +20,7 @@ def _fetch_from_zenodo(image_name: str) -> npt.NDArray:
     image_path = ZENODO.path / f"{image_name}.zip.unzip" / image_name
 
     # open zarr
-    image = read_write_zarr.read_zarr_array(image_path)
+    image = read_write_zarr.read_zarr_array(image_path, zarr_spec=2)
 
     return image
 
@@ -33,3 +33,8 @@ def get_heart() -> npt.NDArray:
 def get_dense_segmentation() -> npt.NDArray:
     """Fetch small subset of C3 segmentation data from the H01 release"""
     return _fetch_from_zenodo("H01-c3-subset.zarr")
+
+
+def get_sparse_segmentation() -> npt.NDArray:
+    """Fetch small subset of '104 proofread cells' segmentation data from the H01 release"""
+    return _fetch_from_zenodo("H01-proofread-104-subset.zarr")
