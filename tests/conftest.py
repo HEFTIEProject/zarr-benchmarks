@@ -84,7 +84,7 @@ def image(request):
 @pytest.fixture()
 def store_path():
     """Path to store zarr images written from benchmarks"""
-    return pathlib.Path("data/output/heart-example.zarr")
+    return pathlib.Path("data/output/temp-benchmarks.zarr")
 
 
 def _expand_min_max(config: dict) -> dict:
