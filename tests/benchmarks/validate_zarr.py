@@ -43,6 +43,8 @@ def validate_blosc_zarr_metadata(
     blosc_cname: str,
     zarr_spec: Literal[2, 3],
 ) -> None:
+    """Check JSON metadata of Zarr (saved at store_path) matches given image / blosc settings."""
+
     zarr_metadata = _read_zarr_metadata_file(store_path, zarr_spec)
     _validate_overall_settings(zarr_metadata, image, chunk_size, zarr_spec)
 
@@ -72,6 +74,8 @@ def validate_gzip_zarr_metadata(
     gzip_level: int,
     zarr_spec: Literal[2, 3],
 ) -> None:
+    """Check JSON metadata of Zarr (saved at store_path) matches given image / gzip settings."""
+
     zarr_metadata = _read_zarr_metadata_file(store_path, zarr_spec)
     _validate_overall_settings(zarr_metadata, image, chunk_size, zarr_spec)
 
@@ -95,6 +99,8 @@ def validate_zstd_zarr_metadata(
     zstd_level: int,
     zarr_spec: Literal[2, 3],
 ) -> None:
+    """Check JSON metadata of Zarr (saved at store_path) matches given image / zstd settings."""
+
     zarr_metadata = _read_zarr_metadata_file(store_path, zarr_spec)
     _validate_overall_settings(zarr_metadata, image, chunk_size, zarr_spec)
 
@@ -114,6 +120,9 @@ def validate_zstd_zarr_metadata(
 def validate_no_compressor_zarr_metadata(
     image: npt.NDArray, store_path: Path, chunk_size: int, zarr_spec: Literal[2, 3]
 ) -> None:
+    """Check JSON metadata of Zarr (saved at store_path) matches given image / settings. There should be no metadata
+    relating to compression stored in this case."""
+
     zarr_metadata = _read_zarr_metadata_file(store_path, zarr_spec)
     _validate_overall_settings(zarr_metadata, image, chunk_size, zarr_spec)
 
