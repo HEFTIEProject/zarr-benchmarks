@@ -503,9 +503,9 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame) -> None:
     create_read_write_plots_for_package(read_write_benchmarks, "zarr_python_3")
     create_read_write_plots_for_package(read_write_benchmarks, "tensorstore")
 
-    # create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_2")
-    # create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_3")
-    # create_read_write_errorbar_plots_for_package(read_write_benchmarks, "tensorstore")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_2")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "zarr_python_3")
+    create_read_write_errorbar_plots_for_package(read_write_benchmarks, "tensorstore")
 
     read_chunks_128_spec2 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
@@ -622,8 +622,8 @@ def create_all_plots(
         package_paths_dict,
     )
 
-    # create_read_write_plots(benchmarks_df)
-    # create_chunk_size_plots(benchmarks_df)
+    create_read_write_plots(benchmarks_df)
+    create_chunk_size_plots(benchmarks_df)
     create_shuffle_plots(benchmarks_df)
 
     print("Plotting finished 🕺")
