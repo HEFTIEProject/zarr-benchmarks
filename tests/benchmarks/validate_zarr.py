@@ -39,7 +39,7 @@ def validate_blosc_zarr_metadata(
     store_path: Path,
     chunk_size: int,
     blosc_clevel: int,
-    blosc_shuffle: str,
+    blosc_shuffle: Literal["shuffle", "noshuffle", "bitshuffle"],
     blosc_cname: str,
     zarr_spec: Literal[2, 3],
 ) -> None:
