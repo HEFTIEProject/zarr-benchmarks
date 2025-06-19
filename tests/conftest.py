@@ -4,7 +4,11 @@ import pathlib
 import numpy as np
 import pytest
 
-from zarr_benchmarks.fetch_datasets import get_image
+from zarr_benchmarks.fetch_datasets import (
+    get_dense_segmentation,
+    get_heart,
+    get_sparse_segmentation,
+)
 from zarr_benchmarks.utils import read_json_file
 
 
@@ -18,9 +22,15 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
-        "--dev-image",
-        action="store_true",
-        help="Use a small 100x100x100 image to test benchmarks",
+        "--image",
+        action="store",
+        default="dev",
+        type=str,
+        choices=["dev", "heart", "dense", "sparse"],
+        help="Type of image to run benchmarks with: 'dev' is a small 128x128x128 numpy array for testing purposes, "
+        "'heart' is an image of a heart from the human organ atlas, 'dense' is a dense segmentation (small subset of "
+        "C3 segmentation data from the H01 release) and 'sparse' is a sparse segmentation (small subset of '104 "
+        "proofread cells' from the H01 release).",
     )
 
     parser.addoption(
@@ -51,26 +61,30 @@ def warmup_rounds(request):
 
 
 @pytest.fixture(scope="session")
-def dev_image(request):
-    return request.config.getoption("--dev-image")
+def image(request):
+    """Return image selected via --image option as a numpy array. If --image=dev, a small 128x128x128 numpy array is
+    used, otherwise the relevant image is fetched from zenodo (or the cache if already downloaded). Reading the full
+    size images are quite slow, so we only do it once per testing session."""
 
+    image_type = request.config.getoption("--image")
 
-@pytest.fixture(scope="session")
-def image(dev_image):
-    """If '--dev_image' isn't set, use the heart image from zenodo. This process is quite slow, so we only do it once
-    per testing session. If '--dev_image' is set, use a small 128x128x128 numpy array instead - this is useful for quick
-    test runs during development."""
-
-    if dev_image:
-        return np.random.rand(128, 128, 128)
-
-    return get_image()
+    match image_type:
+        case "dev":
+            return np.random.rand(128, 128, 128)
+        case "heart":
+            return get_heart()
+        case "dense":
+            return get_dense_segmentation()
+        case "sparse":
+            return get_sparse_segmentation()
+        case _:
+            raise ValueError(f"Invalid --image option {image_type}")
 
 
 @pytest.fixture()
 def store_path():
     """Path to store zarr images written from benchmarks"""
-    return pathlib.Path("data/output/heart-example.zarr")
+    return pathlib.Path("data/output/temp-benchmarks.zarr")
 
 
 def _expand_min_max(config: dict) -> dict:

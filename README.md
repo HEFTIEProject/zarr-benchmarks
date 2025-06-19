@@ -17,13 +17,13 @@ the choice of options for folks reading and writing 3D imaging data.
 
 ## Running the benchmarks
 
-### All benchmarks
+### Installation
 
 Install the relevant dependencies with:
 
 ```bash
 # Run from the top level of this repository
-pip install .[plots]
+pip install -e .[plots]
 ```
 
 If using `uv`, you can also install the dependencies with:
@@ -35,19 +35,40 @@ uv pip install -e ".[plots]"
 Note: there are a number of optional dependencies that can be installed, if
 required. See the [development dependencies](#development-dependencies) section.
 
-Then run tox with:
+### All benchmarks
+
+To run all benchmarks (with all images) run the following tox commands:
 
 ```bash
-tox -- --benchmark-only --config=all
+# Run with an image of a heart from the Human Organ Atlas
+tox -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
+
+# Run with a dense segmentation (small subset of C3 segmentation data from the H01 release)
+tox -- --benchmark-only --image=dense --config=all --benchmark-storage=data/results/dense
+
+# Run with a sparse segmentation (small subset of '104 proofread cells' segmentation data from the H01 release)
+tox -- --benchmark-only --image=sparse --config=all --benchmark-storage=data/results/sparse
 ```
 
 This will run all benchmarks via `zarr-python` version 2 + 3 and `tensorstore`
-with the example Human Organ Atlas image. All results will be saved as `.json`
-files to the `data/results` directory.
+with the given images. Each tox command will generate three result `.json` files
+in the given `--benchmark-storage` directory - one for `zarr-python` version 2
+(`{id}_zarr-python-v2.json`), one for `zarr-python` version 3
+(`{id}_zarr-python-v3.json`) and one for tensorstore (`{id}_tensorstore.json`).
+`{id}` is a four digit number (e.g. `0001`) that increments automatically for
+every new `tox` run.
 
-Note: the first time this command is run, the required datasets will be
-downloaded from Zenodo and cached locally on your computer. Later runs will
-re-use this data, and should be faster.
+If `--benchmark-storage` isn't specified, json files will be saved to the
+default `.benchmarks` directory. We recommend setting `--benchmark-storage` to
+an appropriately named sub-directory within `data/results` (as in the example
+above).
+
+Note: the first time these commands are run, the required datasets will be
+downloaded from
+[HEFTIE's Zenodo repository](https://doi.org/10.5281/zenodo.15544055) and cached
+locally on your computer. Later runs will re-use this data, and should be
+faster. Information about the source of these datasets is provided in the
+`LICENSE` file within each `.zarr` file on Zenodo.
 
 ### Specific config
 
@@ -57,7 +78,7 @@ selection of parameters for quick test runs). To run with parameters from a
 single config file use e.g.
 
 ```bash
-tox -- --benchmark-only --config=shuffle
+tox -- --benchmark-only --image=heart --config=shuffle --benchmark-storage=data/results/heart
 ```
 
 ### Specific package
@@ -66,13 +87,13 @@ To only run benchmarks for a specific package, use the `-e` option:
 
 ```bash
 # tensorstore only
-tox run -e py313-tensorstore
+tox run -e py313-tensorstore -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 
 # zarr-python v2 only
-tox run -e py313-zarrv2
+tox run -e py313-zarrv2 -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 
 # zarr-python v3 only
-tox run -e py313-zarrv3
+tox run -e py313-zarrv3 -- --benchmark-only --image=heart --config=all --benchmark-storage=data/results/heart
 ```
 
 To see a list of available environments, use `tox -l`.
@@ -83,21 +104,28 @@ Removing the `--config` option will use a small `dev` config to test a small
 selection of parameters:
 
 ```bash
-tox -- --benchmark-only
+tox -- --benchmark-only --image=heart --benchmark-storage=data/results/heart
 ```
 
-You can also use a smaller image (100x100x100 numpy array) by adding
-`--dev-image`:
+You can also use a smaller image (128x128x128 numpy array) by using
+`--image=dev` (this is also the default if no `--image` option is provided):
 
 ```bash
-tox -- --benchmark-only --dev-image
+tox -- --benchmark-only --image=dev --benchmark-storage=data/results/dev
 ```
 
 You can also override the default number of rounds / warmup rounds for each
 benchmark with:
 
 ```bash
-tox -- --benchmark-only --dev-image --rounds=1 --warmup-rounds=0
+tox -- --benchmark-only --image=dev --rounds=1 --warmup-rounds=0 --benchmark-storage=data/results/dev
+```
+
+As described in the [specific package section](#specific-package), you can also
+run with a single tox environment via e.g.:
+
+```bash
+tox run -e py313-tensorstore -- --benchmark-only --image=dev --benchmark-storage=data/results/dev
 ```
 
 Everything after the first `--` will be passed to the internal `pytest` call, so
@@ -145,65 +173,7 @@ pip install .[plots,tensorstore,zarr-python-v3]
 
 Use `zarr-python-v2` if you need version 2 instead.
 
-## Running pre-commit locally
+## Developer docs
 
-If you want quick development, you can always do git commit -n which will
-disable the check (but still run in CI). Or don’t run pre-commit install until
-you need it.
-
-## Project considerations
-
-- Benchmarks should be easy to run on a typical laptop. This means:
-  - **small test data** (< 1GB)
-  - **quick** (~seconds for individual benchmarks, ~minutes for the whole set of
-    benchmarks)
-- Benchmarks will be run on spatial **3D imaging data**, and **segmenations** of
-  that data
-- The most important measurement to make is compression ratio - data will sit on
-  disks unchanged for years, but performance of the libraries to read/write the
-  data can improve on much shorter timescales.
-- The most important software and configurations to test are those that are
-  mature, reliable, and usable _now_ by a wide range of scientists.
-
-### Data
-
-To start with, we will use a downsampled version of a full organ dataset from
-the [Human Organ Atalas](https://human-organ-atlas.esrf.fr) (for example
-[this heart dataset](https://human-organ-atlas.esrf.fr/datasets/1773966096) )
-
-### Measurements
-
-For each configuration we will record:
-
-1. Write time
-2. Read time
-3. Compression ratio
-
-### Configurations
-
-When benchmarking we will vary:
-
-- Zarr implementation
-  - `zarr-python` v2, `zarr-python` v3, and `tensorstore`
-- Zarr data format version
-  - 2 and 3
-- Compression codec
-  - To limit options, use only
-    [codecs supported by neuroglancer](https://github.com/google/neuroglancer/tree/master/src/datasource/zarr#zarr-v2)
-    for both Zarr v2 and Zarr v3: `blosc`, `gzip`, `zstd`
-- Compression codec parameters, e.g., compression level
-- Chunk size
-  - To keep things simple, use a isotropic chunk shape (e.g., (128, 128, 128))
-    and just vary the chunk size.
-- Shard size (only for Zarr format 3)
-- Type of data
-  - Imaging data
-  - "Sparse" segmentation data (e.g., arteries)
-  - "Dense" segmentation data (e.g., cells)
-
-### Stretch goals
-
-- Run benchmarks using `zarr-python` version 3 and/or `tensorstore`
-- Run benchmarks using `zarr-python` version 3 and
-  [`zarrs-python`](https://github.com/ilan-gold/zarrs-python)
-- Try different sharding options in Zarr format 3
+Further information about code structure / implementation, is provided in the
+[developer docs](DEVELOPERS.md).

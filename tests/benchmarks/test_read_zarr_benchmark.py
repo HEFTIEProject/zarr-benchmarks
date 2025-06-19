@@ -20,7 +20,7 @@ def test_read_blosc(
     zarr_spec,
 ):
     if zarr_spec == 3 and is_zarr_python_v2():
-        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
 
     blosc_compressor = read_write_zarr.get_blosc_compressor(
         blosc_cname, blosc_clevel, blosc_shuffle, zarr_spec=zarr_spec
@@ -61,7 +61,7 @@ def test_read_gzip(
     zarr_spec,
 ):
     if zarr_spec == 3 and is_zarr_python_v2():
-        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
 
     gzip_compressor = read_write_zarr.get_gzip_compressor(
         gzip_level, zarr_spec=zarr_spec
@@ -102,7 +102,7 @@ def test_read_zstd(
     zarr_spec,
 ):
     if zarr_spec == 3 and is_zarr_python_v2():
-        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
 
     zstd_compressor = read_write_zarr.get_zstd_compressor(
         zstd_level, zarr_spec=zarr_spec
@@ -146,7 +146,7 @@ def test_read_no_compressor(
         pytest.skip("config didn't include no compressor")
 
     if zarr_spec == 3 and is_zarr_python_v2():
-        pytest.skip("Zarr v3 is not supported in the py313-zarrv2 environment.")
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
 
     read_write_zarr.write_zarr_array(
         image=image,

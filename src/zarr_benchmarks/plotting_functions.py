@@ -6,56 +6,53 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 
-def set_axes_limits(graph: sns.relplot, data: pd.DataFrame, plot_name: str) -> None:
+def get_limits_custom(x_min: int, x_max: int, max_range: int) -> tuple[float, float]:
+    central_value = (x_min + x_max) / 2
+    x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
+    x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+    return x_lim_min, x_lim_max
+
+
+def set_axes_limits(graph: sns.relplot, data: pd.DataFrame) -> None:
     """Set all subplots to cover the same total x axis range (= max_range across all subplots),
     centred on their central x value.
     """
 
-    range = []
-    x_max_min_ratio = []
+    compressors = {}
     for compressor, ax in graph.axes_dict.items():
         # Filter data for this compressor
         compressor_data = data[data.compressor == compressor]
-        x_min = compressor_data["stats.min"].min()
-        x_max = compressor_data["stats.max"].max()
-        range.append(x_max - x_min)
-        x_max_min_ratio.append((x_max / x_min))
 
-    if not range:
-        print(f"Skipping compressor for {plot_name} (no data)")
-        return
+        # Get max / min x values for this compressor - bearing in mind we're plotting the mean with
+        # errorbars of length 2* standard deviation
+        x_min = (
+            compressor_data["stats.mean"] - 2 * compressor_data["stats.stddev"]
+        ).min()
+        x_max = (
+            compressor_data["stats.mean"] + 2 * compressor_data["stats.stddev"]
+        ).max()
 
-    max_range = max(range)
-    max_x_max_min_ratio = max(x_max_min_ratio)
+        compressors[compressor] = {
+            "x_min": x_min,
+            "x_max": x_max,
+            "range": x_max - x_min,
+        }
 
-    def set_limits_custom(x_min: int, x_max: int, max_range: int) -> None:
-        central_value = (x_min + x_max) / 2
-        x_lim_min = central_value - max_range / 2 - round(max_range, 1) / 10
-        if x_lim_min < 0:
-            x_lim_min = x_min
-        x_lim_max = central_value + max_range / 2 + round(max_range, 1) / 10
+    max_range = max([compressors[compressor]["range"] for compressor in compressors])
+
+    for compressor, ax in graph.axes_dict.items():
+        # Set the x-axis limits for each subplot
+        compressor = compressors[compressor]
+        x_lim_min, x_lim_max = get_limits_custom(
+            compressor["x_min"], compressor["x_max"], max_range
+        )
         ax.set_xlim(x_lim_min, x_lim_max)
-
-    if max_x_max_min_ratio > 10:
-        graph.set(xscale="log")
-        for compressor, ax in graph.axes_dict.items():
-            # Set the x-axis limits for each subplot
-            x_min = graph.data["stats.min"].min()
-            x_max = graph.data["stats.min"].max()
-            set_limits_custom(x_min, x_max, max_range)
-
-    else:
-        for compressor, ax in graph.axes_dict.items():
-            # Set the x-axis limits for each subplot
-            x_min = min(data[data.compressor == compressor]["stats.min"])
-            x_max = max(data[data.compressor == compressor]["stats.max"])
-            set_limits_custom(x_min, x_max, max_range)
 
 
 def plot_errorbars_benchmarks(
     data: pd.DataFrame,
     *,
-    sub_dir_name: str,
+    plots_dir: Path,
     plot_name: str,
     title: str | None = None,
     hue: str | None = None,
@@ -67,7 +64,7 @@ def plot_errorbars_benchmarks(
 
     Args:
         data (pd.DataFrame): Contains the data to be plotted.
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plots_dir (Path): directory the plot will be saved to.
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
@@ -108,7 +105,7 @@ def plot_errorbars_benchmarks(
 
     graph.map(add_error_bars, x_axis, y_axis, "stats.stddev")
 
-    set_axes_limits(graph, data, plot_name)
+    set_axes_limits(graph, data)
 
     x_axis_label, y_axis_label = get_axis_labels(data, x_axis=x_axis, y_axis=y_axis)
 
@@ -121,7 +118,7 @@ def plot_errorbars_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir_name, plot_name),
+        get_output_path(data, plots_dir, plot_name),
     )
 
 
@@ -130,7 +127,7 @@ def plot_relplot_benchmarks(
     *,
     x_axis: str,
     y_axis: str,
-    sub_dir_name: str,
+    plots_dir: Path,
     plot_name: str,
     title: str | None = None,
     hue: str | None = None,
@@ -144,7 +141,7 @@ def plot_relplot_benchmarks(
         data (pd.DataFrame): Contains the data to be plotted.
         x_axis (str): name of dataframe column to be used for x-axis
         y_axis (str): name of dataframe column to be used for y-axis
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plots_dir (Path): directory the plot will be saved to.
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
@@ -199,7 +196,7 @@ def plot_relplot_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir_name, plot_name),
+        get_output_path(data, plots_dir, plot_name),
     )
 
 
@@ -222,12 +219,11 @@ def get_axis_labels(
 
 
 def get_output_path(
-    benchmarks_df: pd.DataFrame, sub_dir_name: str, plot_name: str
+    benchmarks_df: pd.DataFrame, plots_dir: Path, plot_name: str
 ) -> Path:
     machine_info = benchmarks_df["machine"].iloc[0]
     date = datetime.now().strftime("%Y-%m-%d")
 
-    plots_dir = Path(__file__).parents[2] / "data" / "plots" / sub_dir_name
     return plots_dir / f"{plot_name}_{date}_{machine_info}.png"
 
 
@@ -243,7 +239,7 @@ def plot_catplot_benchmarks(
     *,
     x_axis: str,
     y_axis: str,
-    sub_dir_name: str,
+    plots_dir: Path,
     plot_name: str,
     title: str | None = None,
     hue: str | None = None,
@@ -256,16 +252,18 @@ def plot_catplot_benchmarks(
         data (pd.DataFrame): Contains the data to be plotted.
         x_axis (str): name of dataframe column to be used for x-axis
         y_axis (str): name of dataframe column to be used for y-axis
-        sub_dir_name (str): name of the sub-directory where the plot will be saved within data/plots
+        plots_dir (Path): directory the plot will be saved to.
         plot_name (str): name of the plot which will be used for the start of the final filename
         title (str | None, optional): title of the plot. Defaults to None.
         hue (str | None, optional): name of dataframe column to be used for the colours in the plot. Defaults to None.
     """
     # Before plotting, set the desired order
-    shuffle_order = ["noshuffle", "bitshuffle", "shuffle"]
-    data[x_axis] = pd.Categorical(
-        data["blosc_shuffle"], categories=shuffle_order, ordered=True
-    )
+    if x_axis == "blosc_shuffle":
+        data = data.copy()
+        shuffle_order = ["noshuffle", "bitshuffle", "shuffle"]
+        data[x_axis] = pd.Categorical(
+            data["blosc_shuffle"], categories=shuffle_order, ordered=True
+        )
 
     graph = sns.catplot(
         data=data,
@@ -290,5 +288,5 @@ def plot_catplot_benchmarks(
 
     save_plot_as_png(
         graph,
-        get_output_path(data, sub_dir_name, plot_name),
+        get_output_path(data, plots_dir, plot_name),
     )
