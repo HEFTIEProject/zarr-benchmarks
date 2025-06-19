@@ -11,7 +11,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
 ]
-dependencies = ["imageio", "pytest", "pytest-benchmark", "tox", "jsonschema", "pooch"]
+dependencies = ["pytest", "pytest-benchmark", "tox", "jsonschema", "pooch"]
 description = "zarr benchmarks"
 license = { file = "LICENSE" }
 name = "zarr_benchmarks"
