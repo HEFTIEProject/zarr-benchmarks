@@ -5,17 +5,20 @@ import numpy as np
 import pytest
 
 from zarr_benchmarks.read_write_zarr import read_write_zarr
+from zarr_benchmarks.utils import is_zarr_python_v2
 
 pytestmark = [pytest.mark.tensorstore, pytest.mark.zarr_python]
 
 
 @pytest.mark.parametrize("write_empty_chunks", [True, False])
-def test_write_empty_chunks(tmp_path, write_empty_chunks):
-    """Check an empty chunk is written to file when write_empty_chunks=True"""
+def test_write_empty_chunks_spec_3(tmp_path, write_empty_chunks):
+    """Check an empty chunk is written to file when write_empty_chunks=True (zarr spec v3)"""
+
+    if is_zarr_python_v2():
+        pytest.skip("Zarr spec v3 is not supported by zarr-python v2")
 
     image = np.zeros(shape=(1, 1, 1))
     store_path = tmp_path / "image.zarr"
-    zarr_spec = 2
 
     read_write_zarr.write_zarr_array(
         image,
@@ -23,7 +26,28 @@ def test_write_empty_chunks(tmp_path, write_empty_chunks):
         overwrite=True,
         chunks=(1, 1, 1),
         compressor=None,
-        zarr_spec=zarr_spec,
+        zarr_spec=3,
+        write_empty_chunks=write_empty_chunks,
+    )
+
+    assert (store_path / "zarr.json").exists()
+    assert (store_path / "c" / "0" / "0" / "0").exists() == write_empty_chunks
+
+
+@pytest.mark.parametrize("write_empty_chunks", [True, False])
+def test_write_empty_chunks_spec_2(tmp_path, write_empty_chunks):
+    """Check an empty chunk is written to file when write_empty_chunks=True (zarr spec v2)"""
+
+    image = np.zeros(shape=(1, 1, 1))
+    store_path = tmp_path / "image.zarr"
+
+    read_write_zarr.write_zarr_array(
+        image,
+        store_path,
+        overwrite=True,
+        chunks=(1, 1, 1),
+        compressor=None,
+        zarr_spec=2,
         write_empty_chunks=write_empty_chunks,
     )
 

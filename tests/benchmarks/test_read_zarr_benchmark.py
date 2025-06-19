@@ -1,5 +1,6 @@
 import pytest
 
+import tests.benchmarks.validate_zarr as validate_zarr
 from zarr_benchmarks.read_write_zarr import read_write_zarr
 from zarr_benchmarks.utils import is_zarr_python_v2
 
@@ -48,6 +49,16 @@ def test_read_blosc(
         warmup_rounds=warmup_rounds,
     )
 
+    validate_zarr.validate_blosc_zarr_metadata(
+        image,
+        store_path,
+        chunk_size,
+        blosc_clevel,
+        blosc_shuffle,
+        blosc_cname,
+        zarr_spec,
+    )
+
 
 @pytest.mark.benchmark(group="read")
 def test_read_gzip(
@@ -87,6 +98,10 @@ def test_read_gzip(
         kwargs={"zarr_spec": zarr_spec},
         rounds=rounds,
         warmup_rounds=warmup_rounds,
+    )
+
+    validate_zarr.validate_gzip_zarr_metadata(
+        image, store_path, chunk_size, gzip_level, zarr_spec
     )
 
 
@@ -130,6 +145,10 @@ def test_read_zstd(
         warmup_rounds=warmup_rounds,
     )
 
+    validate_zarr.validate_zstd_zarr_metadata(
+        image, store_path, chunk_size, zstd_level, zarr_spec
+    )
+
 
 @pytest.mark.benchmark(group="read")
 def test_read_no_compressor(
@@ -168,4 +187,8 @@ def test_read_no_compressor(
         kwargs={"zarr_spec": zarr_spec},
         rounds=rounds,
         warmup_rounds=warmup_rounds,
+    )
+
+    validate_zarr.validate_no_compressor_zarr_metadata(
+        image, store_path, chunk_size, zarr_spec
     )
