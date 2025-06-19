@@ -130,7 +130,7 @@ def create_shuffle_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
         data=read_specv2,
         x_axis="blosc_shuffle",
         y_axis="stats.mean",
-        sub_dir_name=sub_dir_name,
+        plots_dir=save_dir,
         plot_name="read",
         title=title,
     )
@@ -147,8 +147,8 @@ def create_shuffle_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
         data=read_specv3,
         x_axis="blosc_shuffle",
         y_axis="compression_ratio",
-        sub_dir_name=sub_dir_name,
         plot_name="compression_ratio",
+        plots_dir=save_dir,
         title=title,
     )
 
@@ -156,8 +156,8 @@ def create_shuffle_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
         data=write_specv3,
         x_axis="blosc_shuffle",
         y_axis="stats.mean",
-        sub_dir_name=sub_dir_name,
         plot_name="write",
+        plots_dir=save_dir,
         title=title,
     )
 
@@ -212,7 +212,6 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         hue="package",
         title="Spec_v2_chunk_size_write_all",
         plots_dir=save_dir,
-        sub_dir_name="chunk_size",
         plot_name="write",
     )
 
@@ -233,7 +232,6 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         hue="package",
         title="Spec_v2_chunk_size_read_all",
         plots_dir=save_dir,
-        sub_dir_name="chunk_size",
         plot_name="read",
     )
 
@@ -248,7 +246,7 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         x_axis="chunk_size",
         y_axis="compression_ratio",
         col="package",
-        sub_dir_name="chunk_size",
+        plots_dir=plots_dir / "chunk_size",
         plot_name="compression_ratio",
         title="Spec_v3",
     )
@@ -258,7 +256,7 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
-        sub_dir_name="chunk_size",
+        plots_dir=plots_dir / "chunk_size",
         plot_name="write",
         title="Spec_v3",
     )
@@ -269,7 +267,7 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         x_axis="chunk_size",
         hue="package",
         title="Spec_v3_chunk_size_write_all",
-        sub_dir_name="chunk_size",
+        plots_dir=plots_dir / "chunk_size",
         plot_name="write",
     )
 
@@ -278,7 +276,7 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
-        sub_dir_name="chunk_size",
+        plots_dir=plots_dir / "chunk_size",
         plot_name="read",
         title="Spec_v3",
     )
@@ -289,7 +287,7 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         x_axis="chunk_size",
         hue="package",
         title="Spec_v3_chunk_size_read_all",
-        sub_dir_name="chunk_size",
+        plots_dir=plots_dir / "chunk_size",
         plot_name="read",
     )
 
@@ -344,7 +342,6 @@ def create_read_write_plots_for_package(
         col="chunk_size",
         title=f"Spec_v2_{package}_chunk_size_all",
         plots_dir=plots_dir / "write",
-        sub_dir_name="write",
         plot_name=f"{package}_chunk_size_all",
     )
 
@@ -357,7 +354,6 @@ def create_read_write_plots_for_package(
         col="chunk_size",
         title=f"Spec_v2_{package}_chunk_size_all",
         plots_dir=plots_dir / "read",
-        sub_dir_name="read",
         plot_name=f"{package}_chunk_size_all",
     )
 
@@ -377,7 +373,7 @@ def create_read_write_plots_for_package(
             size="compression_level",
             col="chunk_size",
             title=f"Spec_v3_{package}_chunk_size_all",
-            sub_dir_name="write",
+            plots_dir=plots_dir / "write",
             plot_name=f"{package}_chunk_size_all",
         )
 
@@ -389,7 +385,7 @@ def create_read_write_plots_for_package(
             size="compression_level",
             col="chunk_size",
             title=f"Spec_v3_{package}_chunk_size_all",
-            sub_dir_name="read",
+            plots_dir=plots_dir / "read",
             plot_name=f"{package}_chunk_size_all",
         )
 
@@ -406,7 +402,6 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         title=f"Spec_v2_{package}_chunk_size128",
-        sub_dir_name="write",
         plots_dir=plots_dir / "write",
         plot_name=f"{package}_chunk_size128",
     )
@@ -418,7 +413,6 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         title=f"Spec_v2_{package}_chunk_size128",
-        sub_dir_name="read",
         plots_dir=plots_dir / "read",
         plot_name=f"{package}_chunk_size128",
     )
@@ -429,9 +423,7 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         col="compressor",
         title="Spec_v2",
-        sub_dir_name="write",
         plots_dir=plots_dir / "write",
-
         plot_name=f"{package}_chunk_size128",
     )
 
@@ -441,7 +433,6 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         col="compressor",
         title="Spec_v2",
-        sub_dir_name="read",
         plots_dir=plots_dir / "read",
         plot_name=f"{package}_chunk_size128",
     )
@@ -461,7 +452,7 @@ def create_read_write_plots_for_package(
             hue="compressor",
             size="compression_level",
             title=f"Spec_v3_{package}_chunk_size128",
-            sub_dir_name="write",
+            plots_dir=plots_dir / "write",
             plot_name=f"{package}_chunk_size128",
         )
 
@@ -472,7 +463,7 @@ def create_read_write_plots_for_package(
             hue="compressor",
             size="compression_level",
             title=f"Spec_v3_{package}_chunk_size128",
-            sub_dir_name="read",
+            plots_dir=plots_dir / "read",
             plot_name=f"{package}_chunk_size128",
         )
 
@@ -482,7 +473,7 @@ def create_read_write_plots_for_package(
             y_axis="compression_ratio",
             col="compressor",
             title="Spec_v3",
-            sub_dir_name="write",
+            plots_dir=plots_dir / "write",
             plot_name=f"{package}_chunk_size128",
         )
 
@@ -492,7 +483,7 @@ def create_read_write_plots_for_package(
             y_axis="compression_ratio",
             col="compressor",
             title="Spec_v3",
-            sub_dir_name="read",
+            plots_dir=plots_dir / "read",
             plot_name=f"{package}_chunk_size128",
         )
 
@@ -551,7 +542,7 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         col="package",
         hue="compressor",
         size="compression_level",
-        sub_dir_name="write",
+        plots_dir=plots_dir / "write",
         plot_name="all_packages",
         title="Spec_v2",
     )
@@ -574,7 +565,7 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         col="package",
         hue="compressor",
         size="compression_level",
-        sub_dir_name="read",
+        plots_dir=plots_dir / "read",
         plot_name="all_packages",
         title="Spec_v3",
     )
