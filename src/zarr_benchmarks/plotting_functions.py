@@ -190,6 +190,7 @@ def plot_relplot_benchmarks(
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
+        plot_name = title + "_" + plot_name
         graph.figure.suptitle(title)
         graph.tight_layout()
 
@@ -227,6 +228,7 @@ def get_output_path(
 
 
 def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
+    # pdb.set_trace()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     grid.savefig(output_path, format="png", dpi=300)
     plt.close()
@@ -278,8 +280,11 @@ def plot_catplot_benchmarks(
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
+        plot_name = title + "_" + plot_name
         graph.figure.suptitle(title)
         graph.tight_layout()
+
+    # pdb.set_trace()
 
     save_plot_as_png(
         graph,

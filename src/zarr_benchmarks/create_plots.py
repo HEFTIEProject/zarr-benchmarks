@@ -66,6 +66,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
             "compression_ratio",
             "params.chunk_size",
             "params.blosc_shuffle",
+            "params.zarr_spec",
         ]
         + stats_cols
     ]
@@ -73,6 +74,7 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
         columns={
             "params.chunk_size": "chunk_size",
             "params.blosc_shuffle": "blosc_shuffle",
+            "params.zarr_spec": "zarr_spec",
         }
     )
 
@@ -98,14 +100,16 @@ def create_shuffle_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
         & (benchmarks_df.chunk_size == 128)
     ]
     save_dir = plots_dir / "shuffle"
-    write = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
-    write = write[write.package == "tensorstore"]
-    read = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
-    read = read[read.package == "tensorstore"]
-    title = "Shuffle for tensorstore - blosc-zstd"
+    write_specv2 = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
+    write_specv2 = write_specv2[write_specv2.package == "tensorstore"]
+    write_specv2 = write_specv2[write_specv2.zarr_spec == 2]
+    read_specv2 = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
+    read_specv2 = read_specv2[read_specv2.package == "tensorstore"]
+    read_specv2 = read_specv2[read_specv2.zarr_spec == 2]
+    title = "Specv2 Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
-        data=read,
+        data=read_specv2,
         x_axis="blosc_shuffle",
         y_axis="compression_ratio",
         plots_dir=save_dir,
@@ -114,7 +118,7 @@ def create_shuffle_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
     )
 
     plot_catplot_benchmarks(
-        data=write,
+        data=write_specv2,
         x_axis="blosc_shuffle",
         y_axis="stats.mean",
         plots_dir=save_dir,
@@ -123,7 +127,42 @@ def create_shuffle_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
     )
 
     plot_catplot_benchmarks(
-        data=read,
+        data=read_specv2,
+        x_axis="blosc_shuffle",
+        y_axis="stats.mean",
+        plots_dir=save_dir,
+        plot_name="read",
+        title=title,
+    )
+
+    write_specv3 = shuffle_benchmarks[shuffle_benchmarks.group == "write"]
+    write_specv3 = write_specv3[write_specv3.package == "tensorstore"]
+    write_specv3 = write_specv3[write_specv3.zarr_spec == 3]
+    read_specv3 = shuffle_benchmarks[shuffle_benchmarks.group == "read"]
+    read_specv3 = read_specv3[read_specv3.package == "tensorstore"]
+    read_specv3 = read_specv3[read_specv3.zarr_spec == 3]
+    title = "Specv3 Shuffle for tensorstore - blosc-zstd"
+
+    plot_catplot_benchmarks(
+        data=read_specv3,
+        x_axis="blosc_shuffle",
+        y_axis="compression_ratio",
+        plot_name="compression_ratio",
+        plots_dir=save_dir,
+        title=title,
+    )
+
+    plot_catplot_benchmarks(
+        data=write_specv3,
+        x_axis="blosc_shuffle",
+        y_axis="stats.mean",
+        plot_name="write",
+        plots_dir=save_dir,
+        title=title,
+    )
+
+    plot_catplot_benchmarks(
+        data=read_specv3,
         x_axis="blosc_shuffle",
         y_axis="stats.mean",
         plots_dir=save_dir,
@@ -143,50 +182,112 @@ def create_chunk_size_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
     chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
     save_dir = plots_dir / "chunk_size"
 
+    chunk_size_write_specv2 = chunk_size_write[chunk_size_write.zarr_spec == 2]
+    chunk_size_read_specv2 = chunk_size_read[chunk_size_read.zarr_spec == 2]
+
     plot_relplot_benchmarks(
-        chunk_size_read,
+        chunk_size_read_specv2,
         x_axis="chunk_size",
         y_axis="compression_ratio",
         col="package",
         plots_dir=save_dir,
         plot_name="compression_ratio",
+        title="Spec_v2",
     )
 
     plot_relplot_benchmarks(
-        chunk_size_write,
+        chunk_size_write_specv2,
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
         plots_dir=save_dir,
         plot_name="write",
+        title="Spec_v2",
     )
 
     plot_relplot_benchmarks(
-        chunk_size_write,
+        chunk_size_write_specv2,
         y_axis="stats.mean",
         x_axis="chunk_size",
         hue="package",
-        title="chunk_size_write_all",
+        title="Spec_v2_chunk_size_write_all",
         plots_dir=save_dir,
         plot_name="write",
     )
 
     plot_relplot_benchmarks(
-        chunk_size_read,
+        chunk_size_read_specv2,
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
         plots_dir=save_dir,
         plot_name="read",
+        title="Spec_v2",
     )
 
     plot_relplot_benchmarks(
-        chunk_size_read,
+        chunk_size_read_specv2,
         y_axis="stats.mean",
         x_axis="chunk_size",
         hue="package",
-        title="chunk_size_read_all",
+        title="Spec_v2_chunk_size_read_all",
         plots_dir=save_dir,
+        plot_name="read",
+    )
+
+    chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
+    chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
+
+    chunk_size_write_specv3 = chunk_size_write[chunk_size_write.zarr_spec == 3]
+    chunk_size_read_specv3 = chunk_size_read[chunk_size_read.zarr_spec == 3]
+
+    plot_relplot_benchmarks(
+        chunk_size_read_specv3,
+        x_axis="chunk_size",
+        y_axis="compression_ratio",
+        col="package",
+        plots_dir=plots_dir / "chunk_size",
+        plot_name="compression_ratio",
+        title="Spec_v3",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_write_specv3,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        col="package",
+        plots_dir=plots_dir / "chunk_size",
+        plot_name="write",
+        title="Spec_v3",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_write_specv3,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        title="Spec_v3_chunk_size_write_all",
+        plots_dir=plots_dir / "chunk_size",
+        plot_name="write",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_read_specv3,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        col="package",
+        plots_dir=plots_dir / "chunk_size",
+        plot_name="read",
+        title="Spec_v3",
+    )
+
+    plot_relplot_benchmarks(
+        chunk_size_read_specv3,
+        y_axis="stats.mean",
+        x_axis="chunk_size",
+        hue="package",
+        title="Spec_v3_chunk_size_read_all",
+        plots_dir=plots_dir / "chunk_size",
         plot_name="read",
     )
 
@@ -229,72 +330,162 @@ def create_read_write_plots_for_package(
     write = package_benchmarks[package_benchmarks.group == "write"]
     read = package_benchmarks[package_benchmarks.group == "read"]
 
+    write_spec2 = write[write.zarr_spec == 2]
+    read_spec2 = read[read.zarr_spec == 2]
+
     plot_relplot_benchmarks(
-        write,
+        write_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"{package}_chunk_size_all",
+        title=f"Spec_v2_{package}_chunk_size_all",
         plots_dir=plots_dir / "write",
         plot_name=f"{package}_chunk_size_all",
     )
 
     plot_relplot_benchmarks(
-        read,
+        read_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"{package}_chunk_size_all",
+        title=f"Spec_v2_{package}_chunk_size_all",
         plots_dir=plots_dir / "read",
         plot_name=f"{package}_chunk_size_all",
     )
+
+    if package == "zarr_python_2":
+        print(
+            "Skipping zarr_python_2 chunk size plots for spec v3, as it does not support it."
+        )
+    else:
+        write_spec3 = write[write.zarr_spec == 3]
+        read_spec3 = read[read.zarr_spec == 3]
+
+        plot_relplot_benchmarks(
+            write_spec3,
+            x_axis="stats.mean",
+            y_axis="compression_ratio",
+            hue="compressor",
+            size="compression_level",
+            col="chunk_size",
+            title=f"Spec_v3_{package}_chunk_size_all",
+            plots_dir=plots_dir / "write",
+            plot_name=f"{package}_chunk_size_all",
+        )
+
+        plot_relplot_benchmarks(
+            read_spec3,
+            x_axis="stats.mean",
+            y_axis="compression_ratio",
+            hue="compressor",
+            size="compression_level",
+            col="chunk_size",
+            title=f"Spec_v3_{package}_chunk_size_all",
+            plots_dir=plots_dir / "read",
+            plot_name=f"{package}_chunk_size_all",
+        )
 
     write_chunks_128 = write[write.chunk_size == 128]
     read_chunks_128 = read[read.chunk_size == 128]
 
+    write_chunks_128_spec2 = write_chunks_128[write_chunks_128.zarr_spec == 2]
+    read_chunks_128_spec2 = read_chunks_128[read_chunks_128.zarr_spec == 2]
+
     plot_relplot_benchmarks(
-        write_chunks_128,
+        write_chunks_128_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"{package}_chunk_size128",
+        title=f"Spec_v2_{package}_chunk_size128",
         plots_dir=plots_dir / "write",
         plot_name=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
-        read_chunks_128,
+        read_chunks_128_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"{package}_chunk_size128",
+        title=f"Spec_v2_{package}_chunk_size128",
         plots_dir=plots_dir / "read",
         plot_name=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
-        write_chunks_128,
+        write_chunks_128_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
+        title="Spec_v2",
         plots_dir=plots_dir / "write",
         plot_name=f"{package}_chunk_size128",
     )
 
     plot_relplot_benchmarks(
-        read_chunks_128,
+        read_chunks_128_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
+        title="Spec_v2",
         plots_dir=plots_dir / "read",
         plot_name=f"{package}_chunk_size128",
     )
+
+    if package == "zarr_python_2":
+        print(
+            "Skipping zarr_python_2 chunk size plots for spec v3, as it does not support it."
+        )
+    else:
+        write_chunks_128_spec3 = write_chunks_128[write_chunks_128.zarr_spec == 3]
+        read_chunks_128_spec3 = read_chunks_128[read_chunks_128.zarr_spec == 3]
+
+        plot_relplot_benchmarks(
+            write_chunks_128_spec3,
+            x_axis="stats.mean",
+            y_axis="compression_ratio",
+            hue="compressor",
+            size="compression_level",
+            title=f"Spec_v3_{package}_chunk_size128",
+            plots_dir=plots_dir / "write",
+            plot_name=f"{package}_chunk_size128",
+        )
+
+        plot_relplot_benchmarks(
+            read_chunks_128_spec3,
+            x_axis="stats.mean",
+            y_axis="compression_ratio",
+            hue="compressor",
+            size="compression_level",
+            title=f"Spec_v3_{package}_chunk_size128",
+            plots_dir=plots_dir / "read",
+            plot_name=f"{package}_chunk_size128",
+        )
+
+        plot_relplot_benchmarks(
+            write_chunks_128_spec3,
+            x_axis="stats.mean",
+            y_axis="compression_ratio",
+            col="compressor",
+            title="Spec_v3",
+            plots_dir=plots_dir / "write",
+            plot_name=f"{package}_chunk_size128",
+        )
+
+        plot_relplot_benchmarks(
+            read_chunks_128_spec3,
+            x_axis="stats.mean",
+            y_axis="compression_ratio",
+            col="compressor",
+            title="Spec_v3",
+            plots_dir=plots_dir / "read",
+            plot_name=f"{package}_chunk_size128",
+        )
 
 
 def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> None:
@@ -321,17 +512,19 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         read_write_benchmarks, "tensorstore", plots_dir
     )
 
-    read_chunks_128 = read_write_benchmarks[
+    read_chunks_128_spec2 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
         & (read_write_benchmarks.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 2)
     ]
-    write_chunks_128 = read_write_benchmarks[
+    write_chunks_128_spec2 = read_write_benchmarks[
         (read_write_benchmarks.group == "write")
         & (read_write_benchmarks.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 2)
     ]
 
     plot_relplot_benchmarks(
-        read_chunks_128,
+        read_chunks_128_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="package",
@@ -339,10 +532,11 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         size="compression_level",
         plots_dir=plots_dir / "read",
         plot_name="all_packages",
+        title="Spec_v2",
     )
 
     plot_relplot_benchmarks(
-        write_chunks_128,
+        write_chunks_128_spec2,
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="package",
@@ -350,6 +544,42 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
         size="compression_level",
         plots_dir=plots_dir / "write",
         plot_name="all_packages",
+        title="Spec_v2",
+    )
+
+    read_chunks_128_spec3 = read_write_benchmarks[
+        (read_write_benchmarks.group == "read")
+        & (read_write_benchmarks.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 3)
+    ]
+    write_chunks_128_spec3 = read_write_benchmarks[
+        (read_write_benchmarks.group == "write")
+        & (read_write_benchmarks.chunk_size == 128)
+        & (benchmarks_df.zarr_spec == 3)
+    ]
+
+    plot_relplot_benchmarks(
+        read_chunks_128_spec3,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="package",
+        hue="compressor",
+        size="compression_level",
+        plots_dir=plots_dir / "read",
+        plot_name="all_packages",
+        title="Spec_v3",
+    )
+
+    plot_relplot_benchmarks(
+        write_chunks_128_spec3,
+        x_axis="stats.mean",
+        y_axis="compression_ratio",
+        col="package",
+        hue="compressor",
+        size="compression_level",
+        plots_dir=plots_dir / "write",
+        plot_name="all_packages",
+        title="Spec_v3",
     )
 
 
