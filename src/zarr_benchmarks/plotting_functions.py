@@ -283,8 +283,6 @@ def plot_catplot_benchmarks(
         graph.figure.suptitle(title)
         graph.tight_layout()
 
-    # pdb.set_trace()
-
     save_plot_as_png(
         graph,
         get_output_path(data, plots_dir, plot_name),
