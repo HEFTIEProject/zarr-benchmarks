@@ -550,7 +550,7 @@ def create_read_write_plots(benchmarks_df: pd.DataFrame, plots_dir: Path) -> Non
     read_chunks_128_spec3 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
         & (read_write_benchmarks.chunk_size == 128)
-        & (benchmarks_df.zarr_spec == 3)
+        & (read_write_benchmarks.zarr_spec == 3)
     ]
     write_chunks_128_spec3 = read_write_benchmarks[
         (read_write_benchmarks.group == "write")
