@@ -228,7 +228,6 @@ def get_output_path(
 
 
 def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
-    # pdb.set_trace()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     grid.savefig(output_path, format="png", dpi=300)
     plt.close()
