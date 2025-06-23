@@ -213,7 +213,10 @@ def create_chunk_size_plots(
 
 
 def create_read_write_errorbar_plots_for_package(
-    read_write_benchmarks: pd.DataFrame, package: str, plots_dir: Path
+    read_write_benchmarks: pd.DataFrame,
+    package: str,
+    plots_dir: Path,
+    zarr_spec: Literal[2, 3],
 ) -> None:
     package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
     write = package_benchmarks[package_benchmarks.group == "write"]
@@ -222,14 +225,23 @@ def create_read_write_errorbar_plots_for_package(
     write_chunks_128 = write[write.chunk_size == 128]
     read_chunks_128 = read[read.chunk_size == 128]
 
+    write_chunks_128 = write_chunks_128[write_chunks_128.zarr_spec == zarr_spec]
+    read_chunks_128 = read_chunks_128[read_chunks_128.zarr_spec == zarr_spec]
+
+    if write_chunks_128.empty or read_chunks_128.empty:
+        print(
+            f"Skipping read_write plots for {package}, as no data for zarr spec v{zarr_spec}"
+        )
+        return
+
     plot_errorbars_benchmarks(
         write_chunks_128,
         hue="compressor",
         col="compressor",
         size="compression_level",
-        title=f"{package}_chunk_size128",
-        plots_dir=plots_dir / "write_errorbars",
-        plot_name=f"{package}_chunk_size128",
+        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        plots_dir=plots_dir / "write_errorbars" / f"spec_{zarr_spec}",
+        plot_name=f"Spec_v{zarr_spec}_{package}_chunk_size128",
     )
 
     plot_errorbars_benchmarks(
@@ -237,9 +249,9 @@ def create_read_write_errorbar_plots_for_package(
         hue="compressor",
         col="compressor",
         size="compression_level",
-        title=f"{package}_chunk_size128",
-        plots_dir=plots_dir / "read_errorbars",
-        plot_name=f"{package}_chunk_size128",
+        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        plots_dir=plots_dir / "read_errorbars" / f"spec_{zarr_spec}",
+        plot_name=f"Spec_v{zarr_spec}_{package}_chunk_size128",
     )
 
 
@@ -354,15 +366,15 @@ def create_read_write_plots(
         read_write_benchmarks, "tensorstore", plots_dir, zarr_spec
     )
 
-    # create_read_write_errorbar_plots_for_package(
-    #     read_write_benchmarks, "zarr_python_2", plots_dir, zarr_spec
-    # )
-    # create_read_write_errorbar_plots_for_package(
-    #     read_write_benchmarks, "zarr_python_3", plots_dir, zarr_spec
-    # )
-    # create_read_write_errorbar_plots_for_package(
-    #     read_write_benchmarks, "tensorstore", plots_dir, zarr_spec
-    # )
+    create_read_write_errorbar_plots_for_package(
+        read_write_benchmarks, "zarr_python_2", plots_dir, zarr_spec
+    )
+    create_read_write_errorbar_plots_for_package(
+        read_write_benchmarks, "zarr_python_3", plots_dir, zarr_spec
+    )
+    create_read_write_errorbar_plots_for_package(
+        read_write_benchmarks, "tensorstore", plots_dir, zarr_spec
+    )
 
     read_chunks_128 = read_write_benchmarks[
         (read_write_benchmarks.group == "read")
