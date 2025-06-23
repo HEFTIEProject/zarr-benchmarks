@@ -150,14 +150,12 @@ def create_chunk_size_plots(
         (benchmarks_df.compressor == "blosc-zstd")
         & (benchmarks_df.compression_level == 3)
         & (benchmarks_df.blosc_shuffle == "shuffle")
+        & (benchmarks_df.zarr_spec == zarr_spec)
     ]
 
     chunk_size_write = chunk_size_benchmarks[chunk_size_benchmarks.group == "write"]
     chunk_size_read = chunk_size_benchmarks[chunk_size_benchmarks.group == "read"]
     save_dir = plots_dir / "chunk_size" / f"spec_{zarr_spec}"
-
-    chunk_size_write = chunk_size_write[chunk_size_write.zarr_spec == zarr_spec]
-    chunk_size_read = chunk_size_read[chunk_size_read.zarr_spec == zarr_spec]
 
     plot_relplot_benchmarks(
         chunk_size_read,
