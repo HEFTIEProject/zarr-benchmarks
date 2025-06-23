@@ -311,8 +311,8 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"Spec_v2_{package}_chunk_size128",
-        plots_dir=plots_dir / "write",
+        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        plots_dir=plots_dir / "write" / f"spec_{zarr_spec}",
         plot_name=f"{package}_chunk_size128",
     )
 
@@ -322,8 +322,8 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"Spec_v2_{package}_chunk_size128",
-        plots_dir=plots_dir / "read",
+        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        plots_dir=plots_dir / "read" / f"spec_{zarr_spec}",
         plot_name=f"{package}_chunk_size128",
     )
 
@@ -332,8 +332,8 @@ def create_read_write_plots_for_package(
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
-        title="Spec_v2",
-        plots_dir=plots_dir / "write",
+        title=f"Spec_v{zarr_spec}",
+        plots_dir=plots_dir / "write" / f"spec_{zarr_spec}",
         plot_name=f"{package}_chunk_size128",
     )
 
@@ -342,8 +342,8 @@ def create_read_write_plots_for_package(
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
-        title="Spec_v2",
-        plots_dir=plots_dir / "read",
+        title=f"Spec_v{zarr_spec}",
+        plots_dir=plots_dir / "read" / f"spec_{zarr_spec}",
         plot_name=f"{package}_chunk_size128",
     )
 
