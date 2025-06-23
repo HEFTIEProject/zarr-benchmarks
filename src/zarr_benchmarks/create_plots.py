@@ -107,12 +107,12 @@ def create_shuffle_plots(
         (shuffle_benchmarks.group == "write")
         & (shuffle_benchmarks.package == "tensorstore")
     ]
-    write = write[write.zarr_spec == 2]
+    write = write[write.zarr_spec == zarr_spec]
     read = shuffle_benchmarks[
         (shuffle_benchmarks.group == "read")
         & (shuffle_benchmarks.package == "tensorstore")
     ]
-    read = read[read.zarr_spec == 2]
+    read = read[read.zarr_spec == zarr_spec]
     title = f"Spec v{zarr_spec} Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
@@ -228,7 +228,7 @@ def create_read_write_errorbar_plots_for_package(
 
     if write_chunks_128.empty or read_chunks_128.empty:
         print(
-            f"Skipping read_write plots for {package}, as no data for zarr spec v{zarr_spec}"
+            f"Skipping read_write errorbar plots for {package}, as no data for zarr spec v{zarr_spec}"
         )
         return
 
@@ -280,7 +280,7 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"Spec_{zarr_spec}_{package}_chunk_size_all",
+        title=f"Spec_v{zarr_spec}_{package}_chunk_size_all",
         plots_dir=plots_dir / "write" / f"spec_{zarr_spec}",
         plot_name=f"{package}_chunk_size_all",
     )
@@ -292,16 +292,13 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"Spec_{zarr_spec}_{package}_chunk_size_all",
+        title=f"Spec_v{zarr_spec}_{package}_chunk_size_all",
         plots_dir=plots_dir / "read" / f"spec_{zarr_spec}",
         plot_name=f"{package}_chunk_size_all",
     )
 
     write_chunks_128 = write[write.chunk_size == 128]
     read_chunks_128 = read[read.chunk_size == 128]
-
-    write_chunks_128 = write_chunks_128[write_chunks_128.zarr_spec == zarr_spec]
-    read_chunks_128 = read_chunks_128[read_chunks_128.zarr_spec == zarr_spec]
 
     plot_relplot_benchmarks(
         write_chunks_128,
