@@ -190,7 +190,6 @@ def plot_relplot_benchmarks(
     graph.set_axis_labels(x_axis_label, y_axis_label)
 
     if title is not None:
-        plot_name = title + "_" + plot_name
         graph.figure.suptitle(title)
         graph.tight_layout()
 
