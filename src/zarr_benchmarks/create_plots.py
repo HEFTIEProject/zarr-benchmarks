@@ -58,8 +58,6 @@ def prepare_benchmarks_dataframe(json_dict: dict) -> pd.DataFrame:
 
     # remove un-needed columns
     stats_cols = [col for col in benchmark_df if col.startswith("stats")]
-    # if "params.zarr_spec" not in benchmark_df.columns:
-    #     benchmark_df["params.zarr_spec"] = 0
     benchmark_df = benchmark_df[
         [
             "machine",
