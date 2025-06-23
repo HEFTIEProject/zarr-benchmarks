@@ -259,11 +259,14 @@ def create_read_write_plots_for_package(
 ) -> None:
     package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
 
-    write = package_benchmarks[package_benchmarks.group == "write"]
-    read = package_benchmarks[package_benchmarks.group == "read"]
-
-    write = write[write.zarr_spec == zarr_spec]
-    read = read[read.zarr_spec == zarr_spec]
+    write = package_benchmarks[
+        (package_benchmarks.group == "write")
+        & (package_benchmarks.zarr_spec == zarr_spec)
+    ]
+    read = package_benchmarks[
+        (package_benchmarks.group == "read")
+        & (package_benchmarks.zarr_spec == zarr_spec)
+    ]
 
     if write.empty or read.empty:
         print(
