@@ -106,13 +106,15 @@ def create_shuffle_plots(
     write = shuffle_benchmarks[
         (shuffle_benchmarks.group == "write")
         & (shuffle_benchmarks.package == "tensorstore")
+        & (shuffle_benchmarks.zarr_spec == zarr_spec)
     ]
-    write = write[write.zarr_spec == zarr_spec]
+    # write = write[write.zarr_spec == zarr_spec]
     read = shuffle_benchmarks[
         (shuffle_benchmarks.group == "read")
         & (shuffle_benchmarks.package == "tensorstore")
+        & (shuffle_benchmarks.zarr_spec == zarr_spec)
     ]
-    read = read[read.zarr_spec == zarr_spec]
+    # read = read[read.zarr_spec == zarr_spec]
     title = f"Spec v{zarr_spec} Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
