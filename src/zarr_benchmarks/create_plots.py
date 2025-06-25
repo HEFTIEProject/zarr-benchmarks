@@ -215,7 +215,7 @@ def create_read_write_errorbar_plots_for_package(
     zarr_spec: Literal[2, 3],
 ) -> None:
     package_benchmarks = read_write_benchmarks[read_write_benchmarks.package == package]
-    write = package_benchmarks[(package_benchmarks.group == "write")]
+    write = package_benchmarks[package_benchmarks.group == "write"]
     read = package_benchmarks[package_benchmarks.group == "read"]
 
     write_chunks_128 = write[(write.chunk_size == 128) & (write.zarr_spec == zarr_spec)]
