@@ -79,10 +79,7 @@ def plot_errorbars_benchmarks(
         plot_name = plot_name
     else:
         facet_kws = dict(sharex=False, sharey=False)
-        if len(data[col].unique()) < 3:
-            col_wrap = 1
-        else:
-            col_wrap = 3
+        col_wrap = 1
         plot_name = plot_name + "_subplots"
 
     facet_kws["despine"] = False
@@ -155,10 +152,7 @@ def plot_relplot_benchmarks(
         plot_name = plot_name
     else:
         facet_kws = dict(sharex=True, sharey=True)
-        if len(data[col].unique()) < 3:
-            col_wrap = 1
-        else:
-            col_wrap = 3
+        col_wrap = 1
         plot_name = plot_name + "_subplots"
 
     facet_kws["despine"] = False
