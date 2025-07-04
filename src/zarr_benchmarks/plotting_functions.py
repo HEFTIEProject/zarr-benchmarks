@@ -74,17 +74,18 @@ def plot_errorbars_benchmarks(
     x_axis = "stats.mean"
     y_axis = "compression_ratio"
     if col is None:
-        facet_kws = None
+        facet_kws = {}
         col_wrap = None
         plot_name = plot_name
     else:
         facet_kws = dict(sharex=False, sharey=False)
         if len(data[col].unique()) < 3:
-            col_wrap = 2
+            col_wrap = 1
         else:
             col_wrap = 3
         plot_name = plot_name + "_subplots"
 
+    facet_kws["despine"] = False
     graph = sns.relplot(
         data=data,
         x=x_axis,
@@ -149,17 +150,18 @@ def plot_relplot_benchmarks(
         col (str | None, optional): name of dataframe column to be used for splitting into subplots. Defaults to None.
     """
     if col is None:
-        facet_kws = None
+        facet_kws = {}
         col_wrap = None
         plot_name = plot_name
     else:
         facet_kws = dict(sharex=True, sharey=True)
         if len(data[col].unique()) < 3:
-            col_wrap = 2
+            col_wrap = 1
         else:
             col_wrap = 3
         plot_name = plot_name + "_subplots"
 
+    facet_kws["despine"] = False
     graph = sns.relplot(
         data=data,
         x=x_axis,
