@@ -155,7 +155,10 @@ def plot_relplot_benchmarks(
         plot_name = plot_name
     else:
         facet_kws = dict(sharex=True, sharey=True)
-        col_wrap = 1
+        if len(data[col].unique()) < 5:
+            col_wrap = 1
+        else:
+            col_wrap = 3
         plot_name = plot_name + "_subplots"
 
     facet_kws["despine"] = False
