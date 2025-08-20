@@ -60,7 +60,8 @@ Unless stated as being varied, the default configuration used was:
 - **Chunk size** = 128 x 128 x 128
 - **Compressor** = blsoc-zstd
 - **Shuffle** = "shuffle"
-- **Compression level** = ???
+- **Compression level** = 3
+- **Zarr spec version** = 2
 
 ## Compressors
 
