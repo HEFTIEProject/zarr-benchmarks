@@ -40,17 +40,18 @@ This is part of the [HEFTIE project](https://github.com/HEFTIEProject).
 
 ## Configuration
 
-Data used for benchmarking is available at
-[https://doi.org/10.5281/zenodo.15544055](https://doi.org/10.5281/zenodo.15544055).
+Data used for benchmarking is available on
+[Zenodo](https://doi.org/10.5281/zenodo.15544055).
 
-### Dense image data
+### Datasets
 
-- **Image data**: A **(shape)** shaped image of a human heart with _uint16_ data
-  type.
-- **Dense label data**: A **(shape)** shaped **description** with **dtype** data
-  type.
-- **Sparse label data**: A **(shape)** shaped **description** with **dtype**
-  data type.
+All datasets have shape: 806 x 629 x 629, with a data type of _uint16_.
+
+- **Image data**: A HiP-CT scan of a human heart.
+- **Dense label data**: Segmented neurons from an electron microscopy volume of
+  part of the human cerebral cortex.
+- **Sparse label data**: Selected proofread segmented neurons, from the same
+  dataset as the dense label data.
 
 ### Default configuration
 
