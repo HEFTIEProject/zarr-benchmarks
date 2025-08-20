@@ -10,7 +10,7 @@ This page contains benchmarks for the best options to use when creating Zarr
 arrays.
 
 [Zarr](https://zarr.dev/) is a specification for storing array data. When
-creating a Zarr dataset there are several confugration options you can set,
+creating a Zarr dataset there are several configuration options you can set,
 which all have an impact on data compression, read times, and write times. This
 project provides guidance on how array creation options affect data size and
 read/write performance.
@@ -41,7 +41,7 @@ This is part of the [HEFTIE project](https://github.com/HEFTIEProject).
 ## Configuration
 
 Data used for benchmarking is available at
-[https://doi.org/10.5281/zenodo.15544055]().
+[https://doi.org/10.5281/zenodo.15544055](https://doi.org/10.5281/zenodo.15544055).
 
 ### Dense image data
 
@@ -54,7 +54,7 @@ Data used for benchmarking is available at
 
 ### Default configuration
 
-Unless stated as being varied, the default confugration used was:
+Unless stated as being varied, the default configuration used was:
 
 - **Chunk size** = 128 x 128 x 128
 - **Compressor** = blsoc-zstd
@@ -63,7 +63,7 @@ Unless stated as being varied, the default confugration used was:
 
 ## Compressors
 
-This section shows how varying the compressor and it's confguration affects
+This section shows how varying the compressor and it's configuration affects
 performance.
 
 ### Compression algorithm & compression level
@@ -84,7 +84,7 @@ exactly with the data shape, so when written to Zarr some extra data at the
 edges is written to pad the final chunks.
 
 The quickest compressors on the left hand side of the graph took around 1 to 2
-seconds, and already gave comression ratios of ~1.5. Increasing the compression
+seconds, and already gave compression ratios of ~1.5. Increasing the compression
 level typically increases the compression ratio at the cost of increased write
 time. Increasing the compression level does not increase the compression ratio
 by much - for _blosc-zstd_ going from ~1.8 and write times of 2 seconds to ~2.0
@@ -119,7 +119,7 @@ time for different values of shuffle for the _blosc-zstd_ codec.
 ![alt text](assets/shuffle_compression.png) ![alt text](assets/shuffle_read.png)
 ![alt text](assets/shuffle_write.png)
 
-Using setting the _shuffle_ confguration to "shuffle" increases the compression
+Using setting the _shuffle_ configuration to "shuffle" increases the compression
 ratio from ~1.5 to ~1.9, and does not substatially change the read or write
 times.
 
