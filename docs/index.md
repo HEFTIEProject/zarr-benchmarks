@@ -59,7 +59,7 @@ Unless stated as being varied, the default configuration used was:
 
 - **Dataset** = heart image
 - **Chunk size** = 128 x 128 x 128
-- **Compressor** = blsoc-zstd
+- **Compressor** = blosc-zstd
 - **Shuffle** = "shuffle"
 - **Compression level** = 3
 - **Zarr spec version** = 2
