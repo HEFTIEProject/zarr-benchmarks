@@ -57,6 +57,7 @@ All datasets have shape: 806 x 629 x 629, with a data type of _uint16_.
 
 Unless stated as being varied, the default configuration used was:
 
+- **Dataset** = heart image
 - **Chunk size** = 128 x 128 x 128
 - **Compressor** = blsoc-zstd
 - **Shuffle** = "shuffle"
