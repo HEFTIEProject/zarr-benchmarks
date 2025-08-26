@@ -164,9 +164,9 @@ def create_chunk_size_plots(
         x_axis="chunk_size",
         y_axis="compression_ratio",
         col="package",
+        title=f"Chunk size vs. compression ratio ({spec_str})",
         plots_dir=save_dir,
         plot_name="compression_ratio",
-        title=f"{spec_str}",
     )
 
     plot_relplot_benchmarks(
@@ -176,7 +176,7 @@ def create_chunk_size_plots(
         col="package",
         plots_dir=save_dir,
         plot_name="write",
-        title=f"{spec_str}",
+        title=f"Chunk size vs. write time ({spec_str})",
     )
 
     plot_relplot_benchmarks(
@@ -184,7 +184,7 @@ def create_chunk_size_plots(
         y_axis="stats.mean",
         x_axis="chunk_size",
         hue="package",
-        title=f"{spec_str}_chunk_size_write_all",
+        title=f"Chunk size vs. write time ({spec_str})",
         plots_dir=save_dir,
         plot_name="write",
     )
@@ -194,9 +194,9 @@ def create_chunk_size_plots(
         y_axis="stats.mean",
         x_axis="chunk_size",
         col="package",
+        title=f"Chunk size vs. read time ({spec_str})",
         plots_dir=save_dir,
         plot_name="read",
-        title=f"{spec_str}",
     )
 
     plot_relplot_benchmarks(
@@ -204,7 +204,7 @@ def create_chunk_size_plots(
         y_axis="stats.mean",
         x_axis="chunk_size",
         hue="package",
-        title=f"{spec_str}_chunk_size_read_all",
+        title=f"Chunk size vs. read time ({spec_str})",
         plots_dir=save_dir,
         plot_name="read",
     )
