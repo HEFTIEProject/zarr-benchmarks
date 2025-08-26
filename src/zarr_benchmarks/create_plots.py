@@ -232,9 +232,9 @@ def create_read_write_errorbar_plots_for_package(
         hue="compressor",
         col="compressor",
         size="compression_level",
-        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        title=f"Spec_v{zarr_spec}_{package}",
         plots_dir=plots_dir / "write_errorbars" / f"spec_{zarr_spec}",
-        plot_name=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        plot_name=f"Spec_v{zarr_spec}_{package}",
     )
 
     plot_errorbars_benchmarks(
@@ -242,9 +242,9 @@ def create_read_write_errorbar_plots_for_package(
         hue="compressor",
         col="compressor",
         size="compression_level",
-        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        title=f"Spec_v{zarr_spec}_{package}",
         plots_dir=plots_dir / "read_errorbars" / f"spec_{zarr_spec}",
-        plot_name=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        plot_name=f"Spec_v{zarr_spec}_{package}",
     )
 
 
@@ -304,9 +304,9 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        title=f"Spec_v{zarr_spec}_{package}",
         plots_dir=plots_dir / "write" / f"spec_{zarr_spec}",
-        plot_name=f"{package}_chunk_size128",
+        plot_name=f"{package}",
     )
 
     plot_relplot_benchmarks(
@@ -315,9 +315,9 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"Spec_v{zarr_spec}_{package}_chunk_size128",
+        title=f"Spec_v{zarr_spec}_{package}",
         plots_dir=plots_dir / "read" / f"spec_{zarr_spec}",
-        plot_name=f"{package}_chunk_size128",
+        plot_name=f"{package}",
     )
 
     plot_relplot_benchmarks(
@@ -327,7 +327,7 @@ def create_read_write_plots_for_package(
         col="compressor",
         title=f"Spec_v{zarr_spec}",
         plots_dir=plots_dir / "write" / f"spec_{zarr_spec}",
-        plot_name=f"{package}_chunk_size128",
+        plot_name=f"{package}",
     )
 
     plot_relplot_benchmarks(
@@ -337,7 +337,7 @@ def create_read_write_plots_for_package(
         col="compressor",
         title=f"Spec_v{zarr_spec}",
         plots_dir=plots_dir / "read" / f"spec_{zarr_spec}",
-        plot_name=f"{package}_chunk_size128",
+        plot_name=f"{package}",
     )
 
 
