@@ -308,26 +308,6 @@ def create_read_write_plots_for_package(
         plot_name=f"{package}",
     )
 
-    plot_relplot_benchmarks(
-        write_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
-        col="compressor",
-        title=f"Write time vs. compression ratio ({spec_str}, {package})",
-        plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
-        plot_name=f"{package}",
-    )
-
-    plot_relplot_benchmarks(
-        read_chunks_128,
-        x_axis="stats.mean",
-        y_axis="compression_ratio",
-        col="compressor",
-        title=f"Read time vs. compression ratio ({spec_str}, {package})",
-        plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
-        plot_name=f"{package}",
-    )
-
 
 def create_read_write_plots(
     benchmarks_df: pd.DataFrame, plots_dir: Path, zarr_format: Literal[2, 3]
