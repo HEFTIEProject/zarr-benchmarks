@@ -97,6 +97,7 @@ def get_benchmarks_dataframe(package_paths_dict: dict) -> pd.DataFrame:
 def create_shuffle_plots(
     benchmarks_df: pd.DataFrame, plots_dir: Path, zarr_format: Literal[2, 3]
 ) -> None:
+    package = "tensorstore"
     shuffle_benchmarks = benchmarks_df[
         (benchmarks_df.compressor == "blosc-zstd")
         & (benchmarks_df.compression_level == 3)
@@ -105,15 +106,14 @@ def create_shuffle_plots(
     save_dir = plots_dir / "shuffle" / f"format_v{zarr_format}"
     write = shuffle_benchmarks[
         (shuffle_benchmarks.group == "write")
-        & (shuffle_benchmarks.package == "tensorstore")
+        & (shuffle_benchmarks.package == package)
         & (shuffle_benchmarks.zarr_spec == zarr_format)
     ]
     read = shuffle_benchmarks[
         (shuffle_benchmarks.group == "read")
-        & (shuffle_benchmarks.package == "tensorstore")
+        & (shuffle_benchmarks.package == package)
         & (shuffle_benchmarks.zarr_spec == zarr_format)
     ]
-    title = f"Zarr format v{zarr_format} Shuffle for tensorstore - blosc-zstd"
 
     plot_catplot_benchmarks(
         data=read,
@@ -121,7 +121,7 @@ def create_shuffle_plots(
         y_axis="compression_ratio",
         plots_dir=save_dir,
         plot_name="compression_ratio",
-        title=title,
+        title=f"Shuffle vs. compression ratio (Zarr format v{zarr_format}, {package})",
     )
 
     plot_catplot_benchmarks(
@@ -130,7 +130,7 @@ def create_shuffle_plots(
         y_axis="stats.mean",
         plots_dir=save_dir,
         plot_name="write",
-        title=title,
+        title=f"Shuffle vs. write time (Zarr format v{zarr_format}, {package})",
     )
 
     plot_catplot_benchmarks(
@@ -139,7 +139,7 @@ def create_shuffle_plots(
         y_axis="stats.mean",
         plots_dir=save_dir,
         plot_name="read",
-        title=title,
+        title=f"Shuffle vs. read time (Zarr format v{zarr_format}, {package})",
     )
 
 
