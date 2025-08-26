@@ -117,7 +117,7 @@ In addition to setting the compression level, the blosc compressors also allow
 configuring a "shuffle" setting. This ... _link out to description of shuffle_.
 
 The following graphs show (in order) compression ratio, read time, and write
-time for different values of shuffle for the _blosc-zstd_ codec.
+time for different values of shuffle for the _blosc-zstd_ codec (using the tensorstore library).
 
 ![alt text](assets/shuffle_compression.png) ![alt text](assets/shuffle_read.png)
 ![alt text](assets/shuffle_write.png)
