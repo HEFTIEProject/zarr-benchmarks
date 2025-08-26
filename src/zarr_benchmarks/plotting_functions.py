@@ -175,6 +175,7 @@ def plot_relplot_benchmarks(
         facet_kws=facet_kws,
         col_wrap=col_wrap,
     )
+    graph.set_titles(col_template="{col_name}", row_template="{row_name}")
 
     if y_axis == "compression_ratio" and x_axis == "stats.mean":
         if col:  # If we have subplots, add a horizontal line at y=1 to each subplot
