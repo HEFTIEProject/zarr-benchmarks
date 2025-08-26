@@ -56,6 +56,8 @@ Unless stated as being varied, the default configuration used was:
 - **Compression level** = 3
 - **Zarr spec version** = 2
 
+All benchmarks were run 5 times, and the mean values from these runs are shown in the graphs below.
+
 ## Compressors
 
 This section shows how varying the compressor and it's configuration affects
