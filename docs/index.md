@@ -137,24 +137,29 @@ The following graphs show how changing the chunk size affects performance.
 
 ![alt text](assets/chunk_size/compression.png)
 
-Increasing the chunk size decreases the compression ratio, but only slightly. This is probably because larger chunk sizes result in a bigger range data to compress per chunk, resulting in slightly less efficient compression.
+Increasing the chunk size decreases the compression ratio, but only slightly.
+This is probably because larger chunk sizes result in a bigger range data to
+compress per chunk, resulting in slightly less efficient compression.
 
-![alt text](assets/chunk_size/read.png)
-![alt text](assets/chunk_size/write.png)
+![alt text](assets/chunk_size/read.png) ![alt text](assets/chunk_size/write.png)
 
-Setting a low chunk size (below around 90) has an adverse effect on read and write times. This is probably because lower chunk sizes result in more files for the same array size, increaseing the number of file opening/closing operations that need to be done when reading/writing.
+Setting a low chunk size (below around 90) has an adverse effect on read and
+write times. This is probably because lower chunk sizes result in more files for
+the same array size, increaseing the number of file opening/closing operations
+that need to be done when reading/writing.
 
 ## Software libraries
 
-The following graphs show how the software package used affects performance. Benchmarks were run with the
+The following graphs show how the software package used affects performance.
+Benchmarks were run with the
 [_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/),
 [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/), and
 _[tensorstore](https://google.github.io/tensorstore/)_ libraries.
 
-![alt text](assets/library/read.png)
-![alt text](assets/library/write.png)
+![alt text](assets/library/read.png) ![alt text](assets/library/write.png)
 
-_tensorstore_ is consistently the fastest library when both reading and writing data.
+_tensorstore_ is consistently the fastest library when both reading and writing
+data.
 
 ## Zarr format version
 
