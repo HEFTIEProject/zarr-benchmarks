@@ -73,9 +73,9 @@ performance.
 
 ### Compression algorithm & compression level
 
-#### Write speed
+#### Write time
 
-The following graph shows write speed for the Zarr-python 2 library, with write
+The following graph shows write time for the Zarr-python 2 library, with write
 time on the x-axis and compression ratio on the y-axis. Each compressor is
 represented with a different colour/symbol, and larger markers represent higher
 compression levels. The compression level is the ratio of the data size when
@@ -85,7 +85,7 @@ compression ratios mean lower stored data sizes.
 
 ![alt text](assets/write_single.png)
 
-The grey cross in the bottom left of the plot shows a baseline result for no
+The grey cross in the bottom left of he plot shows a baseline result for no
 compression, taking about 0.7s. Perhaps surprisingly this has a compression
 ratio slightly less than one. This is because the chunk boundaries don't line up
 exactly with the data shape, so when written to Zarr some extra data at the
@@ -98,9 +98,9 @@ time. Increasing the compression level does not increase the compression ratio
 by much - for _blosc-zstd_ going from ~1.8 and write times of 2 seconds to ~2.0
 and write times of 50 seconds.
 
-#### Read speed
+#### Read time
 
-The following graph shows read speed for the _zarr-python_ version 2 library,
+The following graph shows read time for the _zarr-python_ version 2 library,
 with read time on the x-axis and compression ratio on the y-axis. Again, each
 compressor is represented with a different colour/symbol, and larger markers
 represent higher compression levels.
@@ -133,6 +133,17 @@ from ~1.5 to ~1.9, and does not substatially change the read or write times.
 
 ### Chunk size
 
+The following graphs show how changing the chunk size affects performance.
+
+![alt text](assets/chunk_size/compression.png)
+
+Increasing the chunk size decreases the compression ratio, but only slightly. This is probably because larger chunk sizes result in a bigger range data to compress per chunk, resulting in slightly less efficient compression.
+
+![alt text](assets/chunk_size/read.png)
+![alt text](assets/chunk_size/write.png)
+
+Setting a low chunk size (below around 90) has an adverse effect on read and write times. This is probably because lower chunk sizes result in more files for the same array size, increaseing the number of file opening/closing operations that need to be done when reading/writing.
+
 ## Software libraries
 
 The following graphs show the read time (x-axis) versus compression ratio
@@ -156,3 +167,7 @@ _[tensorstore](https://google.github.io/tensorstore/)_ libraries.
 _tensorstore_ is consistently the fastest library when writing data.
 
 ## Zarr format version
+
+## Type of data
+
+Up to now, all results are from a 16-bit image dataset.
