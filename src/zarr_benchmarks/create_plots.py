@@ -266,7 +266,7 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"{spec_str}, {package}",
+        title=f"Write time vs. compression ratio ({spec_str}, {package})",
         plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
         plot_name=f"{package}_chunk_size_all",
     )
@@ -278,7 +278,7 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"{spec_str}, {package}",
+        title=f"Read time vs. compression ratio ({spec_str}, {package})",
         plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
         plot_name=f"{package}_chunk_size_all",
     )
@@ -292,7 +292,7 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"{spec_str}, {package}",
+        title=f"Write time vs. compression ratio ({spec_str}, {package})",
         plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
         plot_name=f"{package}",
     )
@@ -303,7 +303,7 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"{spec_str}, {package}",
+        title=f"Read time vs. compression ratio ({spec_str}, {package})",
         plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
         plot_name=f"{package}",
     )
@@ -313,7 +313,7 @@ def create_read_write_plots_for_package(
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
-        title=f"{spec_str}",
+        title=f"Write time vs. compression ratio ({spec_str}, {package})",
         plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
         plot_name=f"{package}",
     )
@@ -323,7 +323,7 @@ def create_read_write_plots_for_package(
         x_axis="stats.mean",
         y_axis="compression_ratio",
         col="compressor",
-        title=f"{spec_str}",
+        title=f"Read time vs. compression ratio ({spec_str}, {package})",
         plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
         plot_name=f"{package}",
     )
