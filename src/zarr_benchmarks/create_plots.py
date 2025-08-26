@@ -218,7 +218,7 @@ def create_read_write_errorbar_plots_for_package(
         hue="compressor",
         col="compressor",
         size="compression_level",
-        title=f"{spec_str}_{package}",
+        title=f"{spec_str}, {package}",
         plots_dir=plots_dir / "write_errorbars" / f"format_v{zarr_format}",
         plot_name=f"format_v{zarr_format}_{package}",
     )
@@ -228,7 +228,7 @@ def create_read_write_errorbar_plots_for_package(
         hue="compressor",
         col="compressor",
         size="compression_level",
-        title=f"{spec_str}_{package}",
+        title=f"{spec_str}, {package}",
         plots_dir=plots_dir / "read_errorbars" / f"format_v{zarr_format}",
         plot_name=f"format_v{zarr_format}_{package}",
     )
@@ -266,7 +266,7 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"{spec_str}_{package}_chunk_size_all",
+        title=f"{spec_str}, {package}",
         plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
         plot_name=f"{package}_chunk_size_all",
     )
@@ -278,7 +278,7 @@ def create_read_write_plots_for_package(
         hue="compressor",
         size="compression_level",
         col="chunk_size",
-        title=f"{spec_str}_{package}_chunk_size_all",
+        title=f"{spec_str}, {package}",
         plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
         plot_name=f"{package}_chunk_size_all",
     )
@@ -292,7 +292,7 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"{spec_str}_{package}",
+        title=f"{spec_str}, {package}",
         plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
         plot_name=f"{package}",
     )
@@ -303,7 +303,7 @@ def create_read_write_plots_for_package(
         y_axis="compression_ratio",
         hue="compressor",
         size="compression_level",
-        title=f"{spec_str}_{package}",
+        title=f"{spec_str}, {package}",
         plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
         plot_name=f"{package}",
     )
@@ -379,7 +379,7 @@ def create_read_write_plots(
         size="compression_level",
         plots_dir=plots_dir / "read" / f"format_v{zarr_format}",
         plot_name="all_packages",
-        title=f"{spec_str}",
+        title=f"Read time vs. compression ratio ({spec_str})",
     )
 
     plot_relplot_benchmarks(
@@ -391,7 +391,7 @@ def create_read_write_plots(
         size="compression_level",
         plots_dir=plots_dir / "write" / f"format_v{zarr_format}",
         plot_name="all_packages",
-        title=f"{spec_str}",
+        title=f"Write time vs. compression ratio ({spec_str})",
     )
 
 
