@@ -15,7 +15,8 @@ which all have an impact on data compression, read times, and write times. This
 project provides guidance on how array creation options affect data size and
 read/write performance.
 
-These benchmarks are part of the [HEFTIE project](https://github.com/HEFTIEProject).
+These benchmarks are part of the
+[HEFTIE project](https://github.com/HEFTIEProject).
 
 ## Executive summary
 
@@ -56,12 +57,14 @@ Unless stated as being varied, the default configuration used was:
 - **Compression level** = 3
 - **Zarr spec version** = 2
 
-All benchmarks were run 5 times, and the mean values from these runs are shown in the graphs below.
+All benchmarks were run 5 times, and the mean values from these runs are shown
+in the graphs below.
 
 ### Hardware
 
-Reading and writing arrays was done to and from local SSD storage, to mimic real world usage
-when reading/writing to/from a disk. This means times given are the full time needed to read/write to/from disk.
+Reading and writing arrays was done to and from local SSD storage, to mimic real
+world usage when reading/writing to/from a disk. This means times given are the
+full time needed to read/write to/from disk.
 
 ## Compressors
 
@@ -77,8 +80,8 @@ time on the x-axis and compression ratio on the y-axis. Each compressor is
 represented with a different colour/symbol, and larger markers represent higher
 compression levels. The compression level is the ratio of the data size when
 loaded into memory (e.g., for an array with data type `uint8` and 16 elements,
-the data size is 16 bytes), and the data size when compressed and stored.
-Higher compression ratios mean lower stored data sizes.
+the data size is 16 bytes), and the data size when compressed and stored. Higher
+compression ratios mean lower stored data sizes.
 
 ![alt text](assets/write_single.png)
 
@@ -119,14 +122,14 @@ In addition to setting the compression level, the blosc compressors also allow
 configuring a "shuffle" setting. This ... _link out to description of shuffle_.
 
 The following graphs show (in order) compression ratio, read time, and write
-time for different values of shuffle for the _blosc-zstd_ codec (using the tensorstore library).
+time for different values of shuffle for the _blosc-zstd_ codec (using the
+tensorstore library).
 
 ![alt text](assets/shuffle_compression.png) ![alt text](assets/shuffle_read.png)
 ![alt text](assets/shuffle_write.png)
 
-Setting the _shuffle_ configuration to "shuffle" increases the compression
-ratio from ~1.5 to ~1.9, and does not substatially change the read or write
-times.
+Setting the _shuffle_ configuration to "shuffle" increases the compression ratio
+from ~1.5 to ~1.9, and does not substatially change the read or write times.
 
 ### Chunk size
 
