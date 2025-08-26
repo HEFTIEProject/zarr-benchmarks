@@ -146,25 +146,15 @@ Setting a low chunk size (below around 90) has an adverse effect on read and wri
 
 ## Software libraries
 
-The following graphs show the read time (x-axis) versus compression ratio
-(y-axis) for the
+The following graphs show how the software package used affects performance. Benchmarks were run with the
 [_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/),
 [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/), and
 _[tensorstore](https://google.github.io/tensorstore/)_ libraries.
 
-![alt text](assets/read.png)
+![alt text](assets/library/read.png)
+![alt text](assets/library/write.png)
 
-_tensorstore_ is consistently the fastest library when reading data.
-
-The following graphs show the write time (x-axis) versus compression ratio
-(y-axis) for the
-[_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/),
-[_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/), and
-_[tensorstore](https://google.github.io/tensorstore/)_ libraries.
-
-![alt text](assets/write_all.png)
-
-_tensorstore_ is consistently the fastest library when writing data.
+_tensorstore_ is consistently the fastest library when both reading and writing data.
 
 ## Zarr format version
 
