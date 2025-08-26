@@ -15,15 +15,7 @@ which all have an impact on data compression, read times, and write times. This
 project provides guidance on how array creation options affect data size and
 read/write performance.
 
-### Zarr versions
-
-At the time of writing tools for working with version 3 of the Zarr array format
-were still works in progress, so all testing was done reading/writing version 2
-Zarr arrays. We expect performance to be similar when reading/writing version 3
-Zarr arrays that are not sharded, because they should write identical data to
-their corresponding version 2 Zarr array.
-
-This is part of the [HEFTIE project](https://github.com/HEFTIEProject).
+These benchmarks are part of the [HEFTIE project](https://github.com/HEFTIEProject).
 
 ## Executive summary
 
@@ -57,7 +49,7 @@ All datasets have shape: 806 x 629 x 629, with a data type of _uint16_.
 
 Unless stated as being varied, the default configuration used was:
 
-- **Dataset** = heart image
+- **Dataset** = heart image data
 - **Chunk size** = 128 x 128 x 128
 - **Compressor** = blosc-zstd
 - **Shuffle** = "shuffle"
@@ -152,3 +144,5 @@ _[tensorstore](https://google.github.io/tensorstore/)_ libraries.
 ![alt text](assets/write_all.png)
 
 _tensorstore_ is consistently the fastest library when writing data.
+
+## Zarr format version
