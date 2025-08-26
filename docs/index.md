@@ -58,6 +58,11 @@ Unless stated as being varied, the default configuration used was:
 
 All benchmarks were run 5 times, and the mean values from these runs are shown in the graphs below.
 
+### Hardware
+
+Reading and writing arrays was done to and from local SSD storage, to mimic real world usage
+when reading/writing to/from a disk. This means times given are the full time needed to read/write to/from disk.
+
 ## Compressors
 
 This section shows how varying the compressor and it's configuration affects
