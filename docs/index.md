@@ -122,7 +122,7 @@ time for different values of shuffle for the _blosc-zstd_ codec.
 ![alt text](assets/shuffle_compression.png) ![alt text](assets/shuffle_read.png)
 ![alt text](assets/shuffle_write.png)
 
-Using setting the _shuffle_ configuration to "shuffle" increases the compression
+Setting the _shuffle_ configuration to "shuffle" increases the compression
 ratio from ~1.5 to ~1.9, and does not substatially change the read or write
 times.
 
