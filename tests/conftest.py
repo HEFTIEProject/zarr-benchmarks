@@ -36,7 +36,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--rounds",
         action="store",
-        default=3,
+        default=5,
         type=int,
         help="Number of rounds for each benchmark",
     )
