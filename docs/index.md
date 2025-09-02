@@ -24,7 +24,8 @@ These benchmarks are part of the
   than [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/) is
   faster than [_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/)
   (for both reading and writing data).
-- **Compressor**: _blosc-zstd_ provides the best compression ratio, for image and segmentation data.
+- **Compressor**: _blosc-zstd_ provides the best compression ratio, for image
+  and segmentation data.
 - **Compression level**: Setting compression levels beyond ~3 results in
   slightly better data compression but much longer write times. Compression
   level does not affect read time.
@@ -145,7 +146,7 @@ compress per chunk, resulting in slightly less efficient compression.
 
 Setting a low chunk size (below around 90) has an adverse effect on read and
 write times. This is probably because lower chunk sizes result in more files for
-the same array size, increaseing the number of file opening/closing operations
+the same array size, increasing the number of file opening/closing operations
 that need to be done when reading/writing.
 
 ## Software libraries
@@ -165,12 +166,16 @@ data.
 
 ## Type of data
 
-Up to now, all results are from a 16-bit CT image dataset of a heart.
-The following graphs show the compression ratio - write time plots for the original heart dataset (top), a dense segmentation (middle), and a sparse segmentation (bottom).
+Up to now, all results are from a 16-bit CT image dataset of a heart. The
+following graphs show the compression ratio - write time plots for the original
+heart dataset (top), a dense segmentation (middle), and a sparse segmentation
+(bottom).
 
 ![alt text](assets/write_single.png)
 ![alt text](assets/image_type/dense_write.png)
 ![alt text](assets/image_type/sparse_write.png)
 
-Again the "blosc-zstd" compressor provides the best compression ratios, but the effect of choosing a different compressor is even more pronounced.
-With the dense segmentation compression ratios reach around 60, whereas for the sparse segmentation compression levels of over 2,000 are reached.
+Again the "blosc-zstd" compressor provides the best compression ratios, but the
+effect of choosing a different compressor is even more pronounced. With the
+dense segmentation compression ratios reach around 60, whereas for the sparse
+segmentation compression levels of over 2,000 are reached.
