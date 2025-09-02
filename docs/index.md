@@ -164,6 +164,8 @@ data.
 
 ## Zarr format version
 
+Although not shown here with graphs, we found that the difference between reading and writing Zarr format 2 and Zarr format 3 data with otherwise identical settings was negligible.
+
 ## Different image types
 
 Up to now, all results are from a 16-bit CT image dataset of a heart. The
