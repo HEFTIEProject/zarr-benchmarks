@@ -164,7 +164,7 @@ data.
 
 ## Zarr format version
 
-## Type of data
+## Different image types
 
 Up to now, all results are from a 16-bit CT image dataset of a heart. The
 following graphs show the compression ratio - write time plots for the original
