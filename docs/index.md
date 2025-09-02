@@ -115,7 +115,8 @@ For _zstd_ (pink triangles) read time increases with compression level. For all
 other compressors there is no variation of read time with compression level. For
 many compressors this is a feature of their design, with a large one-off cost of
 compressing the data but no slow down in reading the data. All the compressors
-have similar read times of around 1 second, apart from _zstd_ and _gzip_ which have significantly slower read times.
+have similar read times of around 1 second, apart from _zstd_ and _gzip_ which
+have significantly slower read times.
 
 ### Shuffle
 
@@ -164,7 +165,9 @@ data.
 
 ## Zarr format version
 
-Although not shown here with graphs, we found that the difference between reading and writing Zarr format 2 and Zarr format 3 data with otherwise identical settings was negligible.
+Although not shown here with graphs, we found that the difference between
+reading and writing Zarr format 2 and Zarr format 3 data with otherwise
+identical settings was negligible.
 
 ## Different image types
 
