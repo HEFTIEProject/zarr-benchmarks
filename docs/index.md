@@ -79,7 +79,7 @@ performance.
 The following graph shows write time for the Zarr-python 2 library, with write
 time on the x-axis and compression ratio on the y-axis. Each compressor is
 represented with a different colour/symbol, and larger markers represent higher
-compression levels. The compression level is the ratio of the data size when
+compression levels. The compression ratio is the ratio of the data size when
 loaded into memory (e.g., for an array with data type `uint8` and 16 elements,
 the data size is 16 bytes), and the data size when compressed and stored. Higher
 compression ratios mean lower stored data sizes.
