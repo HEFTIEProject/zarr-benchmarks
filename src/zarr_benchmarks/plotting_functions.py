@@ -4,6 +4,8 @@ from pathlib import Path
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
+from PIL import Image
+from PIL.PngImagePlugin import PngInfo
 
 
 def get_limits_custom(x_min: int, x_max: int, max_range: int) -> tuple[float, float]:
@@ -116,11 +118,9 @@ def plot_errorbars_benchmarks(
         title = title + " - 2 standard deviations errorbars"
         graph.figure.suptitle(title)
         graph.tight_layout()
+        alt_text = title
 
-    save_plot_as_png(
-        graph,
-        get_output_path(data, plots_dir, plot_name),
-    )
+    save_plot_as_png(graph, get_output_path(data, plots_dir, plot_name), alt_text)
 
 
 def plot_relplot_benchmarks(
@@ -195,11 +195,9 @@ def plot_relplot_benchmarks(
     if title is not None:
         graph.figure.suptitle(title)
         graph.tight_layout()
+        alt_text = title
 
-    save_plot_as_png(
-        graph,
-        get_output_path(data, plots_dir, plot_name),
-    )
+    save_plot_as_png(graph, get_output_path(data, plots_dir, plot_name), alt_text)
 
 
 def get_axis_labels(
@@ -229,10 +227,18 @@ def get_output_path(
     return plots_dir / f"{plot_name}_{date}_{machine_info}.png"
 
 
-def save_plot_as_png(grid: sns.FacetGrid, output_path: Path) -> None:
+def save_plot_as_png(
+    grid: sns.FacetGrid, output_path: Path, alt_text: str | None = None
+) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     grid.savefig(output_path, format="png", dpi=300)
     plt.close()
+
+    if alt_text:
+        img = Image.open(output_path)
+        metadata = PngInfo()
+        metadata.add_text("Alt", alt_text)
+        img.save(output_path, pnginfo=metadata)
 
 
 def plot_catplot_benchmarks(
@@ -283,8 +289,6 @@ def plot_catplot_benchmarks(
     if title is not None:
         graph.figure.suptitle(title)
         graph.tight_layout()
+        alt_text = title
 
-    save_plot_as_png(
-        graph,
-        get_output_path(data, plots_dir, plot_name),
-    )
+    save_plot_as_png(graph, get_output_path(data, plots_dir, plot_name), alt_text)
