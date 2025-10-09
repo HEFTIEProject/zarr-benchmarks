@@ -96,8 +96,8 @@ The quickest compressors on the left hand side of the graph took around 1 to 2
 seconds, and already gave compression ratios of ~1.5. Increasing the compression
 level typically increases the compression ratio at the cost of increased write
 time. Increasing the compression level does not increase the compression ratio
-by much - for _blosc-zstd_ going from ~1.8 and write times of 2 seconds to ~2.0
-and write times of 50 seconds.
+by much - for _blosc-zstd_ going from ~1.8 and write times of ~1 second to ~2.0
+and write times of ~45 seconds.
 
 #### Read time
 
