@@ -140,7 +140,7 @@ The following graphs show how changing the chunk size affects performance.
 ![Chunk size vs compression ratio with increasing chunk size there only a slight decrease in compression ratio](assets/chunk_size/compression.png)
 
 Increasing the chunk size decreases the compression ratio, but only slightly.
-This is probably because larger chunk sizes result in a bigger range data to
+This is probably because larger chunk sizes result in a bigger range of data to
 compress per chunk, resulting in slightly less efficient compression.
 
 ![Chunk size vs read time with chunk size below 90 resulting in longer read times](assets/chunk_size/read.png) ![Chunk size vs write time with chunk size below 90 resulting in longer write times](assets/chunk_size/write.png)
@@ -182,5 +182,5 @@ heart dataset (top), a dense segmentation (middle), and a sparse segmentation
 
 Again the "blosc-zstd" compressor provides the best compression ratios, but the
 effect of choosing a different compressor is even more pronounced. With the
-dense segmentation compression ratios reach around 60, whereas for the sparse
+dense segmentation compression ratios for blosc-zstd reach around 60, whereas for the sparse
 segmentation compression levels of over 2,000 are reached.
