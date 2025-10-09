@@ -84,7 +84,7 @@ loaded into memory (e.g., for an array with data type `uint8` and 16 elements,
 the data size is 16 bytes), and the data size when compressed and stored. Higher
 compression ratios mean lower stored data sizes.
 
-![Write time vs compression ratio for different compressors and compression levels](assets/write_single.png)
+![Write time vs compression ratio for different compressors and compression levels with the quickest compressors taking 1 to 2 seconds with compression ratios of ~1.5. Increasing the compression level does not increase the compression ratio by much while taking much longer](assets/write_single.png)
 
 The grey cross in the bottom left of he plot shows a baseline result for no
 compression, taking about 0.7s. Perhaps surprisingly this has a compression
@@ -106,7 +106,7 @@ with read time on the x-axis and compression ratio on the y-axis. Again, each
 compressor is represented with a different colour/symbol, and larger markers
 represent higher compression levels.
 
-![Read time vs compression ratio for different compressors and compression levels](assets/read_single.png)
+![Read time vs compression ratio for different compressors and compression levels with zstd (pink triangles) read time increases with compression level whereas for all other compressors there is no variation of read time with compression level](assets/read_single.png)
 
 The grey cross in the bottom left of the plot shows a baseline result for no
 compression, taking about 0.6 seconds.
@@ -121,14 +121,14 @@ have significantly slower read times.
 ### Shuffle
 
 In addition to setting the compression level, the blosc compressors also allow
-configuring a "shuffle" setting. This ... _link out to description of shuffle_.
+configuring a "shuffle" setting. This includes [shuffle, noshuffle and bitshuffle](https://www.blosc.org/python-blosc/tutorial.html#using-different-filters).
 
 The following graphs show (in order) compression ratio, read time, and write
 time for different values of shuffle for the _blosc-zstd_ codec (using the
 tensorstore library).
 
-![Shuffle vs compression ratio](assets/shuffle_compression.png) ![Shuffle vs read time](assets/shuffle_read.png)
-![Shuffle vs write time](assets/shuffle_write.png)
+![Shuffle vs compression ratio with compression ratio highest for shuffle and lowest for no shuffle](assets/shuffle_compression.png) ![Shuffle vs read time with longest read time for no shuffle and shortest read time for shuffle](assets/shuffle_read.png)
+![Shuffle vs write time with a shorter write time for shuffle than for no shuffle](assets/shuffle_write.png)
 
 Setting the _shuffle_ configuration to "shuffle" increases the compression ratio
 from ~1.5 to ~1.9, and does not substatially change the read or write times.
@@ -137,13 +137,13 @@ from ~1.5 to ~1.9, and does not substatially change the read or write times.
 
 The following graphs show how changing the chunk size affects performance.
 
-![Chunk size vs compression ratio](assets/chunk_size/compression.png)
+![Chunk size vs compression ratio with increasing chunk size there only a slight decrease in compression ratio](assets/chunk_size/compression.png)
 
 Increasing the chunk size decreases the compression ratio, but only slightly.
 This is probably because larger chunk sizes result in a bigger range data to
 compress per chunk, resulting in slightly less efficient compression.
 
-![Chunk size vs read time](assets/chunk_size/read.png) ![Chunk size vs write time](assets/chunk_size/write.png)
+![Chunk size vs read time with chunk size below 90 resulting in longer read times](assets/chunk_size/read.png) ![Chunk size vs write time with chunk size below 90 resulting in longer write times](assets/chunk_size/write.png)
 
 Setting a low chunk size (below around 90) has an adverse effect on read and
 write times. This is probably because lower chunk sizes result in more files for
@@ -158,7 +158,7 @@ Benchmarks were run with the
 [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/), and
 _[tensorstore](https://google.github.io/tensorstore/)_ libraries.
 
-![Read time vs compression ratio for all software libraries](assets/library/read.png) ![Write time vs compression ratio for all software libraries](assets/library/write.png)
+![Read time vs compression ratio for all software libraries with shorter read times for tensorstore compared to zarr-python versions 2 and 3](assets/library/read.png) ![Write time vs compression ratio for all software libraries with shorter write times for tensorstore compared to zarr-python versions 2 and 3](assets/library/write.png)
 
 _tensorstore_ is consistently the fastest library when both reading and writing
 data.
@@ -176,9 +176,9 @@ following graphs show the compression ratio - write time plots for the original
 heart dataset (top), a dense segmentation (middle), and a sparse segmentation
 (bottom).
 
-![Write time vs compression ratio for heart dataset](assets/write_single.png)
-![Write time vs compression ratio for a dense segmentation](assets/image_type/dense_write.png)
-![Write time vs compression ratio for a sparse segmentation](assets/image_type/sparse_write.png)
+![Write time vs compression ratio for heart dataset with blosc-zstd the best compressor and compression ratios reaching 2.0](assets/write_single.png)
+![Write time vs compression ratio for a dense segmentation with blosc-zstd and zstd the best compressors and compression ratios reaching around 60](assets/image_type/dense_write.png)
+![Write time vs compression ratio for a sparse segmentation with blosc-zstd the best compressor and compression ratios reaching over 2000](assets/image_type/sparse_write.png)
 
 Again the "blosc-zstd" compressor provides the best compression ratios, but the
 effect of choosing a different compressor is even more pronounced. With the
