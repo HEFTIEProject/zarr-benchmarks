@@ -180,7 +180,7 @@ heart dataset (top), a dense segmentation (middle), and a sparse segmentation
 ![Write time vs compression ratio for a dense segmentation with blosc-zstd and zstd the best compressors and compression ratios reaching around 60](assets/image_type/dense_write.png)
 ![Write time vs compression ratio for a sparse segmentation with blosc-zstd the best compressor and compression ratios reaching over 2000](assets/image_type/sparse_write.png)
 
-Again the "blosc-zstd" compressor provides the best compression ratios, but the
-effect of choosing a different compressor is even more pronounced. With the
+For the sparse segmentation (bottom panel) again the "blosc-zstd" compressor provides the best compression ratios, but the
+effect of choosing a different compressor is even more pronounced. For the dense segmentation (middle panel) the "zstd" compressor provides the best results. With the
 dense segmentation compression ratios for blosc-zstd reach around 60, whereas for the sparse
 segmentation compression levels of over 2,000 are reached.
