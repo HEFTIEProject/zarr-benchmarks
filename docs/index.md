@@ -67,6 +67,8 @@ Reading and writing arrays was done to and from local SSD storage, to mimic real
 world usage when reading/writing to/from a disk. This means times given are the
 full time needed to read/write to/from disk.
 
+The data used to create this report is available in the repository under `/example_results`. To create the plots in this report locally (along with further plots we couldn't include in the report), see the README in that repository.
+
 ## Compressors
 
 This section shows how varying the compressor and it's configuration affects
