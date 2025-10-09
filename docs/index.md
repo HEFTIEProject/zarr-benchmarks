@@ -132,7 +132,7 @@ tensorstore library).
 ![Shuffle vs write time with a shorter write time for shuffle than for no shuffle](assets/shuffle_write.png)
 
 Setting the _shuffle_ configuration to "shuffle" increases the compression ratio
-from ~1.5 to ~1.9, and does not substatially change the read or write times.
+for imagaing data from ~1.5 to ~1.9, and does not substatially change the read or write times. We found that different shuffle options have different outcomes for different types of data however.
 
 ### Chunk size
 
