@@ -24,13 +24,12 @@ These benchmarks are part of the
   than [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/) is
   faster than [_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/)
   (for both reading and writing data).
-- **Compressor**: _blosc-zstd_ provides the best compression ratio, for image
-  and segmentation data.
+- **Compressor**: _blosc-zstd_ provides the best compression ratio for image
+  and sparse segmentation data, whereas _zstd_ provides the best compression ratio for dense segmentation data.
 - **Compression level**: Setting compression levels beyond ~3 results in
   slightly better data compression but much longer write times. Compression
   level does not affect read time.
-- **Other compressor options**: Setting the _shuffle_ option increases data
-  compression with no adverse effect on read/write times.
+- **Other compressor options**: Setting the _shuffle_ option has no adverse effect on read/write times, and for some types of data increases compression; for image data setting it to "shuffle" helps, and for sparse labels "bitshuffle" helps. For dense labels not setting shuffle gives the largest compression ratios.
 
 ## Configuration
 
