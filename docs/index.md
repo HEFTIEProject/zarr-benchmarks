@@ -4,18 +4,12 @@ layout: default
 
 # Zarr benchmarks
 
-## Introduction
+This page provides advice on how to set [Zarr](https://zarr.dev/) array
+configuration options. These options all have an impact on data compression,
+read times, and write times. The advice here is based on a series of benchmarks,
+which are presented below.
 
-This page contains benchmarks for the best options to use when creating Zarr
-arrays.
-
-[Zarr](https://zarr.dev/) is a specification for storing array data. When
-creating a Zarr dataset there are several configuration options you can set,
-which all have an impact on data compression, read times, and write times. This
-project provides guidance on how array creation options affect data size and
-read/write performance.
-
-These benchmarks are part of the
+These benchmarks are part of the wider
 [HEFTIE project](https://github.com/HEFTIEProject).
 
 ## Executive summary
@@ -24,43 +18,48 @@ These benchmarks are part of the
   than [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/) is
   faster than [_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/)
   (for both reading and writing data).
-- **Compressor**: _blosc-zstd_ provides the best compression ratio for image and
-  sparse segmentation data, whereas _zstd_ provides the best compression ratio
-  for dense segmentation data.
-- **Compression level**: Setting compression levels beyond ~3 results in
-  slightly better data compression but much longer write times. Compression
-  level does not affect read time.
-- **Other compressor options**: Setting the _shuffle_ option has no adverse
-  effect on read/write times, and for some types of data increases compression;
-  for image data setting it to "shuffle" helps, and for sparse labels
-  "bitshuffle" helps. For dense labels not setting shuffle gives the largest
-  compression ratios.
+- **Compressor**:
+  - `blosc-zstd` provides the best compression ratio for image and sparse
+    segmentation data
+  - `zstd` provides the best compression ratio for dense segmentation data.
+- **Compression level**: Values greater than ~3 result in slightly better data
+  compression but much longer write times. Compression level does not affect
+  read time.
+- **Other compressor options**: Setting the `shuffle` option has no adverse
+  effect on read/write times, and for different data types different values
+  increase compression ratio:
+  - image data, setting it to `"shuffle"`
+  - sparse labels, setting it to `"bitshuffle"`
+  - dense labels not setting `shuffle` at all
 
 ## Configuration
 
-Data used for benchmarking is available on
-[Zenodo](https://doi.org/10.5281/zenodo.15544055).
+The data used for benchmarking is available on Zenodo at
+[10.5281/zenodo.15544055](https://doi.org/10.5281/zenodo.15544055).
 
 ### Datasets
 
-All datasets have shape: 806 x 629 x 629, with a data type of _uint16_.
+All datasets have shape: 806 x 629 x 629, with a 16-bit unsigned integer data
+type. Three different datasets were used:
 
-- **Image data**: A HiP-CT scan of a human heart.
-- **Dense label data**: Segmented neurons from an electron microscopy volume of
-  part of the human cerebral cortex.
-- **Sparse label data**: Selected proofread segmented neurons, from the same
-  dataset as the dense label data.
+- **Image data**:
+  [A Hierarchical Phase-Contrast Tomography (HiP-CT) scan of a human heart.](https://doi.org/10.15151/ESRF-DC-1773966241)
+- **Dense label data**: Segmented neurons from an
+  [electron microscopy volume of part of the human cerebral cortex](https://h01-release.storage.googleapis.com/data.html).
+- **Sparse label data**: Selected proofread segmented neurons, from the
+  [same dataset as the dense label data](https://h01-release.storage.googleapis.com/data.html).
 
 ### Default configuration
 
-Unless stated as being varied, the default configuration used was:
+Unless stated as being varied below, the default Zarr array configuration used
+was:
 
 - **Dataset** = heart image data
-- **Chunk size** = 128 x 128 x 128
-- **Compressor** = blosc-zstd
-- **Shuffle** = "shuffle"
-- **Compression level** = 3
-- **Zarr spec version** = 2
+- **Chunk shape** = `(128, 128, 128)`
+- **Compressor** = `"blosc-zstd"`
+- **Shuffle** = `"shuffle"`
+- **Compression level** = `3`
+- **Zarr specification version** = 2
 
 All benchmarks were run 5 times, and the mean values from these runs are shown
 in the graphs below.
@@ -68,13 +67,14 @@ in the graphs below.
 ### Hardware
 
 Reading and writing arrays was done to and from local SSD storage, to mimic real
-world usage when reading/writing to/from a disk. This means times given are the
-full time needed to read/write to/from disk.
+world usage when reading/writing to a disk. Times given are the full time needed
+to read/write to/from disk.
 
-The data used to create this report is available in the repository under
-`/example_results`. To create the plots in this report locally (along with
-further plots we couldn't include in the report), see the README in that
-repository.
+Benchmarking result data used to create this report is available in the
+[HEFTIEProject/zarr-benchmarks](https://github.com/HEFTIEProject/zarr-benchmarks)
+repository in the `/example_results` directory. To reproduce the plots in this
+report locally (along with further plots we couldn't include in the report), see
+the README in that repository.
 
 ## Compressors
 
@@ -89,9 +89,9 @@ The following graph shows write time for the Zarr-python 2 library, with write
 time on the x-axis and compression ratio on the y-axis. Each compressor is
 represented with a different colour/symbol, and larger markers represent higher
 compression levels. The compression ratio is the ratio of the data size when
-loaded into memory (e.g., for an array with data type `uint8` and 16 elements,
-the data size is 16 bytes), and the data size when compressed and stored. Higher
-compression ratios mean lower stored data sizes.
+loaded into memory (e.g., for an array with 16 bit unsigned integer data type
+and 16 elements, the data size is 32 bytes), and the data size when compressed
+and stored. Higher compression ratios mean lower stored data sizes.
 
 ![Write time vs compression ratio for different compressors and compression levels with the quickest compressors taking 1 to 2 seconds with compression ratios of ~1.5. Increasing the compression level does not increase the compression ratio by much while taking much longer](assets/write_single.png)
 
