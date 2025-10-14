@@ -24,12 +24,17 @@ These benchmarks are part of the
   than [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/) is
   faster than [_zarr-python_ version 2](https://zarr.readthedocs.io/en/v2.18.5/)
   (for both reading and writing data).
-- **Compressor**: _blosc-zstd_ provides the best compression ratio for image
-  and sparse segmentation data, whereas _zstd_ provides the best compression ratio for dense segmentation data.
+- **Compressor**: _blosc-zstd_ provides the best compression ratio for image and
+  sparse segmentation data, whereas _zstd_ provides the best compression ratio
+  for dense segmentation data.
 - **Compression level**: Setting compression levels beyond ~3 results in
   slightly better data compression but much longer write times. Compression
   level does not affect read time.
-- **Other compressor options**: Setting the _shuffle_ option has no adverse effect on read/write times, and for some types of data increases compression; for image data setting it to "shuffle" helps, and for sparse labels "bitshuffle" helps. For dense labels not setting shuffle gives the largest compression ratios.
+- **Other compressor options**: Setting the _shuffle_ option has no adverse
+  effect on read/write times, and for some types of data increases compression;
+  for image data setting it to "shuffle" helps, and for sparse labels
+  "bitshuffle" helps. For dense labels not setting shuffle gives the largest
+  compression ratios.
 
 ## Configuration
 
@@ -66,7 +71,10 @@ Reading and writing arrays was done to and from local SSD storage, to mimic real
 world usage when reading/writing to/from a disk. This means times given are the
 full time needed to read/write to/from disk.
 
-The data used to create this report is available in the repository under `/example_results`. To create the plots in this report locally (along with further plots we couldn't include in the report), see the README in that repository.
+The data used to create this report is available in the repository under
+`/example_results`. To create the plots in this report locally (along with
+further plots we couldn't include in the report), see the README in that
+repository.
 
 ## Compressors
 
@@ -122,17 +130,21 @@ have significantly slower read times.
 ### Shuffle
 
 In addition to setting the compression level, the blosc compressors also allow
-configuring a "shuffle" setting. This includes [shuffle, noshuffle and bitshuffle](https://www.blosc.org/python-blosc/tutorial.html#using-different-filters).
+configuring a "shuffle" setting. This includes
+[shuffle, noshuffle and bitshuffle](https://www.blosc.org/python-blosc/tutorial.html#using-different-filters).
 
 The following graphs show (in order) compression ratio, read time, and write
 time for different values of shuffle for the _blosc-zstd_ codec (using the
 tensorstore library).
 
-![Shuffle vs compression ratio with compression ratio highest for shuffle and lowest for no shuffle](assets/shuffle_compression.png) ![Shuffle vs read time with longest read time for no shuffle and shortest read time for shuffle](assets/shuffle_read.png)
+![Shuffle vs compression ratio with compression ratio highest for shuffle and lowest for no shuffle](assets/shuffle_compression.png)
+![Shuffle vs read time with longest read time for no shuffle and shortest read time for shuffle](assets/shuffle_read.png)
 ![Shuffle vs write time with a shorter write time for shuffle than for no shuffle](assets/shuffle_write.png)
 
 Setting the _shuffle_ configuration to "shuffle" increases the compression ratio
-for imagaing data from ~1.5 to ~1.9, and does not substatially change the read or write times. We found that different shuffle options have different outcomes for different types of data however.
+for imagaing data from ~1.5 to ~1.9, and does not substatially change the read
+or write times. We found that different shuffle options have different outcomes
+for different types of data however.
 
 ### Chunk size
 
@@ -144,7 +156,8 @@ Increasing the chunk size decreases the compression ratio, but only slightly.
 This is probably because larger chunk sizes result in a bigger range of data to
 compress per chunk, resulting in slightly less efficient compression.
 
-![Chunk size vs read time with chunk size below 90 resulting in longer read times](assets/chunk_size/read.png) ![Chunk size vs write time with chunk size below 90 resulting in longer write times](assets/chunk_size/write.png)
+![Chunk size vs read time with chunk size below 90 resulting in longer read times](assets/chunk_size/read.png)
+![Chunk size vs write time with chunk size below 90 resulting in longer write times](assets/chunk_size/write.png)
 
 Setting a low chunk size (below around 90) has an adverse effect on read and
 write times. This is probably because lower chunk sizes result in more files for
@@ -159,7 +172,8 @@ Benchmarks were run with the
 [_zarr-python_ version 3](https://zarr.readthedocs.io/en/stable/), and
 _[tensorstore](https://google.github.io/tensorstore/)_ libraries.
 
-![Read time vs compression ratio for all software libraries with shorter read times for tensorstore compared to zarr-python versions 2 and 3](assets/library/read.png) ![Write time vs compression ratio for all software libraries with shorter write times for tensorstore compared to zarr-python versions 2 and 3](assets/library/write.png)
+![Read time vs compression ratio for all software libraries with shorter read times for tensorstore compared to zarr-python versions 2 and 3](assets/library/read.png)
+![Write time vs compression ratio for all software libraries with shorter write times for tensorstore compared to zarr-python versions 2 and 3](assets/library/write.png)
 
 _tensorstore_ is consistently the fastest library when both reading and writing
 data.
@@ -181,7 +195,9 @@ heart dataset (top), a dense segmentation (middle), and a sparse segmentation
 ![Write time vs compression ratio for a dense segmentation with blosc-zstd and zstd the best compressors and compression ratios reaching around 60](assets/image_type/dense_write.png)
 ![Write time vs compression ratio for a sparse segmentation with blosc-zstd the best compressor and compression ratios reaching over 2000](assets/image_type/sparse_write.png)
 
-For the sparse segmentation (bottom panel) again the "blosc-zstd" compressor provides the best compression ratios, but the
-effect of choosing a different compressor is even more pronounced. For the dense segmentation (middle panel) the "zstd" compressor provides the best results. With the
-dense segmentation compression ratios for blosc-zstd reach around 60, whereas for the sparse
+For the sparse segmentation (bottom panel) again the "blosc-zstd" compressor
+provides the best compression ratios, but the effect of choosing a different
+compressor is even more pronounced. For the dense segmentation (middle panel)
+the "zstd" compressor provides the best results. With the dense segmentation
+compression ratios for blosc-zstd reach around 60, whereas for the sparse
 segmentation compression levels of over 2,000 are reached.
