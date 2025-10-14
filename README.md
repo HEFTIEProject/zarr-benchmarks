@@ -1,12 +1,17 @@
 # Zarr benchmarks for 3D images
 
 This repository contains benchmarks for creating, reading, and storing huge 3D
-images in [Zarr](https://zarr.dev/) arrays. It is one part of the
+images in [Zarr](https://zarr.dev/) arrays. It was done as part of the
 [HEFTIE project](https://github.com/HEFTIEProject).
 
-The goal of this repository is to benchmark writing data to Zarr with a range of
-different _configurations_ (e.g., compression codec, chunk size...), to guide
-the choice of options for folks reading and writing 3D imaging data.
+The goal is to benchmark writing data to Zarr with a range of different
+_configurations_ (e.g., compression codec, chunk size...), to guide the choice
+of options for reading and writing 3D imaging data.
+
+## Final results
+
+The final write-up can be found at
+[https://heftieproject.github.io/zarr-benchmarks/](https://heftieproject.github.io/zarr-benchmarks/).
 
 ## Other related work
 
