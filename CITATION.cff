@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "Zarr benchmarks"
+version: 1.8.0
+license: "BSD-3"
+type: software
+abstract: "This repository provides advice on how to set Zarr array configuration options.
+These options all have an impact on data compression, read times, and write times.
+The advice here is based on a series of benchmarks, which are presented in the report."
+message: "If you use this software, please cite it as below."
+authors:
+  - given-names: David
+    family-names: Stansby
+    affiliation: University College London
+    orcid: "https://orcid.org/0000-0002-1365-1908"
+  - given-names: Kimberley
+    family-names: Meechan
+    affiliation: University College London
+    orcid: "https://orcid.org/0000-0003-4939-4170"
+  - given-names: Ruaridh
+    family-names: Gollifer
+    affiliation: University College London
+    orcid: "https://orcid.org/0000-0001-9319-936X8"
+keywords:
+  - zarr
+  - data compression
