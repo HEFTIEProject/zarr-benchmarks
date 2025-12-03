@@ -1,11 +1,13 @@
 cff-version: 1.2.0
 title: "Zarr benchmarks"
 version: 1
-license: "BSD-3"
+license: "BSD-3-Clause"
 type: software
-abstract: "This repository provides advice on how to set Zarr array configuration options.
-These options all have an impact on data compression, read times, and write times.
-The advice here is based on a series of benchmarks, which are presented in the report."
+abstract:
+  "This repository provides advice on how to set Zarr array configuration
+  options. These options all have an impact on data compression, read times, and
+  write times. The advice here is based on a series of benchmarks, which are
+  presented in the report."
 message: "If you use this software, please cite it as below."
 authors:
   - given-names: David
