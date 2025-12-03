@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "Zarr benchmarks"
-version: 1.8.0
+version: 1
 license: "BSD-3"
 type: software
 abstract: "This repository provides advice on how to set Zarr array configuration options.
