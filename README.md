@@ -13,6 +13,10 @@ of options for reading and writing 3D imaging data.
 The final write-up can be found at
 [https://heftieproject.github.io/zarr-benchmarks/](https://heftieproject.github.io/zarr-benchmarks/).
 
+This is based on the results in the `/example_results` directory. To re-create
+all plots locally (inside `data/plots`), follow the installation instructions
+below then run: `python src/zarr_benchmarks/create_plots.py --example_results`.
+
 ## Other related work
 
 - [`zarr-developers/zarr-benchmark`](https://github.com/zarr-developers/zarr-benchmark)
