@@ -21,7 +21,7 @@ authors:
   - given-names: Ruaridh
     family-names: Gollifer
     affiliation: University College London
-    orcid: "https://orcid.org/0000-0001-9319-936X8"
+    orcid: "https://orcid.org/0000-0001-9319-936X"
 keywords:
   - zarr
   - data compression
