@@ -11,6 +11,7 @@ which are presented below.
 
 These benchmarks are part of the wider
 [HEFTIE project](https://github.com/HEFTIEProject).
+The current version can be cited from zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17806390.svg)](https://doi.org/10.5281/zenodo.17806390)
 
 ## Executive summary
 

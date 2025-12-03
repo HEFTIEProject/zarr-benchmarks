@@ -1,5 +1,7 @@
 # Zarr benchmarks for 3D images
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17806390.svg)](https://doi.org/10.5281/zenodo.17806390)
+
 This repository contains benchmarks for creating, reading, and storing huge 3D
 images in [Zarr](https://zarr.dev/) arrays. It was done as part of the
 [HEFTIE project](https://github.com/HEFTIEProject).
